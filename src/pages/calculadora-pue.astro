@@ -1,0 +1,43 @@
+---
+import Base from '@/layouts/Base.astro';
+import PueCalculator from '@/components/PueCalculator';
+import LeadForm from '@/components/LeadForm';
+---
+
+<Base
+  title="Calculadora de PUE e DCiE"
+  description="Calcule o PUE do seu data center conforme ISO/IEC 30134-2, compare com benchmarks 2025 (Uptime Institute, Google, AWS, Meta, Ascenty) e estime custo, CUE e WUE."
+>
+  <h1>Calculadora de PUE</h1>
+  <p>
+    <strong>PUE (Power Usage Effectiveness)</strong> é a razão entre a energia total consumida pela
+    instalação e a energia consumida pelos equipamentos de TI (ISO/IEC 30134-2 / The Green Grid).
+    Quanto mais próximo de 1,0, mais eficiente a infraestrutura. "Você não gerencia o que não
+    mede" — comece medindo.
+  </p>
+
+  <PueCalculator client:load />
+
+  <section class="card soft">
+    <h2>Como medir corretamente</h2>
+    <ol>
+      <li><strong>Defina a fronteira:</strong> energia total = tudo que entra no data center (TI + climatização + UPS + distribuição + iluminação).</li>
+      <li><strong>Escolha o nível de medição</strong> (Green Grid/ISO): L1 na saída do UPS, L2 nos PDUs, L3 no equipamento de TI. Migre para níveis mais altos conforme a maturidade.</li>
+      <li><strong>Prefira energia (kWh) a potência instantânea:</strong> o padrão-ouro é o PUE anualizado (12 meses móveis), que captura sazonalidade — é assim que Google e os hyperscalers reportam.</li>
+      <li><strong>Meça com frequência:</strong> básico = mensal; intermediário = diário; avançado = contínuo.</li>
+      <li><strong>Aja sobre o resultado:</strong> o PUE é o começo da conversa, não o fim — siga para o <a href="/simulador-economia/">simulador de economia</a>.</li>
+    </ol>
+  </section>
+
+  <section class="card soft">
+    <h2>Limitações do PUE (e por que oferecemos mais métricas)</h2>
+    <ul>
+      <li>PUE ignora emissões de carbono, consumo de água e a origem da energia — um PUE 1,2 alimentado a carvão pode ter impacto maior que um 1,4 em grid renovável.</li>
+      <li>Pode ser "otimizado" de forma perversa (ex.: gastar muita água em resfriamento evaporativo para ganhar pouco em energia).</li>
+      <li>O próprio The Green Grid alerta que o PUE não foi criado para comparar instalações diferentes — use-o para acompanhar a <em>sua</em> evolução.</li>
+      <li>Por isso esta calculadora inclui <strong>WUE</strong> (água, ISO/IEC 30134-9) e <strong>CUE</strong> (carbono, ISO/IEC 30134-8) — as métricas que a regulação moderna (EED europeia) já exige.</li>
+    </ul>
+  </section>
+
+  <LeadForm client:visible />
+</Base>

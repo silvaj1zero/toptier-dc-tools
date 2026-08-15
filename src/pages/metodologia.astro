@@ -1,0 +1,97 @@
+---
+import Base from '@/layouts/Base.astro';
+import { PUE_BENCHMARKS, LEGACY_42U_TABLE } from '@/data/benchmarks';
+---
+
+<Base
+  title="Metodologia"
+  description="Fundamentação das ferramentas Top Tier: ISO/IEC 30134, The Green Grid, ASHRAE 90.4, benchmarks Uptime Institute 2025 e regulação (EED, EnEfG). Todas as fórmulas e fontes expostas."
+>
+  <h1>Metodologia</h1>
+  <p>
+    Princípio central destas ferramentas: <strong>nenhum número sem fonte, nenhuma fórmula
+    oculta</strong>. Esta página documenta as normas, os benchmarks e as decisões metodológicas —
+    e serve de material de apoio à disciplina de Eficiência Energética e Sustentabilidade do MBA em
+    Infraestrutura de Ambientes Críticos.
+  </p>
+
+  <section class="card">
+    <h2>Fórmulas</h2>
+    <ul>
+      <li><code>PUE = Energia total da instalação ÷ Energia dos equipamentos de TI</code> (ISO/IEC 30134-2 / The Green Grid)</li>
+      <li><code>DCiE = 1 ÷ PUE</code> — métrica legada, descontinuada pelo The Green Grid; exibimos apenas por familiaridade histórica</li>
+      <li><code>Energia anual (kWh) = potência média (kW) × 8.760 h</code></li>
+      <li><code>Custo anual = energia anual × tarifa efetiva</code>, onde <code>tarifa efetiva = tarifa base + adicional de bandeira ÷ 100</code></li>
+      <li><code>CUE = fator de emissão do grid (kgCO2e/kWh) × PUE</code> — método indireto do The Green Grid (ISO/IEC 30134-8); com inventário próprio, <code>CUE = emissões totais ÷ kWh de TI</code></li>
+      <li><code>WUE = litros de água anuais ÷ kWh de TI anuais</code> (ISO/IEC 30134-9)</li>
+      <li>Economia: <code>Δpotência = TI × (PUE atual − PUE alvo)</code>, projetada linearmente em 1/5/10 anos</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Benchmarks de referência (por que não usamos a régua de 2010)</h2>
+    <p>
+      As calculadoras clássicas do mercado ainda classificam PUE 2,0 como "médio" — uma régua de
+      ~2010. A média global caiu para <strong>1,54</strong> (Uptime Institute, 2025) e os
+      hyperscalers operam entre 1,08 e 1,15. Comparar-se com a régua antiga infla artificialmente a
+      sensação de eficiência.
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Referência</th><th>PUE</th><th>Ano</th><th>Fonte</th></tr>
+        </thead>
+        <tbody>
+          {PUE_BENCHMARKS.map((b) => (
+            <tr><td>{b.label}</td><td>{b.value.toFixed(2)}</td><td>{b.year}</td><td>{b.source}</td></tr>
+          ))}
+        </tbody>
+      </table>
+    </div>
+    <details class="method">
+      <summary>Régua histórica (~2010) usada pelas calculadoras clássicas — apenas para contraste</summary>
+      <div class="table-wrap">
+        <table>
+          <thead><tr><th>PUE</th><th>DCiE</th><th>Classificação da época</th></tr></thead>
+          <tbody>
+            {LEGACY_42U_TABLE.map((r) => (
+              <tr><td>{r.pue.toFixed(1)}</td><td>{Math.round(r.dcie * 100)}%</td><td>{r.label}</td></tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+    </details>
+  </section>
+
+  <section class="card">
+    <h2>Normas e regulação</h2>
+    <ul>
+      <li><strong>ISO/IEC 30134</strong> — família de KPIs de data center: PUE (parte 2), ITEEsv (4), ITEUsv (5), ERF (6), CER (7), CUE (8), WUE (9). Equivalente europeu: EN 50600-4.</li>
+      <li><strong>The Green Grid</strong> — criador do PUE/DCiE; white papers seguem sendo a referência de metodologia de medição (níveis L1/L2/L3).</li>
+      <li><strong>ASHRAE 90.4-2025</strong> — requisitos mínimos de eficiência para projeto e operação; escopo ampliado para GEE e água.</li>
+      <li><strong>UE — Diretiva de Eficiência Energética (EED), Art. 12</strong> — reporting anual obrigatório para data centers com TI instalada ≥ 500 kW: PUE, WUE, ERF, REF (Delegated Regulation (EU) 2024/1364).</li>
+      <li><strong>Alemanha — EnEfG</strong> — PUE ≤ 1,2 para data centers novos a partir de 07/2026; existentes: ≤ 1,5 (07/2027) e ≤ 1,3 (07/2030).</li>
+      <li><strong>Brasil — ReData/PNDC</strong> — regime especial de tributação para data centers condicionado a energia renovável e investimento em P&D&I nacional; a agenda regulatória brasileira de eficiência está nascendo agora.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Dados brasileiros</h2>
+    <ul>
+      <li><strong>Tarifas:</strong> o usuário informa a tarifa da fatura/contrato; presets por distribuidora (ANEEL) estão sendo verificados e serão adicionados com fonte e ano.</li>
+      <li><strong>Bandeiras tarifárias:</strong> adicional por 100 kWh conforme ANEEL (bandeira selecionável na ferramenta).</li>
+      <li><strong>Fator de emissão:</strong> fator médio anual do SIN publicado pelo MCTI — usado para CO2e e CUE estimado. O grid brasileiro (~80% renovável) é um diferencial competitivo real dos data centers locais.</li>
+    </ul>
+  </section>
+
+  <section class="card soft">
+    <h2>Sobre</h2>
+    <p>
+      Desenvolvido pela <a href="https://www.toptier.net.br">Top Tier Infrastructure</a> — mais de
+      25 anos em ambientes de missão crítica, parceira certificada do programa de eficiência
+      energética do US DOE para data centers na América Latina. Estas ferramentas são o material
+      hands-on oficial da disciplina de Eficiência Energética do MBA em Infraestrutura de Ambientes
+      Críticos.
+    </p>
+  </section>
+</Base>

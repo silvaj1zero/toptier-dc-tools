@@ -1,0 +1,49 @@
+---
+import Base from '@/layouts/Base.astro';
+import LeadForm from '@/components/LeadForm';
+---
+
+<Base
+  title="Ferramentas de Eficiência Energética para Data Centers"
+  description="Calculadora de PUE e simulador de economia de energia para data centers, com benchmarks 2025, métricas ISO/IEC 30134 e contexto brasileiro. Por Top Tier Infrastructure."
+>
+  <h1>Ferramentas de eficiência energética para data centers</h1>
+  <p>
+    Calculadoras abertas, atualizadas e com metodologia transparente — desenvolvidas pela
+    <strong>Top Tier Infrastructure</strong> e usadas no
+    <strong>MBA em Infraestrutura de Ambientes Críticos</strong> (disciplina de Eficiência
+    Energética e Sustentabilidade).
+  </p>
+
+  <div class="card">
+    <h2><a href="/calculadora-pue/">Calculadora de PUE</a></h2>
+    <p>
+      Calcule PUE e DCiE conforme ISO/IEC 30134-2 e The Green Grid, compare com os benchmarks de
+      2025 (média global 1,54 — Uptime Institute), estime custo anual em reais com bandeira
+      tarifária, e obtenha WUE e CUE opcionais. Inclui leitura regulatória (lei alemã EnEfG e
+      diretiva europeia EED).
+    </p>
+    <a class="btn" href="/calculadora-pue/">Abrir calculadora</a>
+  </div>
+
+  <div class="card">
+    <h2><a href="/simulador-economia/">Simulador de Economia de Energia</a></h2>
+    <p>
+      Projete a economia em kWh, reais e toneladas de CO2e ao reduzir o PUE do seu data center, em
+      horizontes de 1, 5 e 10 anos — com fatores de emissão do grid brasileiro e sugestão de
+      medidas típicas para cada faixa de ganho.
+    </p>
+    <a class="btn" href="/simulador-economia/">Abrir simulador</a>
+  </div>
+
+  <div class="card soft">
+    <h2><a href="/metodologia/">Metodologia aberta</a></h2>
+    <p>
+      Diferente das calculadoras clássicas do mercado (tarifas de 2010, benchmarks obsoletos,
+      fatores ocultos), aqui toda fórmula, fator e fonte está exposta — e a régua de comparação é a
+      de hoje, não a de 2010. Veja as normas, os benchmarks e as decisões metodológicas.
+    </p>
+  </div>
+
+  <LeadForm client:visible />
+</Base>

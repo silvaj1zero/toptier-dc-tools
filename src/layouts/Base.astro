@@ -1,0 +1,53 @@
+---
+import '@/styles/global.css';
+
+interface Props {
+  title: string;
+  description: string;
+}
+
+const { title, description } = Astro.props;
+const year = new Date().getFullYear();
+---
+
+<!doctype html>
+<html lang="pt-BR">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>{title} · Top Tier Infrastructure</title>
+    <meta name="description" content={description} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <meta property="og:title" content={title} />
+    <meta property="og:description" content={description} />
+    <meta property="og:type" content="website" />
+  </head>
+  <body>
+    <header class="site-header">
+      <div class="inner">
+        <a class="brand" href="/">TTI <span>·</span> Ferramentas de Eficiência</a>
+        <nav>
+          <a href="/calculadora-pue/">Calculadora PUE</a>
+          <a href="/simulador-economia/">Simulador de Economia</a>
+          <a href="/metodologia/">Metodologia</a>
+          <a href="https://www.toptier.net.br" target="_blank" rel="noopener">toptier.net.br</a>
+        </nav>
+      </div>
+    </header>
+    <main>
+      <slot />
+    </main>
+    <footer class="site-footer">
+      <div class="inner">
+        <p>
+          © {year} Top Tier Infrastructure — mais de 25 anos em ambientes de missão crítica.
+          Ferramentas educacionais do MBA em Infraestrutura de Ambientes Críticos.
+        </p>
+        <p>
+          Contato: <a href="mailto:contato@toptier.net.br">contato@toptier.net.br</a> ·
+          Metodologia aberta: todas as fórmulas, fatores e fontes estão expostos em cada ferramenta.
+        </p>
+      </div>
+    </footer>
+  </body>
+</html>
