@@ -173,15 +173,29 @@ export default function SavingsSimulator({ locale = 'pt-br' }: { locale?: Locale
             </table>
           </div>
 
-          {EQUIVALENCIAS.length > 0 && result.res.perYear[0] ? (
+          {result.res.perYear[0] ? (
             <>
               <h3>{d.equivalencesTitle}</h3>
               <ul>
-                {EQUIVALENCIAS.map((eq) => (
-                  <li key={eq.id}>
-                    {eq.labelPt} — fator {eq.value} {eq.unit} ({eq.fonte}, {eq.ano})
-                  </li>
-                ))}
+                {EQUIVALENCIAS.map((eq) => {
+                  const y1 = result.res.perYear[0]!;
+                  let computed: string | null = null;
+                  if (eq.id === 'residencias') {
+                    computed = `${fmtNumber(y1.energyKwh / (eq.value * 12), 0)} residências`;
+                  } else if (eq.id === 'arvores' && y1.carbonTons != null) {
+                    computed = `${fmtNumber((y1.carbonTons * 1000) / eq.value, 0)} árvores`;
+                  }
+                  if (computed == null) return null;
+                  return (
+                    <li key={eq.id}>
+                      <strong>{computed}</strong> — {eq.labelPt}, por ano de economia
+                      <br />
+                      <small>
+                        fator: {eq.value} {eq.unit} ({eq.fonte}, {eq.ano}){eq.nota ? ` — ${eq.nota}` : ''}
+                      </small>
+                    </li>
+                  );
+                })}
               </ul>
             </>
           ) : null}

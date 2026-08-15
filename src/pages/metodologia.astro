@@ -78,9 +78,11 @@ import { PUE_BENCHMARKS, LEGACY_42U_TABLE } from '@/data/benchmarks';
   <section class="card">
     <h2>Dados brasileiros</h2>
     <ul>
-      <li><strong>Tarifas:</strong> o usuário informa a tarifa da fatura/contrato; presets por distribuidora (ANEEL) estão sendo verificados e serão adicionados com fonte e ano.</li>
-      <li><strong>Bandeiras tarifárias:</strong> adicional por 100 kWh conforme ANEEL (bandeira selecionável na ferramenta).</li>
-      <li><strong>Fator de emissão:</strong> fator médio anual do SIN publicado pelo MCTI — usado para CO2e e CUE estimado. O grid brasileiro (~80% renovável) é um diferencial competitivo real dos data centers locais.</li>
+      <li><strong>Tarifas:</strong> presets por distribuidora vêm do ranking público de tarifas da ANEEL (tarifa convencional, sem impostos, jan/2025) — são ponto de partida didático. A tarifa real de um data center (Grupo A, TE + TUSD, impostos ou mercado livre) deve ser informada manualmente a partir da fatura.</li>
+      <li><strong>Bandeiras tarifárias:</strong> adicional por 100 kWh conforme ANEEL (2025/2026): verde R$ 0 · amarela R$ 1,885 · vermelha P1 R$ 4,46 · vermelha P2 R$ 7,87.</li>
+      <li><strong>Fator de emissão:</strong> fator médio anual do SIN publicado pelo MCTI/SIRENE — 0,0385 tCO2/MWh em 2023, o menor em 12 anos. Usado para CO2e e CUE estimado. O grid brasileiro (~80% renovável) é um diferencial competitivo real dos data centers locais. Nota: a partir de 2025 o MCTI mudou a metodologia de cálculo (inclusão de renováveis na base), então séries não são diretamente comparáveis.</li>
+      <li><strong>Equivalências:</strong> residências (consumo médio 179,1 kWh/mês — EPE, Anuário 2025) e árvores nativas (faixa 7–10 kg CO2/ano — SOS Mata Atlântica/ESALQ-USP). Não usamos equivalência em "carros" porque não há fator oficial brasileiro consolidado — transparência antes de marketing.</li>
+      <li><strong>Contraste internacional:</strong> tarifa média comercial dos EUA em abr/2026: 13,51 ¢/kWh (EIA) — as calculadoras clássicas ainda usam a tabela DOE/EIA de 2010.</li>
     </ul>
   </section>
 
