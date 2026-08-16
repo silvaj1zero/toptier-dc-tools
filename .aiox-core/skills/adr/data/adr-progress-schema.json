@@ -1,0 +1,250 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://aiox.dev/schemas/adr/adr-progress-v1.json",
+  "title": "ADR Lifecycle Progress (adr-progress-v1)",
+  "description": "Índice de estado machine-readable de uma execução de /adr (ADR-COCKPIT-ADR-LIFECYCLE-SKILL D4). Snapshot-primário + event-log-secundário leve (docs/research/2026-07-07-resumable-state/findings.md). Fonte única de retomada — Phase-0 Recognition (implementada por 006.W1.3) lê este arquivo, reconcilia com o disco (reconcile_policy: disk-wins) e decide retomar/re-rodar/inspecionar/novo. Vive em .aiox/adr/<adr-slug>/adr-progress.json. Princípios herdados de .claude/rules/sinkra-pipeline-canon.md R17 (índice único machine-readable, ack vence na reconciliação, progresso em prosa é VETO) — vocabulário reconstruído do zero para o domínio ADR (D1 agnosticismo): NÃO usa macro/sub_progress/stem/branch/leaf do SINKRA. Este schema define apenas o CONTRATO de dados; a orquestração runtime que lê/escreve (Phase-0 Recognition, reconciliação de fato, lock acquire/release) é 006.W1.3 (fora de escopo aqui).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "revision",
+    "updated_at",
+    "adr_id",
+    "target_ref",
+    "phase",
+    "active_mode",
+    "reconcile_policy"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "adr-progress-v1",
+      "description": "Versão do schema de progresso do ADR. Fixa em adr-progress-v1 (recomendação A do research)."
+    },
+    "revision": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Contador monotônico crescente, incrementado a cada escrita deste arquivo (LangGraph checkpoint_id — ADAPT, recomendação A). Usado para detectar staleness/concorrência e para ancorar decision_forks[].forked_at_revision. NUNCA decresce; um writer que observar revision menor que a última conhecida está operando sobre um snapshot obsoleto."
+    },
+    "updated_at": {
+      "type": "string",
+      "format": "date-time",
+      "description": "ISO 8601 da última escrita neste arquivo."
+    },
+    "adr_id": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Identificador do ADR sendo conduzido (ex: slug ou título canônico usado em ADR-<NOME>.md)."
+    },
+    "title": {
+      "type": "string",
+      "description": "Título humano do ADR (opcional — conveniência de exibição; adr_id é a chave, não este campo)."
+    },
+    "type": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Type do ADR — o eixo de roteamento de lifecycle (ADR-COCKPIT-ADR-LIFECYCLE-SKILL D10). AUSENTE ⇒ 'architecture' (o default de 8 fases — todo ADR pré-D10 permanece válido). 'ui-ux' seleciona o lifecycle design-first (4 pré-fases R/M/A/S antes da Phase 0, playbook em references/ui-ux-lifecycle.md). String livre (NÃO enum fechado) porque o sistema de types é extensível por design (db/process/integration são placeholders futuros — report §2); No-Invention: só architecture e ui-ux têm lifecycle definido hoje. Campo opcional."
+    },
+    "target_ref": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Path relativo do artefato ADR real em disco (ex: docs/architecture/ADR-FOO.md). Referência, NUNCA conteúdo/prosa inline (recomendação A — outputs.partial[] segue o mesmo princípio)."
+    },
+    "visual_approval": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "description": "ui-ux-only (D10.c pré-fase A — Story 006.W5.3). O Human Gate visual: o usuário VÊ o mockup live e decide olhando. Ausente/null para ADRs type != 'ui-ux' (a maioria). Para type: 'ui-ux', o gate mecânico (scripts/uiux-gate-check.js) exige a forma real — approved_by/approved_at/decisions[] não-vazio — antes de abrir a Phase 0 ou ratificar uma decisão de design (D10.d); um objeto vazio `{}` ou campos ausentes NÃO passam o gate (AC4 — anti-pattern throwaway/inventado).",
+      "required": ["approved_by", "approved_at", "decisions"],
+      "properties": {
+        "approved_by": { "type": "string", "minLength": 1, "description": "Quem aprovou visualmente (founder/approver)." },
+        "approved_at": { "type": "string", "description": "Data/hora da aprovação visual (ISO date ou date-time)." },
+        "decisions": {
+          "type": "array",
+          "minItems": 1,
+          "description": "Cada decisão visual capturada durante a Aprovação (ex: 'modal max-w-3xl', 'full-bleed list') — um array vazio é tratado como ausência de aprovação real pelo gate mecânico.",
+          "items": { "type": "string", "minLength": 1 }
+        }
+      }
+    },
+    "spike_ref": {
+      "type": ["string", "null"],
+      "minLength": 1,
+      "description": "ui-ux-only (D10.c pré-fase S — Story 006.W5.3). Path relativo para o artefato de DS-gate/spike verde (ex: outputs/qa/ds-gate-<slug>.yaml) que prova o mockup aprovado é implementável sem inventar. Ausente/null para ADRs type != 'ui-ux'. O gate mecânico (scripts/uiux-gate-check.js) exige que este path aponte para um arquivo que EXISTE de fato em disco — uma string inventada/apontando para nada NÃO passa o gate (AC4)."
+    },
+    "phase": {
+      "type": "object",
+      "additionalProperties": false,
+      "description": "Fase ativa do ciclo de vida do ADR — objeto, NUNCA um inteiro nu (Serverless Workflow / CNCF — ADAPT, recomendação A+B). As 8 fases nomeadas (0-7) são definidas pelo playbook de 006.W1.1; este schema apenas restringe o formato do índice, não os nomes concretos das fases (No-Invention — não duplica o playbook).",
+      "required": ["current", "name", "entry_rule", "transition_to", "gate_status", "gate"],
+      "properties": {
+        "current": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 7,
+          "description": "Fase ativa, 0-7 (as 8 fases do playbook /adr definido em 006.W1.1). ADR é estritamente sequencial — sem paralelismo/tokens BPMN (veredito IGNORE do research, recomendação F)."
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Nome humano-legível da fase atual (ex: 'contexto', 'decisao', 'consequencias' — nomenclatura concreta definida pelo playbook de 006.W1.1, não por este schema)."
+        },
+        "entry_rule": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Condição que precisa ter sido satisfeita para esta fase estar ativa (auditável, não apenas implícita — Serverless Workflow Task model)."
+        },
+        "transition_to": {
+          "type": ["string", "null"],
+          "description": "Nome da próxima fase quando esta fechar. null quando a fase atual é a última (fase 7 terminal) ou quando a transição ainda não foi decidida."
+        },
+        "gate_status": {
+          "enum": ["pending", "in_progress", "blocked", "passed"],
+          "description": "Estado do gate de fechamento desta fase. 'in_progress' é um HINT — a existência do artefato/ack referenciado por gate.ack_ref em disco pode sobrescrevê-lo para 'passed' na reconciliação (reconcile_policy: disk-wins, ver B)."
+        },
+        "gate": {
+          "type": "object",
+          "additionalProperties": false,
+          "description": "Referência ao artefato/ack de fechamento desta fase em disco.",
+          "required": ["ack_ref"],
+          "properties": {
+            "ack_ref": {
+              "type": ["string", "null"],
+              "description": "Path relativo do artefato/ack que, se existir em disco, prova que esta fase fechou de fato — a VERDADE que sobrescreve gate_status: in_progress (K8s reconcile loop level-triggered — REUSE, recomendação B). null enquanto a fase não produziu um ack ainda."
+            }
+          }
+        }
+      }
+    },
+    "active_mode": {
+      "enum": ["consultive", "executor"],
+      "description": "Qual modo está conduzindo a sessão agora (herdado de D4 do ADR, mesmo princípio de R17 do hub). consultive = elicitação fase-a-fase com o humano; executor = fases autônomas encadeadas. First-class ambos — não é fallback."
+    },
+    "last_transition": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "description": "Última troca de mão entre active_mode. null se nunca houve troca.",
+      "required": ["from", "to", "at", "reason"],
+      "properties": {
+        "from": { "enum": ["consultive", "executor"] },
+        "to": { "enum": ["consultive", "executor"] },
+        "at": { "type": "string", "format": "date-time" },
+        "reason": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Por que a mão trocou (ex: 'decisão estrutural exige elicitação humana', 'fase fechou autonomamente, retomando executor')."
+        }
+      }
+    },
+    "decision": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "description": "Progresso das decisões (D) dentro da fase de decisão do ADR. null quando o ADR ainda não chegou à fase de decisões, ou quando a fase corrente não tem decisões numeradas.",
+      "required": ["current", "total"],
+      "properties": {
+        "current": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Índice da decisão D-atual sendo trabalhada (0 = nenhuma decisão iniciada ainda)."
+        },
+        "total": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total de decisões D-total identificadas para este ADR."
+        },
+        "decided": {
+          "type": "array",
+          "description": "Decisões já fechadas nesta execução, em ordem.",
+          "items": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": ["id", "choice", "decided_at"],
+            "properties": {
+              "id": { "type": "string", "minLength": 1, "description": "Identificador da decisão (ex: D1, D2, ou um slug)." },
+              "choice": { "type": "string", "minLength": 1, "description": "A escolha registrada para esta decisão." },
+              "decided_at": { "type": "string", "format": "date-time" }
+            }
+          }
+        }
+      }
+    },
+    "outputs": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "description": "Onde o trabalho parcial desta execução vive em disco. Este índice APONTA, nunca duplica conteúdo/prosa (recomendação A — outputs.partial[]).",
+      "properties": {
+        "partial": {
+          "type": "array",
+          "description": "Paths relativos (a .aiox/adr/<adr-slug>/ ou ao repo) de artefatos/seções parciais produzidos até agora.",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "reconcile_policy": {
+      "const": "disk-wins",
+      "description": "Política de reconciliação fixa nesta versão do schema — nenhuma outra é aceita (extensibilidade fica para uma v2 futura, não inventada aqui). Formaliza o princípio level-triggered/idempotente do Kubernetes reconcile loop (REUSE, recomendação B): a EXISTÊNCIA do artefato/ack apontado por phase.gate.ack_ref em disco SOBRESCREVE phase.gate_status: in_progress — o progresso (este arquivo) é um hint, o disco é a verdade. Corolário: qualquer 'progresso' registrado apenas em prosa (fora deste índice machine-readable) é inválido/VETO — nunca é fonte de retomada."
+    },
+    "transitions": {
+      "type": "array",
+      "description": "Trilha append-only de transições de fase/modo — auditoria e 'como cheguei aqui' (Temporal-lite, ADAPT leve, recomendação C). NÃO-AUTORITATIVO: observabilidade/auditoria apenas; `phase` é sempre a fonte de verdade; NUNCA se deriva `phase` a partir de transitions[] (regra explícita do research, seção C). Campo opcional — um ADR recém-iniciado pode não ter nenhuma transição ainda.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["revision", "from_phase", "to_phase", "mode", "ts"],
+        "properties": {
+          "revision": { "type": "integer", "minimum": 0, "description": "Valor de revision no momento desta transição." },
+          "from_phase": { "type": ["integer", "null"], "minimum": 0, "maximum": 7, "description": "Fase de origem (0-7). null para a primeira transição (entrada na fase 0)." },
+          "to_phase": { "type": "integer", "minimum": 0, "maximum": 7, "description": "Fase de destino (0-7)." },
+          "mode": { "enum": ["consultive", "executor"], "description": "active_mode vigente no momento da transição." },
+          "reason": { "type": ["string", "null"], "description": "Motivo/observação da transição (auditoria). null se não informado." },
+          "ts": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "decision_forks": {
+      "type": "array",
+      "description": "Registro de decisões REFEITAS — quando uma decisão D-i já fechada é revisitada e trocada (LangGraph time-travel adaptado — ADAPT, valioso para ADR: 'ADRs vivem de por-que-mudamos-de-ideia', recomendação D). Preserva a escolha anterior para auditoria sem perder a nova; NÃO força re-execução das fases seguintes — apenas marca como stale as fases que dependiam da escolha superseded, via `stale_phases[]` dentro do próprio fork (mecanismo de staleness deste schema, decisão de design do @architect, VC-1 — ver description de stale_phases abaixo). Campo opcional — a maioria dos ADRs nunca refaz uma decisão.",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["decision_id", "superseded_choice", "new_choice", "forked_at_revision", "ts"],
+        "properties": {
+          "decision_id": { "type": "string", "minLength": 1, "description": "Identificador da decisão refeita (mesmo id usado em decision.decided[].id)." },
+          "superseded_choice": { "type": "string", "minLength": 1, "description": "A escolha anterior, preservada para auditoria (nunca apagada)." },
+          "new_choice": { "type": "string", "minLength": 1, "description": "A nova escolha que substitui a anterior." },
+          "stale_phases": {
+            "type": "array",
+            "description": "VC-1 (decisão de design do @architect, 006.W1.2): fases (0-7) que dependiam da escolha superseded e precisam re-reconciliar após este fork. Vive DENTRO do fork (não como campo solto em `phase`, nem como array top-level) porque `phase` neste schema é o snapshot da fase ATIVA apenas — não uma lista histórica das 8 fases — então não há onde marcar 'fase 3 ficou stale' senão amarrado à causa (o fork que a invalidou). Um array top-level (`stale_phases` no root) perderia essa proveniência quando há múltiplos forks. Opcional; vazio/ausente = nenhuma fase seguinte precisou re-reconciliar (fork ocorreu na última fase, ou nada downstream dependia da escolha).",
+            "items": { "type": "integer", "minimum": 0, "maximum": 7 },
+            "uniqueItems": true
+          },
+          "forked_at_revision": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Valor de `revision` no momento em que este fork foi registrado. DEVE ser <= revision (o fork não pode ter acontecido 'no futuro' em relação ao snapshot atual) — verificado por VC adversarial, não expresso como constraint estrutural neste schema porque revision é um campo irmão, não um valor comparável via JSON Schema puro sem $data; a validação cruzada revision-vs-forked_at_revision é responsabilidade do runtime consumidor (006.W1.3), documentada aqui para não ser esquecida."
+          },
+          "ts": { "type": "string", "format": "date-time" }
+        }
+      }
+    },
+    "lock": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "description": "Guarda de concorrência anti-duplo-resume (Diagrid — checkpoint != durable execution sem watchdog nativo — ADAPT, recomendação E). Phase-0 Recognition (006.W1.3) checa este campo antes de retomar: lock expirado (agora > acquired_at + ttl_s) → assume a execução livremente; lock vivo de outra sessão (owner_session diferente e ainda dentro do ttl_s) → avisa o humano (não é erro fatal, é aviso). Este schema apenas MODELA os campos — o comportamento de acquire/release/check é implementado por 006.W1.3. Campo opcional — null quando nenhuma sessão detém o lock no momento.",
+      "required": ["owner_session", "acquired_at", "ttl_s"],
+      "properties": {
+        "owner_session": { "type": "string", "minLength": 1, "description": "Identificador da sessão que detém o lock (ex: session id do Claude Code)." },
+        "acquired_at": { "type": "string", "format": "date-time", "description": "Quando o lock foi adquirido." },
+        "ttl_s": { "type": "integer", "minimum": 1, "description": "Time-to-live do lock em segundos. Após acquired_at + ttl_s, o lock é considerado expirado e pode ser assumido por outra sessão." }
+      }
+    },
+    "engine_context": {
+      "type": ["object", "null"],
+      "additionalProperties": false,
+      "description": "Contexto do engine/modelo usado na fase atual (Vadim — durable execution para agentes LLM — ADAPT, recomendação E). No resume, se engine/model mudou em relação à última escrita, o runtime (006.W1.3) deve SINALIZAR (não bloquear) que o output pode estar 'untrusted' — este schema apenas modela os campos, não implementa a sinalização. Campo opcional.",
+      "required": ["engine", "model"],
+      "properties": {
+        "engine": { "type": "string", "minLength": 1, "description": "Motor/harness usado (ex: 'claude-code', 'codex', 'gemini')." },
+        "model": { "type": "string", "minLength": 1, "description": "Modelo usado nesta fase (ex: 'claude-sonnet-5')." }
+      }
+    }
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "schema_version": "adr-progress-v1",
+  "revision": 4,
+  "updated_at": "2026-07-22T10:00:00Z",
+  "adr_id": "adr-test-uiux-gate-missing-spike-file",
+  "title": "TEST fixture — ui-ux ADR with spike_ref pointing at a nonexistent file (AC7-b, AC4)",
+  "target_ref": "docs/architecture/ADR-TEST-UIUX-GATE-MISSING-SPIKE-FILE.md",
+  "type": "ui-ux",
+  "phase": {
+    "current": 0,
+    "name": "grounding",
+    "entry_rule": "pre-phases R/M/A/S must close before Phase 0 opens",
+    "transition_to": "spine",
+    "gate_status": "pending",
+    "gate": { "ack_ref": null }
+  },
+  "active_mode": "consultive",
+  "reconcile_policy": "disk-wins",
+  "visual_approval": {
+    "approved_by": "founder",
+    "approved_at": "2026-07-22",
+    "decisions": ["modal max-w-3xl", "full-bleed list"]
+  },
+  "spike_ref": "outputs/qa/ds-gate-this-file-does-not-exist-anywhere.yaml"
+}

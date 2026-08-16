@@ -1,0 +1,18 @@
+{
+  "schema_version": "adr-progress-v1",
+  "revision": 1,
+  "updated_at": "2026-07-07T14:32:00Z",
+  "adr_id": "adr-cockpit-invalid-example",
+  "target_ref": "docs/architecture/ADR-COCKPIT-INVALID-EXAMPLE.md",
+  "phase": {
+    "current": 8,
+    "name": "fase-inexistente",
+    "entry_rule": "n/a",
+    "transition_to": null,
+    "gate_status": "pending",
+    "gate": {
+      "ack_ref": null
+    }
+  },
+  "reconcile_policy": "last-write-wins"
+}

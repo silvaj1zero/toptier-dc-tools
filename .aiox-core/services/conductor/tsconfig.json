@@ -1,0 +1,17 @@
+{
+  "//": "Run-directly TS sidecar: no emit. allowImportingTsExtensions lets source + tests use .ts import specifiers (required by node --experimental-strip-types, which does not rewrite .js→.ts). typecheck only.",
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "NodeNext",
+    "moduleResolution": "NodeNext",
+    "lib": ["ES2022"],
+    "types": ["node"],
+    "strict": true,
+    "noEmit": true,
+    "allowImportingTsExtensions": true,
+    "verbatimModuleSyntax": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["src/**/*.ts", "test/**/*.ts"]
+}

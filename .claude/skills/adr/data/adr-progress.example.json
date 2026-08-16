@@ -1,0 +1,88 @@
+{
+  "schema_version": "adr-progress-v1",
+  "revision": 7,
+  "updated_at": "2026-07-07T14:32:00Z",
+  "adr_id": "adr-cockpit-example-lifecycle",
+  "title": "Example ADR — retomada após pausa",
+  "target_ref": "docs/architecture/ADR-COCKPIT-EXAMPLE-LIFECYCLE.md",
+  "phase": {
+    "current": 3,
+    "name": "decisao",
+    "entry_rule": "contexto e alternativas documentados (fase 2 fechada com ack)",
+    "transition_to": "consequencias",
+    "gate_status": "in_progress",
+    "gate": {
+      "ack_ref": null
+    }
+  },
+  "active_mode": "consultive",
+  "last_transition": {
+    "from": "executor",
+    "to": "consultive",
+    "at": "2026-07-07T14:20:00Z",
+    "reason": "decisão D2 exige elicitação humana — confidence baixa entre 2 alternativas equivalentes"
+  },
+  "decision": {
+    "current": 2,
+    "total": 4,
+    "decided": [
+      {
+        "id": "D1",
+        "choice": "usar snapshot-primário + event-log-secundário leve",
+        "decided_at": "2026-07-07T14:10:00Z"
+      }
+    ]
+  },
+  "outputs": {
+    "partial": [
+      ".aiox/adr/adr-cockpit-example-lifecycle/contexto-draft.md",
+      ".aiox/adr/adr-cockpit-example-lifecycle/alternativas-draft.md"
+    ]
+  },
+  "reconcile_policy": "disk-wins",
+  "transitions": [
+    {
+      "revision": 1,
+      "from_phase": null,
+      "to_phase": 0,
+      "mode": "executor",
+      "reason": "início do ADR",
+      "ts": "2026-07-07T13:00:00Z"
+    },
+    {
+      "revision": 5,
+      "from_phase": 2,
+      "to_phase": 3,
+      "mode": "executor",
+      "reason": "contexto e alternativas fechados com ack",
+      "ts": "2026-07-07T14:05:00Z"
+    },
+    {
+      "revision": 7,
+      "from_phase": 3,
+      "to_phase": 3,
+      "mode": "consultive",
+      "reason": "troca de mão executor→consultivo dentro da mesma fase (decisão D2)",
+      "ts": "2026-07-07T14:20:00Z"
+    }
+  ],
+  "decision_forks": [
+    {
+      "decision_id": "D1",
+      "superseded_choice": "usar event-sourcing puro (Google ADK)",
+      "new_choice": "usar snapshot-primário + event-log-secundário leve",
+      "stale_phases": [],
+      "forked_at_revision": 4,
+      "ts": "2026-07-07T14:08:00Z"
+    }
+  ],
+  "lock": {
+    "owner_session": "session-a1b2c3d4",
+    "acquired_at": "2026-07-07T14:32:00Z",
+    "ttl_s": 1800
+  },
+  "engine_context": {
+    "engine": "claude-code",
+    "model": "claude-sonnet-5"
+  }
+}

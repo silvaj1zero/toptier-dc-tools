@@ -1,0 +1,25 @@
+{
+  "schema_version": "adr-progress-v1",
+  "revision": 5,
+  "updated_at": "2026-07-22T10:00:00Z",
+  "adr_id": "adr-test-uiux-gate-passed",
+  "title": "TEST fixture — ui-ux ADR with legitimate visual_approval + spike_ref (control/PASS case)",
+  "target_ref": "docs/architecture/ADR-TEST-UIUX-GATE-PASSED.md",
+  "type": "ui-ux",
+  "phase": {
+    "current": 0,
+    "name": "grounding",
+    "entry_rule": "pre-phases R/M/A/S closed — approved mockup + spike satisfy G0's evidence bar",
+    "transition_to": "spine",
+    "gate_status": "pending",
+    "gate": { "ack_ref": null }
+  },
+  "active_mode": "consultive",
+  "reconcile_policy": "disk-wins",
+  "visual_approval": {
+    "approved_by": "founder",
+    "approved_at": "2026-07-22",
+    "decisions": ["modal max-w-3xl", "full-bleed list", "tipo-primeiro-único, 1 tom"]
+  },
+  "spike_ref": ".aiox-core/skills/adr/data/adr-progress.uiux-passed.json"
+}

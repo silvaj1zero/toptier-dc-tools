@@ -1,0 +1,20 @@
+{
+  "name": "@aiox/conductor",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "description": "Pluggable decision-routing for the AIOX Conductor — transport interface + file-protocol adapter (functional) + native-IPC adapter (skeleton) + zero-token policy engine. Run-directly TS (node --experimental-strip-types), zero runtime deps.",
+  "exports": {
+    ".": "./src/index.ts"
+  },
+  "scripts": {
+    "test": "node --experimental-strip-types --disable-warning=ExperimentalWarning --test test/policy.shape.test.ts test/transport.shape.test.ts test/conductor-loop.shape.test.ts test/executor-selector.shape.test.ts test/executor-registry.shape.test.ts test/learning-store.shape.test.ts test/ack.shape.test.ts test/engine-registry.shape.test.ts test/wave-planning.shape.test.ts",
+    "typecheck": "tsc --noEmit"
+  },
+  "engines": {
+    "node": ">=22.6.0"
+  },
+  "devDependencies": {
+    "typescript": "^5.6.0"
+  }
+}

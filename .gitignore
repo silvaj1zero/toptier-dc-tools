@@ -19,3 +19,14 @@ node_modules/
 Thumbs.db
 
 .vercel
+
+# AIOX cockpit-integration (conductor file-protocol + state) — managed
+.sdc-decision/
+.sdc-resolution/
+.sdc-inbox/
+.sdc-ack/
+.sdc-status/
+.aiox/
+
+# Claude Code local settings (operator-local)
+.claude/settings.local.json

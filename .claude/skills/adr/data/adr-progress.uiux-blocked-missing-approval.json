@@ -1,0 +1,20 @@
+{
+  "schema_version": "adr-progress-v1",
+  "revision": 3,
+  "updated_at": "2026-07-22T10:00:00Z",
+  "adr_id": "adr-test-uiux-gate-missing-approval",
+  "title": "TEST fixture — ui-ux ADR with no visual_approval yet (AC7-a)",
+  "target_ref": "docs/architecture/ADR-TEST-UIUX-GATE-MISSING-APPROVAL.md",
+  "type": "ui-ux",
+  "phase": {
+    "current": 0,
+    "name": "grounding",
+    "entry_rule": "pre-phases R/M/A/S must close before Phase 0 opens",
+    "transition_to": "spine",
+    "gate_status": "pending",
+    "gate": { "ack_ref": null }
+  },
+  "active_mode": "consultive",
+  "reconcile_policy": "disk-wins",
+  "spike_ref": "outputs/qa/ds-gate-test-uiux-gate.yaml"
+}

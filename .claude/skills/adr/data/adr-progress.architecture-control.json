@@ -1,0 +1,19 @@
+{
+  "schema_version": "adr-progress-v1",
+  "revision": 1,
+  "updated_at": "2026-07-22T10:00:00Z",
+  "adr_id": "adr-test-architecture-control",
+  "title": "TEST fixture — architecture (default) ADR — control for AC3 (must be totally unaffected)",
+  "target_ref": "docs/architecture/ADR-TEST-ARCHITECTURE-CONTROL.md",
+  "type": "architecture",
+  "phase": {
+    "current": 0,
+    "name": "grounding",
+    "entry_rule": "invocation",
+    "transition_to": "spine",
+    "gate_status": "pending",
+    "gate": { "ack_ref": null }
+  },
+  "active_mode": "consultive",
+  "reconcile_policy": "disk-wins"
+}

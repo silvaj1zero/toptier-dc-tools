@@ -1,0 +1,22 @@
+{
+  "_doc": "Identity + consume contract for the published AIOX framework core. The publish workflow (.github/workflows/publish-aiox-core.yml) packs this whole .aiox-core/ tree as an OCI artifact to ghcr.io/synkraai/aiox-core:<version> and ASSERTS the git tag matches `version` below (drift guard). Bump `version` + tag `aiox-core-v<version>` to release.",
+  "name": "aiox-core",
+  "version": "0.1.0",
+  "registry": "ghcr.io/synkraai/aiox-core",
+  "description": "AIOX dev-environment framework SOT — CLI-agnostic skills/agents/rules/services + the projector. Consumed by AIOX projects (sinkra-hub is the first client).",
+  "contents": {
+    "skills": "skills/",
+    "agents": "agents/",
+    "rules": "rules/",
+    "services": "services/",
+    "sync": "sync/"
+  },
+  "sync_entrypoint": "sync/sync.mjs",
+  "consume": {
+    "model": "overlay",
+    "_model_doc": "aiox-core is the BASE dev framework (the curated agnostic subset). A client project keeps its own project-specific layer ON TOP — the consume must never clobber project-authored skills/rules. See docs/distribution/aiox-core-publishing.md § Overlay precedence.",
+    "install_path": ".aiox-core/",
+    "project_cmd": "node .aiox-core/sync/sync.mjs",
+    "pin_field": "aiox_core.version (in the client's aiox.config.json)"
+  }
+}

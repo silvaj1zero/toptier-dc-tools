@@ -1,0 +1,16 @@
+{
+  "schema_version": "adr-progress-v1",
+  "revision": 1,
+  "updated_at": "2026-07-07T14:32:00Z",
+  "adr_id": "adr-cockpit-invalid-phase-without-gate",
+  "target_ref": "docs/architecture/ADR-COCKPIT-INVALID-PHASE-WITHOUT-GATE.md",
+  "phase": {
+    "current": 0,
+    "name": "contexto",
+    "entry_rule": "n/a",
+    "transition_to": null,
+    "gate_status": "pending"
+  },
+  "active_mode": "executor",
+  "reconcile_policy": "disk-wins"
+}
