@@ -10,6 +10,7 @@ Ferramentas web de eficiência energética para data centers — [Top Tier Infra
 |---|---|---|
 | Calculadora de PUE (com DCiE legado, WUE/CUE opcionais, benchmarks 2025, leitura regulatória) | `/calculadora-pue/` | 42u.com/measurement/pue-dcie.htm |
 | Simulador de Economia de Energia (1/5/10 anos, tarifas BR + bandeiras, CO2e via fator SIN) | `/simulador-economia/` | 42u.com/efficiency/energy-efficiency-calculator.htm |
+| Calculadora de Virtualização (consolidação por curve fit WP 118, paradoxo do PUE, níveis de evidência declarados) | `/calculadora-virtualizacao/` | Schneider TradeOff — Virtualization Energy Savings Calculator (descontinuada) |
 | Metodologia aberta (normas, benchmarks, fórmulas) | `/metodologia/` | — |
 
 ## Princípios
@@ -53,6 +54,8 @@ src/
 Apontar `ferramentas.toptier.net.br` via CNAME para o alias do projeto na Vercel (instruções no dashboard do projeto → Settings → Domains).
 
 ## Roadmap
+
+Certificação da Calculadora de Virtualização (plano em `docs/research/2026-08-16-virtualizacao/00-plano.md`): curvas LBNL/DOE nos coeficientes elétricos · validação cruzada com DC Pro · validação empírica contra sites auditados (FOMM).
 
 Próximas ferramentas (benchmark completo em `docs/research/2026-08-15-benchmark/`): TCO construir vs. colocation · CapEx calculator · pegada de carbono lifecycle com dados BR · dimensionamento elétrico · economizador/clima BR · eficiência de UPS · Li-ion vs. VRLA.
 

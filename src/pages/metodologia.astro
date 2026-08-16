@@ -1,6 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { PUE_BENCHMARKS, LEGACY_42U_TABLE } from '@/data/benchmarks';
+import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS } from '@/data/virtualizacao';
 ---
 
 <Base
@@ -83,6 +84,49 @@ import { PUE_BENCHMARKS, LEGACY_42U_TABLE } from '@/data/benchmarks';
       <li><strong>Fator de emissão:</strong> fator médio anual do SIN publicado pelo MCTI/SIRENE — 0,0385 tCO2/MWh em 2023, o menor em 12 anos. Usado para CO2e e CUE estimado. O grid brasileiro (~80% renovável) é um diferencial competitivo real dos data centers locais. Nota: a partir de 2025 o MCTI mudou a metodologia de cálculo (inclusão de renováveis na base), então séries não são diretamente comparáveis.</li>
       <li><strong>Equivalências:</strong> residências (consumo médio 179,1 kWh/mês — EPE, Anuário 2025) e árvores nativas (faixa 7–10 kg CO2/ano — SOS Mata Atlântica/ESALQ-USP). Não usamos equivalência em "carros" porque não há fator oficial brasileiro consolidado — transparência antes de marketing.</li>
       <li><strong>Contraste internacional:</strong> tarifa média comercial dos EUA em abr/2026: 13,51 ¢/kWh (EIA) — as calculadoras clássicas ainda usam a tabela DOE/EIA de 2010.</li>
+    </ul>
+  </section>
+
+  <section class="card">
+    <h2>Calculadora de Virtualização — modelo e níveis de evidência</h2>
+    <p>
+      Reconstrução educacional do <em>Virtualization Energy Savings Calculator</em> da Schneider
+      Electric (TradeOff Tool, descontinuado), a ferramenta historicamente usada na disciplina.
+      Diferente do original, aqui cada bloco do modelo declara o seu <strong>nível de
+      evidência</strong> — porque nem tudo tem a mesma confiabilidade:
+    </p>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr><th>Bloco</th><th>Modelo</th><th>Evidência</th><th>Fonte</th></tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td>Consolidação de servidores</td>
+            <td><code>P_host = P_servidor × N_VMs^{CONSOLIDACAO.expoente}</code></td>
+            <td><span class="badge good">alta</span></td>
+            <td>{CONSOLIDACAO.fonte}</td>
+          </tr>
+          <tr>
+            <td>Infraestrutura física</td>
+            <td><code>P_infra = perdas fixas × capacidade + proporcionais × carga de TI</code></td>
+            <td><span class="badge ok">média</span></td>
+            <td>Estrutura: WP 158/DOE; valores calibrados no caso de referência do WP 118 (erro &lt; 2% no ponto de calibração)</td>
+          </tr>
+          <tr>
+            <td>Melhorias e racks</td>
+            <td>Fatores ×{MELHORIAS.fatores.upsAltaEfFixa} (UPS), ×{MELHORIAS.fatores.coolingFileiraFixa} (fileira), ×{MELHORIAS.fatores.placasCegas} (placas cegas); servidor 2U/rack 42U</td>
+            <td><span class="badge warn">baixa</span></td>
+            <td>Premissas do WP 118, plausíveis e declaradas — não medidas</td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+    <ul>
+      <li><strong>Paradoxo do PUE:</strong> as perdas fixas escalam com a <em>capacidade instalada</em>, não com a carga. Consolidar TI sem right-sizing reduz o denominador do PUE e o piora — a ferramenta reproduz esse comportamento de propósito.</li>
+      <li><strong>Limitação do curve fit:</strong> o expoente {CONSOLIDACAO.expoente} foi derivado de benchmarks de ~2010-13 (SPECpower, Google, Sine Nomine), era de servidores ineficientes em idle. Hardware moderno é mais proporcional à carga — a economia real de consolidação tende a ser menor que a estimada.</li>
+      <li><strong>Arquiteturas disponíveis:</strong> {INFRA_PRESETS.map((p) => p.labelPt).join(' · ')}.</li>
+      <li><strong>Roadmap de certificação:</strong> substituir os coeficientes calibrados pelas curvas medidas do LBNL/DOE <em>Electrical Power Chain Tool</em>, validação cruzada com o DC Pro e validação empírica contra sites auditados no Brasil.</li>
     </ul>
   </section>
 

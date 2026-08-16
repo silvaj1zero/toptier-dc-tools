@@ -1,0 +1,32 @@
+---
+import Base from '@/layouts/Base.astro';
+import VirtualizationCalculator from '@/components/VirtualizationCalculator';
+import LeadForm from '@/components/LeadForm';
+---
+
+<Base
+  title="Calculadora de Virtualização"
+  description="Simule a economia de energia da virtualização de servidores em data centers: consolidação, PUE pré e pós, paradoxo do PUE e conta anual — reconstrução aberta do TradeOff Tool descontinuado da Schneider (White Paper 118), com tarifas brasileiras."
+>
+  <h1>Calculadora de Virtualização</h1>
+  <p>
+    Quanto a virtualização de servidores economiza — em kW, PUE e conta de energia? Esta ferramenta
+    reconstrói, com metodologia aberta, o clássico <em>Virtualization Energy Savings Calculator</em>
+    da Schneider Electric (descontinuado): consolidação por curve fit publicado, modelo de
+    infraestrutura por componentes e o famoso <strong>paradoxo do PUE</strong> — consolidar TI sem
+    right-sizing da infraestrutura <em>piora</em> o PUE, mesmo com a conta caindo.
+  </p>
+
+  <VirtualizationCalculator client:load />
+
+  <section class="card soft">
+    <h2>Como usar o resultado</h2>
+    <ul>
+      <li>Experimente desmarcar as melhorias de right-size e observe o PUE piorar — é o argumento para tratar virtualização como projeto de <em>instalação</em>, não só de TI.</li>
+      <li>A razão de consolidação é sublinear: um host com 10 VMs consome ~2,45× um servidor, não 10× — por isso taxas maiores rendem cada vez menos.</li>
+      <li>O curve fit vem da era 2010-13; servidores modernos são mais proporcionais à carga, então trate a economia como teto otimista e valide com medição.</li>
+    </ul>
+  </section>
+
+  <LeadForm client:visible />
+</Base>
