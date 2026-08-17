@@ -59,7 +59,7 @@ Seguindo a arquitetura da suíte (client-side, funções puras testadas, dado co
 | V4 | Curvas LBNL nos coeficientes elétricos (cert. item 2) | V1 | ✅ 2026-08-16 — curva extraída e publicada como bound (não substitui coeficientes: preservaria o gabarito R4; re-baseline = V4b major). Ver `01-curvas-lbnl.md` |
 | V5 | Validação cruzada DC Pro documentada (cert. item 3) | V1 | ✅ 2026-08-16 — 5 cenários, PASS ±20% em carga plena, viés conservador declarado. Ver `02-validacao-dcpro.md` |
 | V6 | Estudo de Caso R4 + deck atualizado (Parte II → Top Tier) | V3 | ✅ 2026-08-16 (deck R4 + caso R4 + gabarito determinístico em `clients/mba-brpos/07-eficiencia-energetica/`) |
-| V7 | Validação empírica com dados reportados CoC/JRC + CoE/DOE (cert. item 4) | V3 | pendente |
+| V7 | Validação empírica com dados reportados CoC/JRC + CoE/DOE (cert. item 4) | V3 | ✅ 2026-08-17 — PASS: 311 instalações medidas (289 CoC + 22 LBNL) dentro do envelope da engine, desvio de média ≤ +4%. Ver `03-validacao-empirica.md` |
 
 ## Riscos e ressalvas
 
