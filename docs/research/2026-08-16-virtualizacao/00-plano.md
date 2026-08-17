@@ -40,7 +40,7 @@ Seguindo a arquitetura da suíte (client-side, funções puras testadas, dado co
 1. **Testes de regressão + rastreabilidade** *(entra já na Fase A)* — cada coeficiente comentado com fonte + página; suite travando o caso de referência.
 2. **Curvas LBNL** — extrair curvas de eficiência de UPS/PDU/transformador do *Electrical Power Chain Tool* (Excel v2.1, 2020, fórmulas abertas) e substituir os coeficientes elétricos calibrados ⇒ Bloco 2 sobe de "calibrado" para "referenciado DOE". Análogo: *Air Management Tool* para cooling.
 3. **Validação cruzada multi-ponto** — 5–10 cenários no DC Pro/PUE Estimator (LBNL) vs. a engine; documentar desvio máximo aceito (ex.: ±10%) na página de metodologia.
-4. **Validação empírica FOMM (ativo exclusivo TTI)** — rodar contra 10–15 sites auditados anonimizados (PUE medido, carga, arquitetura, ano); publicar erro médio ⇒ selo "modelo validado contra N sites auditados no Brasil".
+4. **Validação empírica com dados reportados (CoC + CoE/DOE)** — comparar as previsões de PUE do modelo, por classe de arquitetura, com distribuições de PUE **medido e reportado** publicamente: EU Code of Conduct for Data Centre Energy Efficiency (JRC — 500+ participantes desde 2008; relatório *Trends in data centre energy consumption under the EU CoC* e, desde 2024, a base de reporting obrigatório da EED) e DOE/LBNL Center of Expertise (benchmarking + parceiros Better Buildings). Publicar o erro/faixa por arquitetura na metodologia. *(Correção 2026-08-16: a âncora original citava FOMM — descartada; maturidade operacional é assunto paralelo, sem relação direta com PUE/virtualização.)*
 5. **Disclaimer com escopo de validade** — faixa de carga/porte/arquitetura validada; fora dela, extrapolação.
 
 ## Impacto no material do MBA (Fase C)
@@ -59,7 +59,7 @@ Seguindo a arquitetura da suíte (client-side, funções puras testadas, dado co
 | V4 | Curvas LBNL nos coeficientes elétricos (cert. item 2) | V1 | ✅ 2026-08-16 — curva extraída e publicada como bound (não substitui coeficientes: preservaria o gabarito R4; re-baseline = V4b major). Ver `01-curvas-lbnl.md` |
 | V5 | Validação cruzada DC Pro documentada (cert. item 3) | V1 | ✅ 2026-08-16 — 5 cenários, PASS ±20% em carga plena, viés conservador declarado. Ver `02-validacao-dcpro.md` |
 | V6 | Estudo de Caso R4 + deck atualizado (Parte II → Top Tier) | V3 | ✅ 2026-08-16 (deck R4 + caso R4 + gabarito determinístico em `clients/mba-brpos/07-eficiencia-energetica/`) |
-| V7 | Validação FOMM + selo (cert. item 4) | V3, dados de campo TTI | pendente |
+| V7 | Validação empírica com dados reportados CoC/JRC + CoE/DOE (cert. item 4) | V3 | pendente |
 
 ## Riscos e ressalvas
 

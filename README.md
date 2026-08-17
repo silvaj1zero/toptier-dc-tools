@@ -55,7 +55,7 @@ Apontar `ferramentas.toptier.net.br` via CNAME para o alias do projeto na Vercel
 
 ## Roadmap
 
-Certificação da Calculadora de Virtualização (plano em `docs/research/2026-08-16-virtualizacao/00-plano.md`): curvas LBNL/DOE nos coeficientes elétricos · validação cruzada com DC Pro · validação empírica contra sites auditados (FOMM).
+Certificação da Calculadora de Virtualização (plano em `docs/research/2026-08-16-virtualizacao/00-plano.md`): curvas LBNL/DOE ✓ · validação cruzada com DC Pro ✓ · pendente: validação empírica com PUE reportado (EU Code of Conduct/JRC · DOE/LBNL Center of Expertise).
 
 Próximas ferramentas (benchmark completo em `docs/research/2026-08-15-benchmark/`): TCO construir vs. colocation · CapEx calculator · pegada de carbono lifecycle com dados BR · dimensionamento elétrico · economizador/clima BR · eficiência de UPS · Li-ion vs. VRLA.
 

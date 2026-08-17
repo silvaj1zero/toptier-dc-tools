@@ -42,7 +42,7 @@ Critério (definido no plano): desvio máximo aceito de ±10–20% em PUE nos ce
 - Resolução de 1 casa decimal na leitura do estimador (±0,05 implícito).
 - Zona climática 3A (EUA); o estimador exige zona ASHRAE e não tem presets brasileiros — o efeito de clima só entra nos cenários com economizador (S3/S4).
 - Mapeamento arquitetura↔inputs tem julgamento (documentado na tabela do protocolo); o DC Pro não expõe redundância (N/2N), que na engine altera os coeficientes.
-- Amostra de 5 cenários; a validação empírica contra sites reais auditados (V7/FOMM) segue sendo o passo de maior valor.
+- Amostra de 5 cenários; a validação empírica contra PUE medido e reportado publicamente (V7 — EU CoC/JRC e DOE/LBNL CoE) segue sendo o passo de maior valor.
 
 ## Reprodutibilidade
 
