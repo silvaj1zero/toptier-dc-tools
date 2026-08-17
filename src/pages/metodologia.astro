@@ -1,7 +1,7 @@
 ---
 import Base from '@/layouts/Base.astro';
 import { PUE_BENCHMARKS, LEGACY_42U_TABLE } from '@/data/benchmarks';
-import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS } from '@/data/virtualizacao';
+import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS, UPS_CURVA_LBNL } from '@/data/virtualizacao';
 ---
 
 <Base
@@ -126,7 +126,9 @@ import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS } from '@/data/virtualizacao';
       <li><strong>Paradoxo do PUE:</strong> as perdas fixas escalam com a <em>capacidade instalada</em>, não com a carga. Consolidar TI sem right-sizing reduz o denominador do PUE e o piora — a ferramenta reproduz esse comportamento de propósito.</li>
       <li><strong>Limitação do curve fit:</strong> o expoente {CONSOLIDACAO.expoente} foi derivado de benchmarks de ~2010-13 (SPECpower, Google, Sine Nomine), era de servidores ineficientes em idle. Hardware moderno é mais proporcional à carga — a economia real de consolidação tende a ser menor que a estimada.</li>
       <li><strong>Arquiteturas disponíveis:</strong> {INFRA_PRESETS.map((p) => p.labelPt).join(' · ')}.</li>
-      <li><strong>Roadmap de certificação:</strong> substituir os coeficientes calibrados pelas curvas medidas do LBNL/DOE <em>Electrical Power Chain Tool</em>, validação cruzada com o DC Pro e validação empírica contra sites auditados no Brasil.</li>
+      <li><strong>Validação contra curvas medidas (LBNL/DOE):</strong> a curva média de UPS moderno de dupla conversão do <em>Electrical Power Chain Tool</em> v2.1 (Table F: {UPS_CURVA_LBNL.pontos.length} pontos, modelos 2014–2017 com spec guides citados) equivale a perdas de <code>{(UPS_CURVA_LBNL.fitPerdas.fixa * 100).toFixed(2)}% fixas + {(UPS_CURVA_LBNL.fitPerdas.proporcional * 100).toFixed(2)}% × carga</code>. A cadeia elétrica melhorada do nosso modelo fica acima dela (inclui PDU, transformador e distribuição) e abaixo da cadeia legada, em toda a faixa de operação — este sanity bound roda na suíte de testes da engine.</li>
+      <li><strong>Validação cruzada com o DC Pro (LBNL/DOE):</strong> 5 cenários rodados no PUE Estimator oficial e comparados com este modelo. Em carga plena, desvio de +4% a +19% com viés <em>conservador</em> sistemático — esperado: o DC Pro assume operação conforme projeto, enquanto este modelo é calibrado num site degradado e penaliza oversizing (perdas fixas × capacidade instalada — o mecanismo do paradoxo do PUE). Direção e ordem dos cenários coincidem nas duas ferramentas.</li>
+      <li><strong>Roadmap de certificação:</strong> validação empírica contra sites auditados no Brasil; re-baseline completo com as curvas LBNL como base ficaria para uma versão major (mudaria o caso de referência didático).</li>
     </ul>
   </section>
 

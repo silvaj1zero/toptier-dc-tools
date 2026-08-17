@@ -1,8 +1,11 @@
 import { describe, expect, it } from 'vitest';
+import { INFRA_PRESETS, UPS_CURVA_LBNL } from '@/data/virtualizacao';
 import {
   SEM_MELHORIAS,
   TODAS_MELHORIAS,
+  aplicarMelhorias,
   potenciaHostKw,
+  potenciaInfra,
   racksNecessarios,
   virtualizationSavings,
   type VirtualizationInput,
@@ -125,6 +128,43 @@ describe('invariantes', () => {
     expect(racksNecessarios(750, 70)).toBe(52);
     expect(racksNecessarios(413, 70)).toBe(29);
     expect(racksNecessarios(1, 100)).toBe(1);
+  });
+});
+
+describe('bounds contra a curva de UPS do LBNL (V4 — certificação item 2)', () => {
+  // A cadeia elétrica da engine cobre UPS + PDU + transformador + distribuição.
+  // Sanidade física em toda a faixa de operação: perdas do UPS moderno sozinho
+  // (curva medida LBNL) <= cadeia MELHORADA (UPS alta eficiência) <= cadeia BASE
+  // (legada, calibrada no caso WP 118). Docs: 01-curvas-lbnl.md.
+  const base = INFRA_PRESETS.find((p) => p.id === 'n_cw')!;
+  const capacidade = 1000;
+
+  function perdasEletricasFracao(melhoradas: boolean, loadFactor: number): number {
+    const coefs = aplicarMelhorias(
+      base,
+      { ...SEM_MELHORIAS, upsAltaEficiencia: melhoradas },
+      1,
+    );
+    return potenciaInfra(loadFactor * capacidade, capacidade, coefs).eletricaKw / capacidade;
+  }
+
+  it('cadeia melhorada fica entre o UPS-only LBNL e a cadeia base, em todos os pontos da curva', () => {
+    for (const { loadFactor, eficiencia } of UPS_CURVA_LBNL.pontos) {
+      const upsOnly = loadFactor * (1 / eficiencia - 1);
+      const melhorada = perdasEletricasFracao(true, loadFactor);
+      const legada = perdasEletricasFracao(false, loadFactor);
+      expect(melhorada).toBeGreaterThanOrEqual(upsOnly);
+      expect(legada).toBeGreaterThan(melhorada);
+    }
+  });
+
+  it('o fit linear publicado reproduz a curva com resíduo < 0,3 pp da capacidade', () => {
+    const { fixa, proporcional } = UPS_CURVA_LBNL.fitPerdas;
+    for (const { loadFactor, eficiencia } of UPS_CURVA_LBNL.pontos) {
+      const medida = loadFactor * (1 / eficiencia - 1);
+      const ajustada = fixa + proporcional * loadFactor;
+      expect(Math.abs(ajustada - medida)).toBeLessThan(0.003);
+    }
   });
 });
 

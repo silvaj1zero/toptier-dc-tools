@@ -110,6 +110,42 @@ export const MELHORIAS = {
   },
 } as const;
 
+// ---------------------------------------------------------------------------
+// Referência de validação — curva de UPS do LBNL/DOE (evidência ALTA)
+// ---------------------------------------------------------------------------
+
+/**
+ * Curva média de eficiência de UPS moderno de dupla conversão (480 V,
+ * 500–600 kW, modelos 2014–2017), extraída da Table F do LBNL/DOE
+ * "Data Center Electrical Power Chain Tool" v2.1 (mar/2020).
+ * Uso: âncora de validação (bounds) da cadeia elétrica do modelo — NÃO é o
+ * coeficiente da engine (ver docs/research/2026-08-16-virtualizacao/01-curvas-lbnl.md).
+ * Fit linear das perdas: perdas/capacidade = 0,00581 + 0,02908 × loadFactor.
+ */
+export const UPS_CURVA_LBNL = {
+  evidencia: 'alta' as NivelEvidencia,
+  ano: 2020,
+  fonte:
+    'LBNL/DOE — Data Center Electrical Power Chain Tool v2.1 (Table F, média de ' +
+    'Galaxy VX 2017, Symmetra PX 2016 e Symmetra MW 2014; spec guides Schneider citados no tool)',
+  pontos: [
+    { loadFactor: 0.1, eficiencia: 0.8983 },
+    { loadFactor: 0.2, eficiencia: 0.9423 },
+    { loadFactor: 0.25, eficiencia: 0.9513 },
+    { loadFactor: 0.3, eficiencia: 0.9562 },
+    { loadFactor: 0.4, eficiencia: 0.9611 },
+    { loadFactor: 0.5, eficiencia: 0.9633 },
+    { loadFactor: 0.6, eficiencia: 0.9644 },
+    { loadFactor: 0.7, eficiencia: 0.965 },
+    { loadFactor: 0.75, eficiencia: 0.965 },
+    { loadFactor: 0.8, eficiencia: 0.9649 },
+    { loadFactor: 0.9, eficiencia: 0.9647 },
+    { loadFactor: 1, eficiencia: 0.9647 },
+  ],
+  /** Fit linear das perdas como fração da capacidade: fixa + proporcional × L. */
+  fitPerdas: { fixa: 0.00581, proporcional: 0.02908 },
+} as const;
+
 /** Premissas de espaço: servidor médio de 2U em racks de 42U. */
 export const RACK_PREMISSAS = {
   uPorServidor: 2,
