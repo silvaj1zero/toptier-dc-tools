@@ -190,14 +190,14 @@ export const pt = {
     reportBy: 'Gerado pelas ferramentas Top Tier Infrastructure',
   },
   lead: {
-    title: 'Receba o relatório e conteúdos do MBA',
+    title: 'Receba o relatório completo e conteúdos exclusivos',
     nameLabel: 'Nome',
     emailLabel: 'E-mail corporativo',
     companyLabel: 'Empresa',
     submit: 'Enviar',
     success: 'Recebido! Entraremos em contato.',
     error: 'Não foi possível enviar. Escreva para contato@toptier.net.br.',
-    privacy: 'Usamos seus dados apenas para contato sobre as ferramentas e cursos Top Tier.',
+    privacy: 'Usamos seus dados apenas para contato sobre as ferramentas, serviços e treinamentos Top Tier.',
   },
 };
 // Nota: sem `as const` de propósito — Dict precisa de strings largas para o en.ts tipar.

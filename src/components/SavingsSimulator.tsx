@@ -10,7 +10,7 @@ import {
 import { t, type Locale } from '@/i18n';
 import { NumberField, TariffFields, initialTariff, tariffFromState, type TariffState } from './fields';
 
-/** Medidas típicas por faixa de redução de PUE — conteúdo didático do MBA. */
+/** Medidas típicas por faixa de redução de PUE — conteúdo didático dos treinamentos Top Tier. */
 const MEASURES: { maxDelta: number; items: string[] }[] = [
   {
     maxDelta: 0.15,

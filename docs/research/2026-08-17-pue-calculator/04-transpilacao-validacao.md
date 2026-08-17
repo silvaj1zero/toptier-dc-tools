@@ -50,7 +50,27 @@ Armadilha documentada: `Power Meters!r7c1`/`r32c1` (default 23) são **constante
 3. **Física (suite de testes):** DX > CW em PUE; redundância piora PUE; economizador melhora com horas; cada checkbox de eficiência isolada nunca piora; PUE independe da capacidade (modelo normalizado); curva monotônica decrescente 5–100%.
 4. **Locks de regressão:** 13 testes em `src/lib/pue-model.test.ts`.
 
-**Pendente (follow-up):** bateria de validação de VARIAÇÕES contra a ferramenta viva (mudar dropdowns no tool e comparar) — bloqueada nesta sessão porque o Chrome congela/descarta a aba em background; requer ~5 min com a janela visível. A régua default + a fidelidade formula-a-formula tornam divergência improvável, mas o teste fecha o ciclo.
+### Bateria de variações contra a ferramenta viva (2026-08-17, janela visível) — CONCLUÍDA
+
+Método: escrita direta nas células de input do runtime vivo (`cell.value()` + `CalculateAllDirtyCells()` — o mesmo caminho dos bindings) e leitura de `Crystal Interface!r53c42` (PUE @50%). **10/10 variações com match exato (≥7 casas decimais):**
+
+| Variação | Ferramenta viva | Réplica |
+|---|---|---|
+| Default | 2,175940305 | 2,1759… ✓ |
+| Cooling DX-glycol | 2,772821027 | 2,7728… ✓ |
+| Cooling air-cooled | 2,415917450 | 2,4159… ✓ |
+| UPS high efficiency | 2,024523125 | 2,0245… ✓ |
+| Dual power path | 2,359481696 | 2,3595… ✓ |
+| CRAC 2N | 2,648928696 | 2,6489… ✓ |
+| Economizador 4000 h | 1,997130530 | 1,9971… ✓ |
+| Blanking+Coordinated+VFD CW | 2,089405916 | 2,0894… ✓ |
+| Close-coupled | 1,782748296 | 1,7827… ✓ |
+| Chiller VFD tower | 2,027821456 | 2,0278… ✓ |
+| Capacidade 400 kW | 2,175940305 (invariante) | 2,1759… ✓ |
+
+Notas de mecânica descobertas na bateria:
+1. **Economizador:** escrever direto em CI r26c1 no runtime vivo não propaga (listener lazy); via CI r25c1 (fração horas/8760) o efeito é idêntico ao da réplica — caminho do modelo: perdas do chiller × (1 − horas/8760), confirmado nas fórmulas PM r22c12-14.
+2. **A curva depende fracamente do load do marker** (ex.: r33c42 com marker em 50% = 2,7826 vs 2,7809 com marker em 30%) — a réplica seta o load antes de ler (semântica do usuário arrastando o marker), igual ao comportamento interativo do tool.
 
 ## Fontes
 

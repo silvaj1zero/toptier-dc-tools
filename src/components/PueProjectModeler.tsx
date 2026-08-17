@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useRef, useState } from 'react';
 import {
   DEFAULT_SCENARIO,
   runScenario,
@@ -85,6 +85,7 @@ export default function PueProjectModeler({ locale = 'pt-br' }: { locale?: Local
   };
 
   // ---- Curva SVG (multi-cenário) ----
+  const svgRef = useRef<SVGSVGElement>(null);
   const W = 640;
   const H = 260;
   const PAD = { l: 44, r: 12, t: 10, b: 28 };
@@ -102,6 +103,18 @@ export default function PueProjectModeler({ locale = 'pt-br' }: { locale?: Local
       .filter((p) => p.load >= 0.05 && Number.isFinite(p.pue))
       .map((p, i) => `${i === 0 ? 'M' : 'L'}${sx(p.load).toFixed(1)},${sy(p.pue).toFixed(1)}`)
       .join(' ');
+
+  // Marcador arrastável (como na ferramenta clássica): arrastar a linha/ponto no
+  // gráfico move a carga de TI e recalcula os resultados. O slider continua
+  // disponível como alternativa acessível por teclado.
+  const dragToLoad = (clientX: number) => {
+    const el = svgRef.current;
+    if (!el) return;
+    const rect = el.getBoundingClientRect();
+    const x = ((clientX - rect.left) / rect.width) * W;
+    const load = Math.round(((x - PAD.l) / (W - PAD.l - PAD.r)) * 100);
+    setLoadPct(Math.min(100, Math.max(5, load)));
+  };
 
   const selects: Array<{
     id: string;
@@ -370,7 +383,20 @@ export default function PueProjectModeler({ locale = 'pt-br' }: { locale?: Local
           </div>
 
           <h3>{d.curveTitle}</h3>
-          <svg viewBox={`0 0 ${W} ${H}`} role="img" aria-label={d.curveTitle} style={{ width: '100%', height: 'auto', background: 'var(--tt-bg-soft)', borderRadius: '8px' }}>
+          <svg
+            ref={svgRef}
+            viewBox={`0 0 ${W} ${H}`}
+            role="img"
+            aria-label={d.curveTitle}
+            onPointerDown={(e) => {
+              e.currentTarget.setPointerCapture(e.pointerId);
+              dragToLoad(e.clientX);
+            }}
+            onPointerMove={(e) => {
+              if (e.buttons & 1) dragToLoad(e.clientX);
+            }}
+            style={{ width: '100%', height: 'auto', background: 'var(--tt-bg-soft)', borderRadius: '8px', cursor: 'ew-resize', touchAction: 'none' }}
+          >
             {[1, 2, 3, 4, 5, 6].filter((v) => v <= yMax).map((v) => (
               <g key={v}>
                 <line x1={PAD.l} x2={W - PAD.r} y1={sy(v)} y2={sy(v)} stroke="var(--tt-gray-300)" strokeDasharray="3 4" />
@@ -387,9 +413,11 @@ export default function PueProjectModeler({ locale = 'pt-br' }: { locale?: Local
             {results.map((r, i) => (
               <path key={i} d={pathFor(r)} fill="none" stroke={CORES[i]} strokeWidth={i === safeActive ? 3 : 1.8} opacity={i === safeActive ? 1 : 0.75} />
             ))}
-            <line x1={sx(loadPct / 100)} x2={sx(loadPct / 100)} y1={PAD.t} y2={H - PAD.b} stroke="var(--tt-gray-500)" strokeDasharray="4 3" />
+            <line x1={sx(loadPct / 100)} x2={sx(loadPct / 100)} y1={PAD.t} y2={H - PAD.b} stroke="var(--tt-teal-600)" strokeWidth={2} strokeDasharray="4 3" />
+            {/* alça invisível mais larga para facilitar o arrasto do marcador */}
+            <rect x={sx(loadPct / 100) - 10} y={PAD.t} width={20} height={H - PAD.t - PAD.b} fill="transparent" />
             {points.map((p, i) => (
-              Number.isFinite(p.pue) ? <circle key={i} cx={sx(loadPct / 100)} cy={sy(p.pue)} r={4} fill={CORES[i]} /> : null
+              Number.isFinite(p.pue) ? <circle key={i} cx={sx(loadPct / 100)} cy={sy(p.pue)} r={i === safeActive ? 6 : 4} fill={CORES[i]} stroke="#fff" strokeWidth={1.5} /> : null
             ))}
           </svg>
 
