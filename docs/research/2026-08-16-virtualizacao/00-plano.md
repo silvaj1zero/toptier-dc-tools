@@ -51,15 +51,15 @@ Seguindo a arquitetura da suíte (client-side, funções puras testadas, dado co
 
 ## Sequência sugerida (stories)
 
-| # | Story | Depende de |
-|---|---|---|
-| V1 | Engine + dados + regression tests (`lib` + `data`) | — |
-| V2 | Página + componente UI + i18n + metodologia | V1 |
-| V3 | Home/README/SEO + deploy | V2 |
-| V4 | Curvas LBNL nos coeficientes elétricos (cert. item 2) | V1 |
-| V5 | Validação cruzada DC Pro documentada (cert. item 3) | V1 |
-| V6 | Estudo de Caso R4 + deck atualizado (Parte II → Top Tier) | V3 |
-| V7 | Validação FOMM + selo (cert. item 4) | V3, dados de campo TTI |
+| # | Story | Depende de | Status |
+|---|---|---|---|
+| V1 | Engine + dados + regression tests (`lib` + `data`) | — | ✅ 2026-08-16 (35 testes, commit `2097e0b`) |
+| V2 | Página + componente UI + i18n + metodologia | V1 | ✅ 2026-08-16 |
+| V3 | Home/README/SEO + deploy | V2 | ✅ 2026-08-16 (produção verificada) |
+| V4 | Curvas LBNL nos coeficientes elétricos (cert. item 2) | V1 | pendente |
+| V5 | Validação cruzada DC Pro documentada (cert. item 3) | V1 | pendente |
+| V6 | Estudo de Caso R4 + deck atualizado (Parte II → Top Tier) | V3 | ✅ 2026-08-16 (deck R4 + caso R4 + gabarito determinístico em `clients/mba-brpos/07-eficiencia-energetica/`) |
+| V7 | Validação FOMM + selo (cert. item 4) | V3, dados de campo TTI | pendente |
 
 ## Riscos e ressalvas
 
