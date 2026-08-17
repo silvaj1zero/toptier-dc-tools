@@ -11,6 +11,7 @@ Ferramentas web de eficiência energética para data centers — [Top Tier Infra
 | Calculadora de PUE (com DCiE legado, WUE/CUE opcionais, benchmarks 2025, leitura regulatória) | `/calculadora-pue/` | 42u.com/measurement/pue-dcie.htm |
 | Simulador de Economia de Energia (1/5/10 anos, tarifas BR + bandeiras, CO2e via fator SIN) | `/simulador-economia/` | 42u.com/efficiency/energy-efficiency-calculator.htm |
 | Calculadora de Virtualização (consolidação por curve fit WP 118, paradoxo do PUE, níveis de evidência declarados) | `/calculadora-virtualizacao/` | Schneider TradeOff — Virtualization Energy Savings Calculator (descontinuada) |
+| Modelador de PUE de Projeto (arquitetura → curva PUE×carga, alocação por subsistema, multi-cenário; planilha do original transpilada célula a célula) | `/modelador-pue/` | Schneider TradeOff — Data Center Efficiency and PUE Calculator |
 | Metodologia aberta (normas, benchmarks, fórmulas) | `/metodologia/` | — |
 
 ## Princípios

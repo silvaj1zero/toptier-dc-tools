@@ -1,0 +1,31 @@
+---
+import Base from '@/layouts/Base.astro';
+import PueProjectModeler from '@/components/PueProjectModeler';
+import LeadForm from '@/components/LeadForm';
+---
+
+<Base
+  title="Modelador de PUE de Projeto"
+  description="Modele o PUE de um data center a partir das decisões de arquitetura — UPS, redundância, água gelada vs. DX, economizador e 13 detalhes de projeto — com curva PUE × carga, alocação de energia e comparação de cenários. Réplica aberta e validada do TradeOff Tool da Schneider."
+>
+  <h1>Modelador de PUE de Projeto</h1>
+  <p>
+    A pergunta de projeto: <strong>que PUE esta arquitetura entrega em cada nível de carga?</strong>
+    Escolha UPS, redundância, sistema de climatização, economizador e os detalhes de projeto — e veja
+    a curva PUE × carga, a alocação de energia por subsistema e o custo anual. Crie até 4 cenários e
+    compare lado a lado (ex.: caminho único vs. 2N, água gelada vs. DX, com e sem right-sizing).
+  </p>
+
+  <PueProjectModeler client:load />
+
+  <section class="card soft">
+    <h2>Como usar</h2>
+    <ul>
+      <li><strong>Modelar ≠ medir:</strong> esta ferramenta estima o PUE a partir de decisões de projeto (como o TradeOff Tool clássico). Para medir uma instalação existente, use a <a href="/calculadora-pue/">Calculadora de PUE</a>; para business case de melhorias, o <a href="/simulador-economia/">Simulador de Economia</a>.</li>
+      <li>Arraste o slider de carga e observe o efeito do <em>oversizing</em>: em cargas baixas, as perdas fixas dominam e o PUE dispara — a mesma física do paradoxo do PUE.</li>
+      <li>Compare um cenário "disponibilidade máxima" (2N em tudo) com um "eficiência máxima" e discuta o trade-off — é o exercício central da Parte I do Estudo de Caso do MBA.</li>
+    </ul>
+  </section>
+
+  <LeadForm client:visible />
+</Base>

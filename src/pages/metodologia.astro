@@ -133,6 +133,23 @@ import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS, UPS_CURVA_LBNL } from '@/data/v
     </ul>
   </section>
 
+  <section class="card">
+    <h2>Modelador de PUE de Projeto — réplica transpilada e validada</h2>
+    <p>
+      O Modelador reconstrói a <em>Data Center Efficiency and PUE Calculator</em> (Schneider
+      Electric TradeOff Tool) por um caminho diferente das demais ferramentas: a planilha interna
+      do dashboard original (10 abas, ~1.750 células) foi <strong>transpilada célula a célula</strong>
+      para código executável — fórmulas e coeficientes idênticos, não uma aproximação.
+    </p>
+    <ul>
+      <li><strong>Validação:</strong> no cenário default, a réplica produz PUE 2,1759 @50% de carga — a ferramenta viva exibe "2.18" e custo anual "$1,140,000" (validado em 2026-08-17); a alocação de energia coincide (Power 11,3% · Cooling 40,4% · IT 46,0% · Other 2,4%).</li>
+      <li><strong>Modelo:</strong> perdas por subsistema em três componentes — fixa (× capacidade instalada), proporcional (× carga) e quadrática (× carga²) — conforme APC/SE White Paper 113; a tabela completa de coeficientes está exposta na própria ferramenta ("Assumptions").</li>
+      <li><strong>Curva PUE × carga:</strong> 101 pontos (0–100%), evidenciando o efeito do oversizing em carga parcial — consistente com o paradoxo do PUE da Calculadora de Virtualização.</li>
+      <li><strong>Diferenças declaradas vs. o original:</strong> UI moderna (sem Flash/Xcelsius), múltiplos cenários comparáveis, moeda R$/US$ e coeficientes expostos — o motor de cálculo é o mesmo.</li>
+      <li><strong>Fontes:</strong> dashboard público da SE (captura 2026-08-17, docs/research/2026-08-17-pue-calculator/), White Papers 113/154/158, DC Pro Calculation Reference Manual (LBNL/DOE).</li>
+    </ul>
+  </section>
+
   <section class="card soft">
     <h2>Sobre</h2>
     <p>
