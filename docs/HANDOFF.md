@@ -4,7 +4,7 @@
 
 ## Estado atual (tudo no ar e sincronizado)
 
-- **Produção:** https://ferramentas.toptier.net.br — 5 páginas: `/calculadora-pue/`, `/simulador-economia/`, `/calculadora-virtualizacao/`, `/modelador-pue/`, `/metodologia/`. Deploy automático Vercel no push para `main` (origin: `silvaj1zero/toptier-dc-tools`, repo do operador — regras multi-tenant NÃO se aplicam).
+- **Produção:** https://ferramentas.toptier.net.br — 5 páginas: `/calculadora-pue/`, `/simulador-economia/`, `/calculadora-virtualizacao/`, `/modelador-pue/`, `/metodologia/`. **Deploy é MANUAL**: `npx vercel --prod` (rodado pelo operador — o classifier bloqueia o agente). Push para `main` NÃO dispara build (verificado 2026-08-18; projeto Vercel `caos-off/toptier-dc-tools` sem integração Git). Origin: `silvaj1zero/toptier-dc-tools`, repo do operador — regras multi-tenant NÃO se aplicam.
 - **Git:** `main` = `d40e8c0`, working tree limpo. Gates: `npm test` (50/50), `npx tsc --noEmit` (0 erros), `npx astro build` (6 páginas).
 - **Posicionamento:** ferramentas são teaser público de lead-gen dos serviços/treinamentos Top Tier — **zero menções a "MBA" no site** (rebranding 2026-08-17). Material do MBA continua no workspace do cliente (ver abaixo).
 
