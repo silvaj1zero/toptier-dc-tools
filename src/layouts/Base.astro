@@ -15,17 +15,43 @@ const year = new Date().getFullYear();
   <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>{title} · Top Tier Infrastructure</title>
+    <title>{title} · Top Tools · Top Tier Infrastructure</title>
     <meta name="description" content={description} />
-    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
+    <link rel="icon" href="/favicon.png" type="image/png" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Top Tools · Top Tier Infrastructure" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
+      rel="stylesheet"
+    />
+    <script is:inline>
+      // Resolve o tema antes do primeiro paint (evita flash). Escolha manual > sistema.
+      (() => {
+        let saved = null;
+        try {
+          saved = localStorage.getItem('tt-theme');
+        } catch {}
+        const theme =
+          saved === 'dark' || saved === 'light'
+            ? saved
+            : matchMedia('(prefers-color-scheme: dark)').matches
+              ? 'dark'
+              : 'light';
+        document.documentElement.dataset.theme = theme;
+      })();
+    </script>
   </head>
   <body>
     <header class="site-header">
       <div class="inner">
-        <a class="brand" href="/">TTI <span>·</span> Ferramentas de Eficiência</a>
+        <a class="brand" href="/">
+          <img class="brand-logo" src="/logo-tti.png" alt="Top Tier Infrastructure" />
+          <span class="brand-name">Top <em>Tools</em></span>
+        </a>
         <nav>
           <a href="/calculadora-pue/">Calculadora PUE</a>
           <a href="/simulador-economia/">Simulador de Economia</a>
@@ -33,6 +59,50 @@ const year = new Date().getFullYear();
           <a href="/modelador-pue/">Modelador de PUE</a>
           <a href="/metodologia/">Metodologia</a>
           <a href="https://www.toptier.net.br" target="_blank" rel="noopener">toptier.net.br</a>
+          <button
+            id="theme-toggle"
+            class="theme-toggle"
+            type="button"
+            aria-label="Alternar tema claro/escuro"
+            title="Alternar tema claro/escuro"
+          >
+            <svg
+              class="icon-moon"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <path d="M12 3a6 6 0 0 0 9 9 9 9 0 1 1-9-9Z"></path>
+            </svg>
+            <svg
+              class="icon-sun"
+              width="20"
+              height="20"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="1.5"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              aria-hidden="true"
+            >
+              <circle cx="12" cy="12" r="4"></circle>
+              <path d="M12 2v2"></path>
+              <path d="M12 20v2"></path>
+              <path d="m4.93 4.93 1.41 1.41"></path>
+              <path d="m17.66 17.66 1.41 1.41"></path>
+              <path d="M2 12h2"></path>
+              <path d="M20 12h2"></path>
+              <path d="m6.34 17.66-1.41 1.41"></path>
+              <path d="m19.07 4.93-1.41 1.41"></path>
+            </svg>
+          </button>
         </nav>
       </div>
     </header>
@@ -43,7 +113,8 @@ const year = new Date().getFullYear();
       <div class="inner">
         <p>
           © {year} Top Tier Infrastructure — mais de 25 anos em ambientes de missão crítica.
-          Ferramentas educacionais abertas — conheça nossos serviços e treinamentos em
+          <strong>Top Tools</strong> é a suíte de ferramentas educacionais abertas da Top Tier —
+          conheça nossos serviços e treinamentos em
           <a href="https://www.toptier.net.br" style="color:inherit;">toptier.net.br</a>.
         </p>
         <p>
@@ -52,5 +123,14 @@ const year = new Date().getFullYear();
         </p>
       </div>
     </footer>
+    <script is:inline>
+      document.getElementById('theme-toggle')?.addEventListener('click', () => {
+        const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+        document.documentElement.dataset.theme = next;
+        try {
+          localStorage.setItem('tt-theme', next);
+        } catch {}
+      });
+    </script>
   </body>
 </html>

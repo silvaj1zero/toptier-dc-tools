@@ -51,7 +51,7 @@ export function PueGauge({ value }: { value: number }) {
             y1={BAR_Y + BAR_H}
             x2={x(tick)}
             y2={BAR_Y + BAR_H + 6}
-            stroke="#64748b"
+            style={{ stroke: 'var(--tt-gray-500)' }}
             strokeWidth={1}
           />
           <text
@@ -59,7 +59,7 @@ export function PueGauge({ value }: { value: number }) {
             y={BAR_Y + BAR_H + 20}
             textAnchor="middle"
             fontSize={11}
-            fill="#64748b"
+            style={{ fill: 'var(--tt-gray-500)' }}
           >
             {tick.toFixed(1)}
           </text>
@@ -72,7 +72,7 @@ export function PueGauge({ value }: { value: number }) {
             y1={BAR_Y - 14 - (i % 2) * 12}
             x2={x(b.value)}
             y2={BAR_Y}
-            stroke="#94a3b8"
+            style={{ stroke: 'var(--tt-gray-500)' }}
             strokeWidth={1}
             strokeDasharray="2 2"
           />
@@ -81,7 +81,7 @@ export function PueGauge({ value }: { value: number }) {
             y={BAR_Y - 17 - (i % 2) * 12}
             textAnchor="middle"
             fontSize={9.5}
-            fill="#64748b"
+            style={{ fill: 'var(--tt-gray-500)' }}
           >
             {b.label.split(' ')[0]} {fmtNumber(b.value)}
           </text>
@@ -90,7 +90,7 @@ export function PueGauge({ value }: { value: number }) {
       {/* marcador do usuário */}
       <polygon
         points={`${x(value)},${BAR_Y - 4} ${x(value) - 7},${BAR_Y - 16} ${x(value) + 7},${BAR_Y - 16}`}
-        fill="#0b2239"
+        style={{ fill: 'var(--tt-navy-900)' }}
       />
       <text
         x={x(value)}
@@ -98,7 +98,7 @@ export function PueGauge({ value }: { value: number }) {
         textAnchor="middle"
         fontSize={13}
         fontWeight={700}
-        fill="#0b2239"
+        style={{ fill: 'var(--tt-navy-900)' }}
       >
         Você: {fmtNumber(value)}
       </text>

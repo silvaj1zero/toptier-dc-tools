@@ -1,30 +1,113 @@
-/* Top Tier DC Tools — design tokens e base */
+/* Top Tools — design tokens (DS Top Tier Infrastructure, "Silent Precision") e base.
+   Tema claro é o default (:root); dark aplica via [data-theme='dark'] (toggle no header,
+   persistido em localStorage) e via prefers-color-scheme quando não há escolha explícita.
+   Os valores dark são duplicados nos dois blocos de propósito — CSS não permite reuso de bloco. */
 
 :root {
-  --tt-navy-900: #0b2239;
-  --tt-navy-700: #123e63;
-  --tt-navy-500: #1c5a8d;
-  --tt-teal-600: #0e9f6e;
-  --tt-teal-100: #e6f6ef;
+  /* Marca */
+  --tt-green: #00a651;
+  --tt-green-deep: #007a3d; /* verde AA (4.5:1 sobre branco) para links e CTAs */
+
+  /* Papéis herdados pelos componentes (nomes estáveis — não renomear) */
+  --tt-navy-900: #111827;
+  --tt-navy-700: #1f2937;
+  --tt-navy-500: #007a3d;
+  --tt-teal-600: #007a3d;
+  --tt-teal-100: #e5f5ec;
   --tt-amber-600: #b45309;
   --tt-amber-100: #fef3c7;
   --tt-red-600: #b91c1c;
   --tt-red-100: #fee2e2;
-  --tt-gray-900: #16202b;
-  --tt-gray-700: #3d4c5c;
-  --tt-gray-500: #64748b;
-  --tt-gray-300: #cbd5e1;
-  --tt-gray-100: #f1f5f9;
+  --tt-gray-900: #111827;
+  --tt-gray-700: #374151;
+  --tt-gray-500: #6b7280;
+  --tt-gray-300: #d1d5db;
+  --tt-gray-100: #f3f4f6;
   --tt-bg: #ffffff;
-  --tt-bg-soft: #f8fafc;
+  --tt-bg-soft: #f7faf8;
+  --tt-card: #ffffff;
+  --tt-input-bg: #ffffff;
+  --tt-header-bg: #ffffff;
+  --tt-logo-chip: transparent;
+
+  /* Categóricas (cenários/séries) — paleta do DS TTI, legível em ambos os temas */
+  --tt-cat-1: #00a651;
+  --tt-cat-2: #3b82f6;
+  --tt-cat-3: #f59e0b;
+  --tt-cat-4: #8b5cf6;
+
   --tt-radius: 10px;
   --tt-font:
-    system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --tt-font-mono: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  --tt-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+/* Dark — escolha do sistema (sem toggle explícito) */
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    --tt-navy-900: #f0f6fc;
+    --tt-navy-700: #c9d1d9;
+    --tt-navy-500: #3ccb7f;
+    --tt-teal-600: #3ccb7f;
+    --tt-teal-100: rgba(0, 166, 81, 0.15);
+    --tt-amber-600: #fbbf24;
+    --tt-amber-100: rgba(245, 158, 11, 0.15);
+    --tt-red-600: #f87171;
+    --tt-red-100: rgba(239, 68, 68, 0.16);
+    --tt-gray-900: #f0f6fc;
+    --tt-gray-700: #c9d1d9;
+    --tt-gray-500: #8b949e;
+    --tt-gray-300: #30363d;
+    --tt-gray-100: #161b22;
+    --tt-bg: #0b0f1a;
+    --tt-bg-soft: #0f141c;
+    --tt-card: #161b22;
+    --tt-input-bg: #0f141c;
+    --tt-header-bg: #0f141c;
+    --tt-logo-chip: #ffffff;
+  }
+}
+
+/* Dark — escolha explícita via toggle */
+:root[data-theme='dark'] {
+  --tt-navy-900: #f0f6fc;
+  --tt-navy-700: #c9d1d9;
+  --tt-navy-500: #3ccb7f;
+  --tt-teal-600: #3ccb7f;
+  --tt-teal-100: rgba(0, 166, 81, 0.15);
+  --tt-amber-600: #fbbf24;
+  --tt-amber-100: rgba(245, 158, 11, 0.15);
+  --tt-red-600: #f87171;
+  --tt-red-100: rgba(239, 68, 68, 0.16);
+  --tt-gray-900: #f0f6fc;
+  --tt-gray-700: #c9d1d9;
+  --tt-gray-500: #8b949e;
+  --tt-gray-300: #30363d;
+  --tt-gray-100: #161b22;
+  --tt-bg: #0b0f1a;
+  --tt-bg-soft: #0f141c;
+  --tt-card: #161b22;
+  --tt-input-bg: #0f141c;
+  --tt-header-bg: #0f141c;
+  --tt-logo-chip: #ffffff;
 }
 
 * {
   box-sizing: border-box;
+}
+
+:root {
+  color-scheme: light;
+}
+
+:root[data-theme='dark'] {
+  color-scheme: dark;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) {
+    color-scheme: dark;
+  }
 }
 
 html {
@@ -33,6 +116,7 @@ html {
   background: var(--tt-bg);
   line-height: 1.6;
   -webkit-text-size-adjust: 100%;
+  accent-color: var(--tt-green);
 }
 
 body {
@@ -40,6 +124,7 @@ body {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
+  background: var(--tt-bg);
 }
 
 main {
@@ -75,14 +160,14 @@ code {
 
 /* Header / footer */
 .site-header {
-  background: var(--tt-navy-900);
-  color: #fff;
+  background: var(--tt-header-bg);
+  border-bottom: 1px solid var(--tt-gray-300);
 }
 
 .site-header .inner {
   max-width: 1080px;
   margin: 0 auto;
-  padding: 0.85rem 1.25rem;
+  padding: 0.65rem 1.25rem;
   display: flex;
   align-items: center;
   justify-content: space-between;
@@ -91,32 +176,81 @@ code {
 }
 
 .site-header .brand {
-  font-weight: 700;
-  font-size: 1.15rem;
-  letter-spacing: 0.02em;
-  color: #fff;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.75rem;
   text-decoration: none;
 }
 
-.site-header .brand span {
-  color: #7fd1b0;
+.brand-logo {
+  height: 34px;
+  width: auto;
+  display: block;
+  background: var(--tt-logo-chip);
+  border-radius: 6px;
+  padding: 2px 4px;
+}
+
+.brand-name {
+  font-weight: 700;
+  font-size: 1.15rem;
+  letter-spacing: 0.02em;
+  color: var(--tt-navy-900);
+}
+
+.brand-name em {
+  font-style: normal;
+  color: var(--tt-green);
 }
 
 .site-header nav {
   display: flex;
+  align-items: center;
   gap: 1.1rem;
   flex-wrap: wrap;
 }
 
 .site-header nav a {
-  color: #d7e3ee;
+  color: var(--tt-gray-700);
   text-decoration: none;
   font-size: 0.95rem;
 }
 
 .site-header nav a:hover {
-  color: #fff;
+  color: var(--tt-navy-500);
   text-decoration: underline;
+}
+
+.theme-toggle {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  padding: 0;
+  background: transparent;
+  border: 1px solid var(--tt-gray-300);
+  border-radius: 8px;
+  color: var(--tt-gray-700);
+  cursor: pointer;
+}
+
+.theme-toggle:hover {
+  background: var(--tt-bg-soft);
+  color: var(--tt-navy-500);
+}
+
+/* JS resolve sempre o tema em data-theme; sem JS, cai no claro (mostra a lua). */
+.theme-toggle .icon-sun {
+  display: none;
+}
+
+:root[data-theme='dark'] .theme-toggle .icon-sun {
+  display: block;
+}
+
+:root[data-theme='dark'] .theme-toggle .icon-moon {
+  display: none;
 }
 
 .site-footer {
@@ -134,7 +268,7 @@ code {
 
 /* Cards e formulários */
 .card {
-  background: var(--tt-bg);
+  background: var(--tt-card);
   border: 1px solid var(--tt-gray-300);
   border-radius: var(--tt-radius);
   padding: 1.25rem 1.5rem;
@@ -166,6 +300,7 @@ label {
   color: var(--tt-gray-700);
 }
 
+input:not([type]),
 input[type='number'],
 input[type='text'],
 input[type='email'],
@@ -176,13 +311,13 @@ select {
   border-radius: 8px;
   font-size: 1rem;
   font-family: inherit;
-  background: #fff;
+  background: var(--tt-input-bg);
   color: var(--tt-gray-900);
 }
 
 input:focus,
 select:focus {
-  outline: 2px solid var(--tt-navy-500);
+  outline: 2px solid var(--tt-green);
   outline-offset: 1px;
 }
 
@@ -205,7 +340,7 @@ select:focus {
 button,
 .btn {
   display: inline-block;
-  background: var(--tt-navy-700);
+  background: var(--tt-green-deep);
   color: #fff;
   border: none;
   border-radius: 8px;
@@ -219,13 +354,24 @@ button,
 
 button:hover,
 .btn:hover {
-  background: var(--tt-navy-500);
+  background: var(--tt-green);
 }
 
 button.secondary {
   background: transparent;
-  color: var(--tt-navy-700);
-  border: 1px solid var(--tt-navy-700);
+  color: var(--tt-navy-500);
+  border: 1px solid var(--tt-navy-500);
+}
+
+:root[data-theme='dark'] button:not(.secondary):not(.theme-toggle),
+:root[data-theme='dark'] .btn {
+  background: var(--tt-green);
+  color: #06240f;
+}
+
+:root[data-theme='dark'] button:not(.secondary):not(.theme-toggle):hover,
+:root[data-theme='dark'] .btn:hover {
+  background: #3ccb7f;
 }
 
 /* Resultados */
@@ -257,6 +403,8 @@ button.secondary {
   font-size: 1.45rem;
   font-weight: 700;
   color: var(--tt-navy-900);
+  font-family: var(--tt-font-mono);
+  font-variant-numeric: tabular-nums;
 }
 
 .stat .note {
@@ -311,6 +459,10 @@ td {
   border-bottom: 1px solid var(--tt-gray-300);
 }
 
+td {
+  font-variant-numeric: tabular-nums;
+}
+
 th {
   color: var(--tt-navy-700);
   font-size: 0.85rem;
@@ -349,8 +501,32 @@ details.method summary {
   height: auto;
 }
 
-/* Print — relatório */
+/* Print — relatório sempre em claro, independente do tema na tela.
+   (bloco no fim do arquivo para vencer os overrides dark de mesma especificidade) */
 @media print {
+  :root,
+  :root[data-theme='dark'] {
+    --tt-navy-900: #111827;
+    --tt-navy-700: #1f2937;
+    --tt-navy-500: #007a3d;
+    --tt-teal-600: #007a3d;
+    --tt-teal-100: #e5f5ec;
+    --tt-amber-600: #b45309;
+    --tt-amber-100: #fef3c7;
+    --tt-red-600: #b91c1c;
+    --tt-red-100: #fee2e2;
+    --tt-gray-900: #111827;
+    --tt-gray-700: #374151;
+    --tt-gray-500: #6b7280;
+    --tt-gray-300: #d1d5db;
+    --tt-gray-100: #f3f4f6;
+    --tt-bg: #ffffff;
+    --tt-bg-soft: #ffffff;
+    --tt-card: #ffffff;
+    --tt-input-bg: #ffffff;
+    --tt-header-bg: #ffffff;
+  }
+
   .site-header,
   .site-footer,
   .no-print,

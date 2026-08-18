@@ -72,7 +72,7 @@ export const pt = {
     equivalencesTitle: 'Equivalências',
     measuresTitle: 'Medidas típicas para chegar lá',
     reportTitle: 'Relatório de simulação de eficiência energética',
-    reportBy: 'Gerado pelas ferramentas Top Tier Infrastructure',
+    reportBy: 'Gerado pelo Top Tools — Top Tier Infrastructure',
   },
   virtualization: {
     title: 'Calculadora de Virtualização',
@@ -121,7 +121,7 @@ export const pt = {
     paradoxNote:
       'O PUE piorou: consolidar a TI sem right-sizing da infraestrutura faz as perdas fixas pesarem mais sobre uma carga menor. A conta de energia ainda assim diminui — marque as melhorias de right-size para recompor a eficiência.',
     reportTitle: 'Relatório de simulação de virtualização',
-    reportBy: 'Gerado pelas ferramentas Top Tier Infrastructure',
+    reportBy: 'Gerado pelo Top Tools — Top Tier Infrastructure',
   },
   pueProject: {
     title: 'Modelador de PUE de Projeto',
@@ -187,7 +187,7 @@ export const pt = {
     provenance:
       'Réplica funcional do modelo da "Data Center Efficiency and PUE Calculator" (Schneider Electric TradeOff Tool): a planilha interna do dashboard original foi transpilada célula a célula, com validação contra a ferramenta viva (PUE 2,18 @50% no cenário default). Fundamentação do modelo: White Paper 113 (perdas fixas/proporcionais/quadráticas por subsistema).',
     reportTitle: 'Relatório de modelagem de PUE',
-    reportBy: 'Gerado pelas ferramentas Top Tier Infrastructure',
+    reportBy: 'Gerado pelo Top Tools — Top Tier Infrastructure',
   },
   lead: {
     title: 'Receba o relatório completo e conteúdos exclusivos',

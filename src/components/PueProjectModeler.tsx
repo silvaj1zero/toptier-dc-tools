@@ -17,7 +17,7 @@ interface NamedScenario {
   scenario: ProjectScenario;
 }
 
-const CORES = ['var(--tt-navy-500)', 'var(--tt-teal-600)', 'var(--tt-amber-600)', 'var(--tt-red-600)'];
+const CORES = ['var(--tt-cat-1)', 'var(--tt-cat-2)', 'var(--tt-cat-3)', 'var(--tt-cat-4)'];
 const ECON_HOURS = [0, 500, 1000, 1500, 2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000, 7500, 8000, 8500, 8760];
 const MAX_SCENARIOS = 4;
 
@@ -417,7 +417,7 @@ export default function PueProjectModeler({ locale = 'pt-br' }: { locale?: Local
             {/* alça invisível mais larga para facilitar o arrasto do marcador */}
             <rect x={sx(loadPct / 100) - 10} y={PAD.t} width={20} height={H - PAD.t - PAD.b} fill="transparent" />
             {points.map((p, i) => (
-              Number.isFinite(p.pue) ? <circle key={i} cx={sx(loadPct / 100)} cy={sy(p.pue)} r={i === safeActive ? 6 : 4} fill={CORES[i]} stroke="#fff" strokeWidth={1.5} /> : null
+              Number.isFinite(p.pue) ? <circle key={i} cx={sx(loadPct / 100)} cy={sy(p.pue)} r={i === safeActive ? 6 : 4} fill={CORES[i]} stroke="var(--tt-card)" strokeWidth={1.5} /> : null
             ))}
           </svg>
 
