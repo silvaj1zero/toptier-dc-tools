@@ -1,0 +1,44 @@
+---
+import Base from '@/layouts/Base.astro';
+import DensityPlanner from '@/components/DensityPlanner';
+import LeadForm from '@/components/LeadForm';
+---
+
+<Base
+  title="Planejador de Espaço e Densidade"
+  description="Especifique espaço e densidade de data centers pelo método correto: gabinete → pod → sala → instalação. Densidade em W/m² como resultado, não como chute — com reservas de espaço explícitas para energia, climatização, staging e incerteza. Baseado no White Paper #155 da Schneider Electric."
+>
+  <h1>Planejador de Espaço e Densidade</h1>
+  <p>
+    Quantos m² o data center precisa — e qual a densidade real em W/m²? Especificar densidade como
+    um número único de W/m² é a receita clássica de capacidade encalhada (<em>stranded
+    capacity</em>). Este planejador implementa o método aberto do <em>White Paper #155</em> da
+    Schneider Electric: você declara <strong>gabinetes, potência média e pico, incerteza e
+    reservas de espaço</strong> — e a densidade sai como <strong>resultado</strong>, do pod à
+    instalação inteira.
+  </p>
+
+  <DensityPlanner client:load />
+
+  <section class="card soft">
+    <h2>Como usar o resultado</h2>
+    <ul>
+      <li>
+        Comece pelo modo <strong>Sala</strong> para ambientes pequenos; use o modo
+        <strong>Instalação</strong> para ver a cascata gabinete → pod → sala → instalação e como a
+        densidade "dilui" a cada nível (corredores, energia, climatização, circulação).
+      </li>
+      <li>
+        A linha de <strong>sugestão para incerteza</strong> é o seguro do projeto: se a densidade
+        real vier menor que a prevista, esse espaço evita ficar com potência sobrando e sala
+        faltando.
+      </li>
+      <li>
+        Compare a densidade da sala com a da instalação — a diferença é o custo espacial da
+        infraestrutura. Especifique sempre <em>kW por gabinete</em> + área, nunca "W/m²" solto.
+      </li>
+    </ul>
+  </section>
+
+  <LeadForm client:visible />
+</Base>

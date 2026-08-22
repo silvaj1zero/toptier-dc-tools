@@ -34,9 +34,14 @@ export function NumberField({
         step={step}
         value={value}
         placeholder={placeholder}
+        aria-describedby={help ? `${id}-help` : undefined}
         onChange={(e: ChangeEvent<HTMLInputElement>) => onChange(e.target.value)}
       />
-      {help ? <p className="help">{help}</p> : null}
+      {help ? (
+        <p className="help" id={`${id}-help`}>
+          {help}
+        </p>
+      ) : null}
     </div>
   );
 }

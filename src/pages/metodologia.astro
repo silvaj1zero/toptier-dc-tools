@@ -151,6 +151,24 @@ import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS, UPS_CURVA_LBNL } from '@/data/v
     </ul>
   </section>
 
+  <section class="card">
+    <h2>Planejador de Espaço e Densidade — método do White Paper #155</h2>
+    <p>
+      Implementação aberta do método de especificação de espaço e densidade da Schneider Electric
+      (<em>White Paper #155 — Calculating Space and Power Density Requirements for Data
+      Centers</em>, N. Rasmussen), com as mesmas fórmulas das planilhas de especificação de sala e
+      de instalação que acompanham o método — reproduzidas linha a linha e cobertas por testes
+      automatizados contra os cenários de referência.
+    </p>
+    <ul>
+      <li><strong>Princípio:</strong> especificar densidade como um único W/m² é ambíguo (não diz se é pico ou média, nem em que nível se aplica) e é causa clássica de capacidade encalhada (<em>stranded capacity</em>). O método troca isso por 5 parâmetros por nível: nº de unidades, potência média-alvo, pico, incerteza e relação de potência gerenciada.</li>
+      <li><strong>Hierarquia:</strong> gabinete → pod → sala → instalação. Cada nível reserva espaço em unidades do inferior (<code>área = unidades × área/unidade + extra</code>), e a densidade sai como resultado: <code>W/m² = 1000 × potência nominal ÷ área total</code>.</li>
+      <li><strong>Incerteza:</strong> a reserva sugerida — <code>nominal × (área/unidade ÷ potência média) × u ÷ (1 − u)</code> — dimensiona o espaço extra para absorver o desvio de densidade com ~80% de confiança; nos níveis superiores propaga-se a sugestão não coberta abaixo.</li>
+      <li><strong>Cenários de referência:</strong> sala de 12 gabinetes × 4 kW → 39,7 m² e 1.209 W/m²; instalação de 4 salas × 8 pods × 10 gabinetes × 5 kW → 1.986 m², 806 W/m² na instalação, 1.232 W/m² na sala e 2.049 W/m² no pod — a mesma instalação mede três densidades diferentes conforme o nível, a prova de que o "W/m² solto" engana.</li>
+      <li><strong>Complemento de layout:</strong> as recomendações de arranjo físico (fileiras quente/fria, <em>pitch</em> de 7 placas, efeito de colunas e formato da sala) vêm do APC White Paper #144 (<em>Data Center Projects: Establishing a Floor Plan</em>) e são tratadas como material didático — a ferramenta calcula o balanço de área, não o desenho da planta.</li>
+    </ul>
+  </section>
+
   <section class="card soft">
     <h2>Sobre</h2>
     <p>
