@@ -1,11 +1,37 @@
-# HANDOFF — toptier-dc-tools (sessão 2026-08-16/17)
+# HANDOFF — toptier-dc-tools (sessão 2026-08-22)
 
 > Leia isto primeiro ao retomar. Estado consolidado, decisões vivas e pendências.
 
-## Estado atual (tudo no ar e sincronizado)
+## Estado atual
 
-- **Produção:** https://ferramentas.toptier.net.br — 5 páginas: `/calculadora-pue/`, `/simulador-economia/`, `/calculadora-virtualizacao/`, `/modelador-pue/`, `/metodologia/`. **Deploy é MANUAL**: `npx vercel --prod` (rodado pelo operador — o classifier bloqueia o agente). Push para `main` NÃO dispara build (verificado 2026-08-18; projeto Vercel `caos-off/toptier-dc-tools` sem integração Git). Origin: `silvaj1zero/toptier-dc-tools`, repo do operador — regras multi-tenant NÃO se aplicam.
-- **Git:** `main` = `d40e8c0`, working tree limpo. Gates: `npm test` (50/50), `npx tsc --noEmit` (0 erros), `npx astro build` (6 páginas).
+- **Produção:** https://ferramentas.toptier.net.br — 6 páginas: `/calculadora-pue/`, `/simulador-economia/`, `/calculadora-virtualizacao/`, `/modelador-pue/`, `/planejador-densidade/` (**nova, ainda não deployada** — pendente `npx vercel --prod` pelo operador), `/metodologia/`. **Deploy é MANUAL**: `npx vercel --prod` (rodado pelo operador — o classifier bloqueia o agente). Push para `main` NÃO dispara build (verificado 2026-08-18; projeto Vercel `caos-off/toptier-dc-tools` sem integração Git). Origin: `silvaj1zero/toptier-dc-tools`, repo do operador — regras multi-tenant NÃO se aplicam.
+- **Gates (2026-08-22):** `npm test` (61/61), `npx tsc --noEmit` (0 erros), `npx astro build` (7 páginas).
+
+## Sessão 2026-08-22 — Planejador de Espaço e Densidade + Deck R6 do módulo
+
+1. **Planejador de Espaço e Densidade** (`/planejador-densidade/`) — transpilação 1:1 das planilhas
+   do método Schneider WP#155 ("Density spec room pt v5 m2" e "Density spec facility v5 m2"):
+   `src/lib/density.ts` (cascata Gabinete→Pod→Sala→Instalação) + `density.test.ts` fixando os
+   cenários default das planilhas (39,7 m²/1.209 W/m²; 1.986 m²/806-1.232-2.049 W/m²; 360/432 gab).
+   UI `DensityPlanner.tsx` com modos Sala e Instalação. QA multi-engine: codex (1 HIGH + 9 MEDIUM)
+   e gemini (3 LOW) — todos corrigidos (validação finita/inteira, área de TI > 0 obrigatória,
+   aria-describedby no NumberField, th scope, aria-pressed nas abas, contraste dark via classes DS).
+2. **Deck R6 do módulo "Planejamento de Espaços, Densidade e Crescimento"** (MBA Parte III) —
+   didática reestruturada a partir dos WPs #155 e #144 (não da ordem do R5): 54 telas (41 slides de
+   conteúdo + 6 divisores + 6 exercícios na ferramenta + fechamento), HTML+PDF no padrão do deck R4.
+   Workspace: `clients/mba-brpos/08-planejamento-espacos/01-deck-r6/` + `02-guia/notas-instrutor-gabarito.md`.
+   PDF também em `~/Downloads/aula-espacos-densidade-r6.pdf`.
+3. **Pesquisa versionada:** `docs/research/2026-08-22-densidade/` — 00-missao, extrações fiéis das
+   6 fontes (PPTX R5, DOCX, 2 WPs, 2 XLSX com fórmulas), 01-mapa-conteudo (diagnóstico do R5) e
+   02-arquitetura-didatica (blueprint dos 6 blocos/41 slides/6 exercícios).
+4. **Gotcha novo:** screenshots do Chrome via extensão estavam quebrados nesta sessão (3 erros CDP
+   distintos); validação visual feita por read_page (a11y tree) + render de PDF via PyMuPDF (instalado).
+
+---
+
+# HANDOFF anterior — sessão 2026-08-16/17
+
+- **Git:** `main` = `d40e8c0`. Gates da época: 50/50, tsc 0, build 6 páginas.
 - **Posicionamento:** ferramentas são teaser público de lead-gen dos serviços/treinamentos Top Tier — **zero menções a "MBA" no site** (rebranding 2026-08-17). Material do MBA continua no workspace do cliente (ver abaixo).
 
 ## O que foi entregue nesta sessão (cronológico)
