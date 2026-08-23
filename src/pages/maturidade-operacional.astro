@@ -1,0 +1,41 @@
+---
+import Base from '@/layouts/Base.astro';
+import FommAssessment from '@/components/FommAssessment';
+---
+
+<Base
+  tool
+  title="Pré-Diagnóstico de Maturidade Operacional (FOMM)"
+  description="Avalie em 10 minutos a maturidade das operações do seu data center nas 7 disciplinas do Facility Operations Maturity Model (Schneider WP #197): segurança, emergências, manutenção, site, operações, mudanças e qualidade. Perfil por disciplina, gaps priorizados e próximos passos — gratuito e auto-declarado."
+>
+  <h1>Pré-Diagnóstico de Maturidade Operacional</h1>
+  <p>
+    ~70% das interrupções em data centers envolvem erro humano — e erro humano é, na prática,
+    <strong>processo imaturo</strong>. Este pré-diagnóstico avalia sua operação nas
+    <strong>7 disciplinas do Facility Operations Maturity Model</strong> (FOMM, Schneider Electric
+    White Paper #197) em ~10 minutos: 18 perguntas, perfil por disciplina na escala 1–5 e os três
+    gaps que merecem ação primeiro. Auto-declarado, gratuito e sem cadastro para ver o resultado.
+  </p>
+
+  <FommAssessment client:load />
+
+  <section class="card soft">
+    <h2>Do pré-diagnóstico à auditoria</h2>
+    <ul>
+      <li>
+        Este resultado é a <strong>fotografia auto-declarada</strong> — útil para priorizar a
+        conversa interna. A <strong>auditoria FOMM formal</strong> valida cada subelemento em campo,
+        com evidências e plano de evolução (o WP #197 recomenda avaliação por terceiro independente,
+        na entrada em operação e depois anualmente).
+      </li>
+      <li>
+        A régua importa: nível 3 ("definido") ainda não detecta desvios — a diferença entre 3 e 4 é
+        ter <em>indicadores e gestão agindo</em>, e é onde a maioria das operações críticas trava.
+      </li>
+      <li>
+        Compare o seu perfil com o benchmark do setor na conversa de diagnóstico — a Top Tier audita
+        operações de missão crítica há mais de 25 anos.
+      </li>
+    </ul>
+  </section>
+</Base>

@@ -132,6 +132,7 @@ export const pt = {
     architectureTitle: 'Arquitetura do data center',
     capacityLabel: 'Capacidade de TI (kW)',
     costLabel: 'Custo da energia (por kWh)',
+    currencyAriaLabel: 'Moeda',
     upsLabel: 'Sistema UPS',
     upsOptions: { legacy: 'Legado', typical: 'Típico', highEfficiency: 'Alta eficiência', none: 'Sem UPS' },
     powerRedLabel: 'Redundância de energia',
@@ -260,14 +261,136 @@ export const pt = {
     reportTitle: 'Relatório de espaço e densidade',
     reportBy: 'Gerado pelo Top Tools — Top Tier Infrastructure',
   },
+  fomm: {
+    title: 'Pré-Diagnóstico de Maturidade Operacional',
+    scaleTitle: 'Como responder',
+    scaleIntro:
+      'Para cada prática, escolha o nível que melhor descreve a operação HOJE — não o plano. Escala de maturidade do White Paper #197 (Schneider Electric):',
+    levels: {
+      1: {
+        label: 'Ad hoc',
+        official: 'Initial / ad hoc',
+        desc: 'Depende de indivíduos; sem documentação nem monitoramento.',
+      },
+      2: {
+        label: 'Repetível',
+        official: 'Repeatable but intuitive',
+        desc: 'Feito de forma parecida por costume, sem processo formal.',
+      },
+      3: {
+        label: 'Definido',
+        official: 'Defined process',
+        desc: 'Processo documentado e treinado, mas sem medição de desvios.',
+      },
+      4: {
+        label: 'Gerenciado',
+        official: 'Managed and measurable',
+        desc: 'Cumprimento monitorado com indicadores e ação da gestão.',
+      },
+      5: {
+        label: 'Otimizado',
+        official: 'Optimized',
+        desc: 'Melhoria contínua medida, ferramentas integradas.',
+      },
+    },
+    disciplines: {
+      ehs: {
+        nome: 'Saúde, Segurança e Meio Ambiente',
+        desc: 'Prevenção de acidentes (EPI, LOTO, análise de risco) e conformidade legal.',
+      },
+      emergencia: {
+        nome: 'Preparação e Resposta a Emergências',
+        desc: 'Procedimentos de emergência (EOPs), simulados e gestão de incidentes.',
+      },
+      manutencao: {
+        nome: 'Gestão de Manutenção',
+        desc: 'Ativos, ordens de serviço, CMMS, fornecedores e sobressalentes.',
+      },
+      site: {
+        nome: 'Gestão do Site',
+        desc: 'Infraestrutura, operação diária, eficiência e condição física.',
+      },
+      operacoes: {
+        nome: 'Gestão de Operações',
+        desc: 'Pessoas, indicadores, riscos, orçamento e reporte.',
+      },
+      mudancas: {
+        nome: 'Gestão de Mudanças',
+        desc: 'Análise de risco, procedimentos operacionais e controle de mudanças.',
+      },
+      qualidade: {
+        nome: 'Gestão de Qualidade',
+        desc: 'Documentação, treinamento, inspeções/auditorias e melhoria contínua.',
+      },
+    },
+    q: {
+      ehs1: 'O programa de prevenção de acidentes (EPI, bloqueio/etiquetagem LOTO, análise de perigos) existe por escrito e é aplicado no dia a dia?',
+      ehs2: 'A conformidade legal do site (elétrica, incêndio, ambiental) tem evidência auditável e em dia?',
+      eme1: 'Existem procedimentos de emergência (EOPs) escritos para as falhas críticas do site — elétrica, climatização, incêndio, perda de redundância?',
+      eme2: 'Simulados de cenário (não só evacuação predial) são calendarizados, executados e registrados?',
+      eme3: 'Incidentes e quase-acidentes são registrados, com análise de causa raiz que atualiza procedimentos e treinamento?',
+      man1: 'O inventário de ativos críticos no CMMS/planilha corresponde à realidade do chão (incluindo firmware)?',
+      man2: 'A manutenção preventiva roda no prazo, com ordens rastreadas, e o backlog é tratado como risco visível?',
+      man3: 'Sobressalentes críticos e contratos de fornecedores (SLA, tempo de resposta, qualificação) estão definidos e testados?',
+      sit1: 'A capacidade de espaço, energia e climatização é gerida com dados (set-points, gestão de carga), não por percepção?',
+      sit2: 'Limpeza técnica, condição física e otimização de eficiência (PUE) são programas contínuos com dono?',
+      ope1: 'O quadro de operação (24×7 próprio ou terceirizado) está dimensionado, com qualificações por função e cadeia de escalada?',
+      ope2: 'Existem KPIs de operação (cumprimento de PM, incidentes, treinamento) revisados pela gestão com ações?',
+      ope3: 'O orçamento de O&M é defendido com dados do CMMS e ciclo de vida — não apenas corte anual?',
+      mud1: 'Trabalho que pode afetar a carga crítica exige MOP com análise de risco, aprovação e plano de retorno?',
+      mud2: 'SOPs/MOPs/EOPs são revisados quando o as-built, o firmware ou a configuração mudam?',
+      qua1: 'A documentação (as-builts, procedimentos) tem controle de versão e está acessível ao turno — inclusive num incidente?',
+      qua2: 'O treinamento é formal — material escrito, prática supervisionada e avaliação — com reciclagem calendarizada?',
+      qua3: 'Inspeções internas e auditorias geram planos de ação com dono e prazo, e o ciclo de melhoria fecha?',
+    },
+    progress: 'respondidas',
+    resultsTitle: 'Seu perfil de maturidade',
+    scoreWord: 'pontuação',
+    conventionNote:
+      'média simples das 7 disciplinas, convenção desta ferramenta (o WP #197 não define índice único)',
+    statGeral: 'Nível geral indicativo',
+    statForte: 'Disciplina mais madura',
+    statGap: 'Maior gap',
+    radarTitle: 'Perfil por disciplina (escala 1–5)',
+    tableCol: { disciplina: 'Disciplina', score: 'Score', nivel: 'Nível' },
+    gapsTitle: 'Onde atacar primeiro',
+    gapsIntro:
+      'As três disciplinas com menor maturidade auto-declarada aparecem primeiro. No plano de ação formal, o WP #197 prioriza pela matriz impacto × facilidade — o que este pré-diagnóstico não substitui:',
+    gapAction: {
+      ehs: 'Formalize o programa de segurança por escrito (EPI, LOTO, análise de perigos) antes de qualquer trabalho em equipamento energizado.',
+      emergencia:
+        'Comece pelos EOPs dos 5 modos de falha mais prováveis e agende o primeiro simulado com registro — é o maior redutor de erro humano.',
+      manutencao:
+        'Reconcilie o CMMS com o chão de fábrica e trate manutenção adiada como item de risco reportado à gestão.',
+      site: 'Estabeleça a medição contínua de capacidade e PUE — sem dados, cada decisão de carga é aposta.',
+      operacoes:
+        'Defina KPIs mínimos (cumprimento de PM, incidentes, treinamento) e uma revisão mensal com a gestão.',
+      mudancas:
+        'Institua MOP obrigatório com análise de risco para qualquer intervenção que toque a carga crítica.',
+      qualidade:
+        'Coloque procedimentos sob controle de versão e formalize o treinamento com avaliação — a base das demais disciplinas.',
+    },
+    ctaTitle: 'Transforme o pré-diagnóstico em plano de ação',
+    ctaText:
+      'Este perfil é auto-declarado — uma auditoria formal valida cada subelemento em campo, com evidências, findings e roadmap de evolução. A Top Tier Infrastructure realiza o diagnóstico de prontidão e a auditoria FOMM completa (7 disciplinas, 26 elementos), com plano de melhoria contínua.',
+    ctaButton: 'Solicitar diagnóstico de prontidão FOMM',
+    methodNote:
+      'Base conceitual: Schneider Electric White Paper #197 (7 disciplinas, 26 elementos, níveis 1–5). O WP #197 não define índice único — o "nível geral" exibido é a média simples das disciplinas, convenção desta ferramenta para fins de orientação. Este pré-diagnóstico é auto-declarado, não emite certificação e não substitui avaliação formal por terceiro independente.',
+    incompleteNote: 'responda as 18 perguntas para ver o seu perfil.',
+    reportTitle: 'Pré-diagnóstico de maturidade operacional (FOMM)',
+    reportBy: 'Gerado pelo Top Tools — Top Tier Infrastructure',
+  },
   lead: {
     title: 'Receba o relatório completo e conteúdos exclusivos',
     nameLabel: 'Nome',
     emailLabel: 'E-mail corporativo',
     companyLabel: 'Empresa',
     submit: 'Enviar',
+    sending: 'Enviando…',
     success: 'Recebido! Entraremos em contato.',
     error: 'Não foi possível enviar. Escreva para contato@toptier.net.br.',
+    consentLabel:
+      'Autorizo o uso destes dados para contato sobre ferramentas, serviços e treinamentos da Top Tier (LGPD).',
     privacy: 'Usamos seus dados apenas para contato sobre as ferramentas, serviços e treinamentos Top Tier.',
   },
 };
