@@ -8,7 +8,9 @@
 - **Nova ferramenta `/maturidade-operacional/`** — Pré-Diagnóstico FOMM (WP #197 Schneider: 7 disciplinas, 18 perguntas, escala 1-5, radar, gaps, CTA "diagnóstico de prontidão"). Engine `src/lib/fomm.ts` + 9 testes. **Gate de claims respeitado** (nunca "certificação"/"1.229"/"0-5" — ver 03-integracao).
 - **Pesquisa versionada** em `docs/research/2026-08-22-best-of-breed/`: benchmark de mercado (grok — "a suíte que não existe" é a nossa), fontes FOMM verificadas, 5 auditorias, plano de integração com toptier.net.br (03) e relatório final com gaps/sugestões (04).
 - **Pendências quentes:** (1) operador configurar `PUBLIC_LEAD_ENDPOINT` na Vercel — sem isso lead cai em mailto; (2) ADR da fronteira FOMM suíte × site novo (colide com ADR-SITE-TECH-FOUNDATION do TTI-Web-Renew); (3) deploy manual `npx vercel --prod` após push.
-- Gates: `tsc` 0 · **70/70** testes · build **8 páginas** + sitemap.
+- **Ajuste do founder (23/08):** bloco de autoridade comercial no FOMM — metodologia exclusiva com score/software proprietários (TierScope), 10+ anos em clientes líderes, Zero Outage (IBM), certificações FOMM via ICOR Internacional; `Top Tier Infrastructure®` nas superfícies de marca. A ferramenta segue sem emitir certificação (gate de claims preservado).
+- Gates finais: `tsc` 0 · **72/72** testes · build **8 páginas** + sitemap.
+- Commits da rodada: `23a1890` (best-of-breed) · `bd116e9` (FOMM) · `a1c26de` (docs) · `23054f5` (autoridade/marca).
 
 ## Estado anterior (parte 1 da sessão)
 
