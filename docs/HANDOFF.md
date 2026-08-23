@@ -2,7 +2,15 @@
 
 > Leia isto primeiro ao retomar. Estado consolidado, decisões vivas e pendências.
 
-## Estado atual
+## Sessão 2026-08-22 (parte 2) — Goal-loop Best-of-Breed + FOMM
+
+- **Goal-loop multi-LLM concluído com duplo APROVADO** (grok técnico R2 + gemini visual R2; codex fora — limite até 28/08). R1 reprovou ambos; lote de correções fechou todos os P0 (SEO: sitemap/robots/canonical/OG+og.png/JSON-LD; fontes self-host WOFF2; logo WebP + variante dark; LeadForm v2: honeypot/origem+UTM/LGPD; a11y: skip-link/focus-visible/aria-*) e P1 (resolvidos ou won't-fix justificado). Backlog P2 no relatório.
+- **Nova ferramenta `/maturidade-operacional/`** — Pré-Diagnóstico FOMM (WP #197 Schneider: 7 disciplinas, 18 perguntas, escala 1-5, radar, gaps, CTA "diagnóstico de prontidão"). Engine `src/lib/fomm.ts` + 9 testes. **Gate de claims respeitado** (nunca "certificação"/"1.229"/"0-5" — ver 03-integracao).
+- **Pesquisa versionada** em `docs/research/2026-08-22-best-of-breed/`: benchmark de mercado (grok — "a suíte que não existe" é a nossa), fontes FOMM verificadas, 5 auditorias, plano de integração com toptier.net.br (03) e relatório final com gaps/sugestões (04).
+- **Pendências quentes:** (1) operador configurar `PUBLIC_LEAD_ENDPOINT` na Vercel — sem isso lead cai em mailto; (2) ADR da fronteira FOMM suíte × site novo (colide com ADR-SITE-TECH-FOUNDATION do TTI-Web-Renew); (3) deploy manual `npx vercel --prod` após push.
+- Gates: `tsc` 0 · **70/70** testes · build **8 páginas** + sitemap.
+
+## Estado anterior (parte 1 da sessão)
 
 - **Produção:** https://ferramentas.toptier.net.br — 6 páginas: `/calculadora-pue/`, `/simulador-economia/`, `/calculadora-virtualizacao/`, `/modelador-pue/`, `/planejador-densidade/` (**nova, ainda não deployada** — pendente `npx vercel --prod` pelo operador), `/metodologia/`. **Deploy é MANUAL**: `npx vercel --prod` (rodado pelo operador — o classifier bloqueia o agente). Push para `main` NÃO dispara build (verificado 2026-08-18; projeto Vercel `caos-off/toptier-dc-tools` sem integração Git). Origin: `silvaj1zero/toptier-dc-tools`, repo do operador — regras multi-tenant NÃO se aplicam.
 - **Gates (2026-08-22):** `npm test` (61/61), `npx tsc --noEmit` (0 erros), `npx astro build` (7 páginas).
