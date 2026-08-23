@@ -369,7 +369,7 @@ export const en: Dict = {
     },
     ctaTitle: 'Turn the pre-assessment into an action plan',
     ctaText:
-      'This profile is self-declared — a formal audit validates each sub-element in the field, with evidence, findings, and an evolution roadmap. Top Tier Infrastructure delivers the readiness diagnostic and the full FOMM audit (7 disciplines, 26 elements) with a continuous-improvement program.',
+      'This profile is self-declared — the formal audit validates each sub-element in the field, with evidence, findings, and an evolution roadmap. Top Tier Infrastructure® applies an exclusive assessment methodology, with a proprietary score and software — TierScope — built on 10+ years applying the model at industry-leading reference clients. We take part in the international Zero Outage group (IBM), helping clients sustain operational excellence and earn international certifications, including the FOMM framework certification issued by ICOR International.',
     ctaButton: 'Request a FOMM readiness diagnostic',
     methodNote:
       'Conceptual basis: Schneider Electric White Paper #197 (7 disciplines, 26 elements, levels 1–5). WP #197 defines no single index — the "overall level" shown is the simple average across disciplines, a convention of this tool for guidance. This pre-assessment is self-declared, grants no certification, and does not replace a formal third-party assessment.',

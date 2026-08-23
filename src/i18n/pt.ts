@@ -372,7 +372,7 @@ export const pt = {
     },
     ctaTitle: 'Transforme o pré-diagnóstico em plano de ação',
     ctaText:
-      'Este perfil é auto-declarado — uma auditoria formal valida cada subelemento em campo, com evidências, findings e roadmap de evolução. A Top Tier Infrastructure realiza o diagnóstico de prontidão e a auditoria FOMM completa (7 disciplinas, 26 elementos), com plano de melhoria contínua.',
+      'Este perfil é auto-declarado — a auditoria formal valida cada subelemento em campo, com evidências, findings e roadmap de evolução. A Top Tier Infrastructure® aplica uma metodologia exclusiva de avaliação, com score e software proprietários — o TierScope — construída em mais de 10 anos de aplicação do modelo em clientes líderes e de referência da indústria. Participamos do grupo internacional Zero Outage (IBM) e ajudamos nossos clientes a manter a excelência operacional e a conquistar certificações internacionais, incluindo a do framework FOMM emitida pelo ICOR Internacional.',
     ctaButton: 'Solicitar diagnóstico de prontidão FOMM',
     methodNote:
       'Base conceitual: Schneider Electric White Paper #197 (7 disciplinas, 26 elementos, níveis 1–5). O WP #197 não define índice único — o "nível geral" exibido é a média simples das disciplinas, convenção desta ferramenta para fins de orientação. Este pré-diagnóstico é auto-declarado, não emite certificação e não substitui avaliação formal por terceiro independente.',
