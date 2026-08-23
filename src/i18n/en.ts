@@ -270,28 +270,41 @@ export const en: Dict = {
         label: 'Ad hoc',
         official: 'Initial / ad hoc',
         desc: 'Depends on individuals; no documentation or monitoring.',
+        criteria:
+          'No formal awareness of the process; nothing documented; no monitoring or improvement; case-by-case execution, fully dependent on individuals.',
       },
       2: {
         label: 'Repeatable',
         official: 'Repeatable but intuitive',
         desc: 'Done similarly by habit, without a formal process.',
+        criteria:
+          'Some process awareness; different people execute similarly by habit; no formal documentation or monitoring; high dependence on key people.',
       },
       3: {
         label: 'Defined',
         official: 'Defined process',
         desc: 'Documented, trained process, but deviations are not measured.',
+        criteria:
+          'Standardized, documented process communicated through training; but no reliable mechanism to detect deviations — no monitoring or structured improvement yet.',
       },
       4: {
         label: 'Managed',
         official: 'Managed and measurable',
         desc: 'Compliance monitored with indicators and management action.',
+        criteria:
+          'Management monitors compliance and acts on deviations; constant monitoring and improvement; tracked formal training; automation still limited or fragmented.',
       },
       5: {
         label: 'Optimized',
         official: 'Optimized',
         desc: 'Measured continuous improvement, integrated tools.',
+        criteria:
+          'Refined practice with measured continuous improvement; technology integrated into the workflow; tools integrated end to end.',
       },
     },
+    infoButton: 'Level criteria',
+    infoTitle: 'What characterizes each level (WP #197)',
+    infoClose: 'Close',
     disciplines: {
       ehs: {
         nome: 'Environmental Health & Safety',
@@ -367,6 +380,18 @@ export const en: Dict = {
       qualidade:
         'Put procedures under version control and formalize training with assessment — the foundation of the other disciplines.',
     },
+    gateTitle: 'Your profile is ready — view and download the result',
+    gateIntro:
+      'Register to view your maturity profile, print the report, and download the FOMM Audit & Certification brochure.',
+    gateWhatsapp: 'WhatsApp (optional)',
+    gateWhatsappHelp: 'Provide it if you want to be contacted via WhatsApp.',
+    gateAuthContact:
+      'I authorize Top Tier to contact me about my result and audit services (LGPD). Without this authorization, no contact will be made.',
+    gateButton: 'View my result',
+    gateSending: 'Registering…',
+    gatePrivacy:
+      'We use your data only to issue the result and, if authorized, to contact you about Top Tier services.',
+    folderButton: 'Download the FOMM Audit & Certification brochure (PDF)',
     ctaTitle: 'Turn the pre-assessment into an action plan',
     ctaText:
       'This profile is self-declared — the formal audit validates each sub-element in the field, with evidence, findings, and an evolution roadmap. Top Tier Infrastructure® applies an exclusive assessment methodology, with a proprietary score and software — TierScope — built on 10+ years applying the model at industry-leading reference clients. We take part in the international Zero Outage group (IBM), helping clients sustain operational excellence and earn international certifications, including the FOMM framework certification issued by ICOR International.',

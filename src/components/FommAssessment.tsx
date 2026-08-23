@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useMemo, useState, type FormEvent } from 'react';
 import { fmtNumber } from '@/lib/calc';
 import {
   DISCIPLINAS,
@@ -11,7 +11,8 @@ import {
   type RespostasFomm,
 } from '@/lib/fomm';
 import { t, type Dict, type Locale } from '@/i18n';
-import LeadForm from './LeadForm';
+
+const FOLDER_URL = '/downloads/tti-fomm-certification-r9.pdf';
 
 // ---------------------------------------------------------------------------
 // Radar SVG (7 eixos, escala 1–5) — sem libs, cores do DS
@@ -113,6 +114,34 @@ function RadarFomm({ d, result }: { d: Dict['fomm']; result: FommResult }) {
 }
 
 // ---------------------------------------------------------------------------
+// Quadro flutuante com os critérios de cada nível (WP #197, Figura 3)
+// ---------------------------------------------------------------------------
+
+function NiveisPopover({ d, onClose }: { d: Dict['fomm']; onClose: () => void }) {
+  return (
+    <div className="fomm-info-pop" role="dialog" aria-label={d.infoTitle}>
+      <div className="fomm-info-head">
+        <strong>{d.infoTitle}</strong>
+        <button type="button" className="secondary fomm-info-close" onClick={onClose}>
+          {d.infoClose}
+        </button>
+      </div>
+      <ol>
+        {([1, 2, 3, 4, 5] as const).map((nivel) => (
+          <li key={nivel}>
+            <strong>
+              {nivel} · {d.levels[nivel].label}
+            </strong>{' '}
+            <em>({d.levels[nivel].official})</em>
+            <p>{d.levels[nivel].criteria}</p>
+          </li>
+        ))}
+      </ol>
+    </div>
+  );
+}
+
+// ---------------------------------------------------------------------------
 // Componente principal
 // ---------------------------------------------------------------------------
 
@@ -120,6 +149,9 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
   const dict = t(locale);
   const d = dict.fomm;
   const [respostas, setRespostas] = useState<RespostasFomm>({});
+  const [openInfo, setOpenInfo] = useState<string | null>(null);
+  const [unlocked, setUnlocked] = useState(false);
+  const [gateStatus, setGateStatus] = useState<'idle' | 'sending'>('idle');
 
   const result = useMemo(() => {
     try {
@@ -133,7 +165,49 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
     setRespostas((r) => ({ ...r, [id]: nivel }));
 
   const nivelLabel = (nivel: NivelMaturidade) => d.levels[nivel].label;
-  const leadContext = result?.completo ? fommParaLead(result) : undefined;
+
+  /**
+   * Gate de registro: para VER e BAIXAR o resultado (e o folder), o prospect
+   * registra nome + e-mail. Contato comercial só com o check de autorização;
+   * WhatsApp é opcional. O registro nunca bloqueia o prospect: se o envio ao
+   * endpoint falhar, o resultado é liberado mesmo assim.
+   */
+  async function onGateSubmit(e: FormEvent<HTMLFormElement>) {
+    e.preventDefault();
+    if (!result?.completo) return;
+    const form = e.currentTarget;
+    const data = new FormData(form);
+
+    // Honeypot: bots preenchem, humanos não veem.
+    if (data.get('website')) {
+      setUnlocked(true);
+      return;
+    }
+    data.delete('website');
+
+    data.set('origem', 'fomm-gate');
+    data.set('autoriza_contato', data.get('autoriza_contato') ? 'sim' : 'nao');
+    const url = new URL(window.location.href);
+    data.set('pagina', url.pathname);
+    if (document.referrer) data.set('referrer', document.referrer);
+    for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']) {
+      const v = url.searchParams.get(k);
+      if (v) data.set(k, v);
+    }
+    for (const [k, v] of Object.entries(fommParaLead(result))) data.set(k, v);
+
+    const endpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT;
+    if (endpoint) {
+      setGateStatus('sending');
+      try {
+        await fetch(endpoint, { method: 'POST', headers: { Accept: 'application/json' }, body: data });
+      } catch {
+        // registro é cortesia — nunca impede o prospect de ver o resultado
+      }
+    }
+    setGateStatus('idle');
+    setUnlocked(true);
+  }
 
   return (
     <div>
@@ -166,13 +240,24 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
                 <div key={q.id} className="fomm-q" role="radiogroup" aria-labelledby={`fq-${q.id}`}>
                   <p className="fomm-q-text" id={`fq-${q.id}`}>
                     {d.q[q.id as keyof typeof d.q]}
+                    <button
+                      type="button"
+                      className="fomm-info-btn"
+                      aria-label={d.infoButton}
+                      title={d.infoButton}
+                      aria-expanded={openInfo === q.id}
+                      onClick={() => setOpenInfo(openInfo === q.id ? null : q.id)}
+                    >
+                      i
+                    </button>
                   </p>
+                  {openInfo === q.id ? <NiveisPopover d={d} onClose={() => setOpenInfo(null)} /> : null}
                   <div className="fomm-scale">
                     {([1, 2, 3, 4, 5] as const).map((nivel) => (
                       <label
                         key={nivel}
                         className={`fomm-opt${respostas[q.id] === nivel ? ' on' : ''}`}
-                        title={`${nivel} — ${nivelLabel(nivel)}`}
+                        title={`${nivel} — ${nivelLabel(nivel)}: ${d.levels[nivel].criteria}`}
                       >
                         <input
                           type="radio"
@@ -198,9 +283,48 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
         {result && !result.completo ? ` — ${d.incompleteNote}` : ''}
       </p>
 
-      {/* O perfil só aparece com as 18 respostas — publicar "nível" com o quiz
-          incompleto seria exatamente o índice inventado que o WP #197 não define. */}
-      {result?.completo ? (
+      {/* Gate de registro: perfil pronto, resultado atrás de nome + e-mail. */}
+      {result?.completo && !unlocked ? (
+        <section className="card fomm-gate">
+          <h2 style={{ marginTop: 0 }}>{d.gateTitle}</h2>
+          <p>{d.gateIntro}</p>
+          <form onSubmit={onGateSubmit}>
+            <div className="grid-2">
+              <div className="field">
+                <label htmlFor="fg-name">{dict.lead.nameLabel}</label>
+                <input id="fg-name" name="name" type="text" required autoComplete="name" maxLength={120} />
+              </div>
+              <div className="field">
+                <label htmlFor="fg-email">{dict.lead.emailLabel}</label>
+                <input id="fg-email" name="email" type="email" required autoComplete="email" maxLength={160} />
+              </div>
+              <div className="field">
+                <label htmlFor="fg-company">{dict.lead.companyLabel}</label>
+                <input id="fg-company" name="company" type="text" autoComplete="organization" maxLength={160} />
+              </div>
+              <div className="field">
+                <label htmlFor="fg-whats">{d.gateWhatsapp}</label>
+                <input id="fg-whats" name="whatsapp" type="tel" autoComplete="tel" maxLength={24} placeholder="+55 11 9…" />
+                <p className="help">{d.gateWhatsappHelp}</p>
+              </div>
+            </div>
+            <div className="hp-field" aria-hidden="true">
+              <label htmlFor="fg-website">Website</label>
+              <input id="fg-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+            </div>
+            <label className="consent">
+              <input type="checkbox" name="autoriza_contato" />
+              <span>{d.gateAuthContact}</span>
+            </label>
+            <button type="submit" disabled={gateStatus === 'sending'}>
+              {gateStatus === 'sending' ? d.gateSending : d.gateButton}
+            </button>
+            <p className="help">{d.gatePrivacy}</p>
+          </form>
+        </section>
+      ) : null}
+
+      {result?.completo && unlocked ? (
         <section className="results">
           <h2>{d.resultsTitle}</h2>
           <div className="stat-grid">
@@ -274,17 +398,18 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
             ))}
           </ol>
 
-          {result.completo ? (
-            <div className="card" style={{ borderColor: 'var(--tt-teal-600)', borderWidth: '2px' }}>
-              <h3 style={{ marginTop: 0 }}>{d.ctaTitle}</h3>
-              <p>{d.ctaText}</p>
-            </div>
-          ) : null}
+          <div className="card" style={{ borderColor: 'var(--tt-teal-600)', borderWidth: '2px' }}>
+            <h3 style={{ marginTop: 0 }}>{d.ctaTitle}</h3>
+            <p>{d.ctaText}</p>
+          </div>
 
-          <div className="no-print" style={{ marginTop: '1rem' }}>
+          <div className="no-print" style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
             <button type="button" onClick={() => window.print()}>
               {dict.common.print}
             </button>
+            <a className="btn-ghost" href={FOLDER_URL} download>
+              {d.folderButton}
+            </a>
           </div>
           <div className="print-only">
             <h2>{d.reportTitle}</h2>
@@ -298,8 +423,6 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
           <p className="disclaimer">{dict.common.disclaimer}</p>
         </section>
       ) : null}
-
-      {result?.completo ? <LeadForm locale={locale} context={leadContext} title={d.ctaButton} /> : null}
     </div>
   );
 }

@@ -775,6 +775,82 @@ details.method summary {
 
 .fomm-q {
   margin: 0 0 1.1rem;
+  position: relative; /* âncora do quadro flutuante de critérios */
+}
+
+/* Ícone "i" — critérios dos níveis */
+.fomm-info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 1.2rem;
+  height: 1.2rem;
+  padding: 0;
+  margin-left: 0.45rem;
+  border-radius: 50%;
+  border: 1.5px solid var(--tt-teal-600);
+  background: transparent;
+  color: var(--tt-teal-600);
+  font-size: 0.75rem;
+  font-weight: 700;
+  font-style: italic;
+  font-family: Georgia, 'Times New Roman', serif;
+  line-height: 1;
+  cursor: pointer;
+  vertical-align: middle;
+}
+
+.fomm-info-btn:hover,
+.fomm-info-btn[aria-expanded='true'] {
+  background: var(--tt-teal-100);
+}
+
+/* Quadro flutuante com os critérios de cada nível */
+.fomm-info-pop {
+  position: absolute;
+  z-index: 20;
+  top: 1.9rem;
+  left: 0;
+  max-width: 34rem;
+  background: var(--tt-card);
+  border: 1px solid var(--tt-teal-600);
+  border-radius: var(--tt-radius);
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.18);
+  padding: 0.9rem 1.1rem;
+  font-size: 0.85rem;
+}
+
+.fomm-info-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.4rem;
+}
+
+.fomm-info-close {
+  padding: 0.25rem 0.7rem;
+  font-size: 0.8rem;
+}
+
+.fomm-info-pop ol {
+  margin: 0;
+  padding-left: 1.2rem;
+}
+
+.fomm-info-pop li {
+  margin: 0.35rem 0;
+}
+
+.fomm-info-pop li p {
+  margin: 0.15rem 0 0;
+  color: var(--tt-gray-700);
+}
+
+/* Gate de registro do resultado */
+.fomm-gate {
+  border-color: var(--tt-teal-600);
+  border-width: 2px;
 }
 
 .fomm-q-text {

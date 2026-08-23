@@ -271,28 +271,41 @@ export const pt = {
         label: 'Ad hoc',
         official: 'Initial / ad hoc',
         desc: 'Depende de indivíduos; sem documentação nem monitoramento.',
+        criteria:
+          'Sem consciência formal do processo; nada documentado; sem monitoramento nem melhoria; execução caso a caso, totalmente dependente de indivíduos.',
       },
       2: {
         label: 'Repetível',
         official: 'Repeatable but intuitive',
         desc: 'Feito de forma parecida por costume, sem processo formal.',
+        criteria:
+          'Alguma consciência do processo; pessoas diferentes executam de forma similar por costume; sem documentação formal nem monitoramento; alta dependência de pessoas-chave.',
       },
       3: {
         label: 'Definido',
         official: 'Defined process',
         desc: 'Processo documentado e treinado, mas sem medição de desvios.',
+        criteria:
+          'Processo padronizado, documentado e comunicado por treinamento; porém sem mecanismo confiável para detectar desvios — ainda não há monitoramento nem melhoria estruturada.',
       },
       4: {
         label: 'Gerenciado',
         official: 'Managed and measurable',
         desc: 'Cumprimento monitorado com indicadores e ação da gestão.',
+        criteria:
+          'A gestão monitora o cumprimento e age sobre desvios; monitoramento e melhoria constantes; treinamento formal rastreado; automação ainda limitada ou fragmentada.',
       },
       5: {
         label: 'Otimizado',
         official: 'Optimized',
         desc: 'Melhoria contínua medida, ferramentas integradas.',
+        criteria:
+          'Prática refinada com melhoria contínua medida; tecnologia integrada ao fluxo de trabalho; ferramentas integradas ponta a ponta.',
       },
     },
+    infoButton: 'Critérios dos níveis',
+    infoTitle: 'O que caracteriza cada nível (WP #197)',
+    infoClose: 'Fechar',
     disciplines: {
       ehs: {
         nome: 'Saúde, Segurança e Meio Ambiente',
@@ -370,6 +383,18 @@ export const pt = {
       qualidade:
         'Coloque procedimentos sob controle de versão e formalize o treinamento com avaliação — a base das demais disciplinas.',
     },
+    gateTitle: 'Seu perfil está pronto — veja e baixe o resultado',
+    gateIntro:
+      'Registre-se para visualizar o seu perfil de maturidade, imprimir o relatório e baixar o folder da Auditoria e Certificação FOMM.',
+    gateWhatsapp: 'WhatsApp (opcional)',
+    gateWhatsappHelp: 'Informe se desejar contato por WhatsApp.',
+    gateAuthContact:
+      'Autorizo a Top Tier a entrar em contato sobre meu resultado e os serviços de auditoria (LGPD). Sem esta autorização, nenhum contato será feito.',
+    gateButton: 'Ver meu resultado',
+    gateSending: 'Registrando…',
+    gatePrivacy:
+      'Usamos seus dados apenas para emitir o resultado e, se autorizado, para contato sobre os serviços Top Tier.',
+    folderButton: 'Baixar o folder — Auditoria e Certificação FOMM (PDF)',
     ctaTitle: 'Transforme o pré-diagnóstico em plano de ação',
     ctaText:
       'Este perfil é auto-declarado — a auditoria formal valida cada subelemento em campo, com evidências, findings e roadmap de evolução. A Top Tier Infrastructure® aplica uma metodologia exclusiva de avaliação, com score e software proprietários — o TierScope — construída em mais de 10 anos de aplicação do modelo em clientes líderes e de referência da indústria. Participamos do grupo internacional Zero Outage (IBM) e ajudamos nossos clientes a manter a excelência operacional e a conquistar certificações internacionais, incluindo a do framework FOMM emitida pelo ICOR Internacional.',
