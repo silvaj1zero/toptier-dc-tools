@@ -209,7 +209,7 @@ export default function VirtualizationCalculator({ locale = 'pt-br' }: { locale?
             <table>
               <thead>
                 <tr>
-                  <th></th>
+                  <th scope="col"><span className="sr-only">Métrica</span></th>
                   <th>{d.colPre}</th>
                   <th>{d.colPos}</th>
                   <th>{d.colReduction}</th>

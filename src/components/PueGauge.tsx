@@ -14,7 +14,7 @@ function x(value: number): number {
 }
 
 /** Escala horizontal de PUE com faixas 2025, marcadores de benchmark e o valor do usuário. */
-export function PueGauge({ value }: { value: number }) {
+export function PueGauge({ value, userLabel = 'Você' }: { value: number; userLabel?: string }) {
   const band = classifyPue(value);
   const segments = [
     { from: 1.0, to: 1.1, color: '#0e9f6e' },
@@ -45,7 +45,7 @@ export function PueGauge({ value }: { value: number }) {
         />
       ))}
       {[1.0, 1.2, 1.4, 1.6, 1.8, 2.0, 2.2, 2.4, 2.6].map((tick) => (
-        <g key={tick}>
+        <g key={tick} className={tick * 10 % 5 === 0 ? undefined : 'tick-minor'}>
           <line
             x1={x(tick)}
             y1={BAR_Y + BAR_H}
@@ -77,6 +77,7 @@ export function PueGauge({ value }: { value: number }) {
             strokeDasharray="2 2"
           />
           <text
+            className="bench-label"
             x={x(b.value)}
             y={BAR_Y - 17 - (i % 2) * 12}
             textAnchor="middle"
@@ -100,7 +101,7 @@ export function PueGauge({ value }: { value: number }) {
         fontWeight={700}
         style={{ fill: 'var(--tt-navy-900)' }}
       >
-        Você: {fmtNumber(value)}
+        {userLabel}: {fmtNumber(value)}
       </text>
     </svg>
   );

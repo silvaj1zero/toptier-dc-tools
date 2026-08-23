@@ -1,13 +1,69 @@
 ---
+import '@/styles/fonts.css';
 import '@/styles/global.css';
 
 interface Props {
   title: string;
   description: string;
+  /** Marca a página como ferramenta (emite JSON-LD WebApplication). */
+  tool?: boolean;
 }
 
-const { title, description } = Astro.props;
+const { title, description, tool = false } = Astro.props;
 const year = new Date().getFullYear();
+const canonical = new URL(Astro.url.pathname, Astro.site);
+const ogImage = new URL('/og.png', Astro.site);
+const currentPath = Astro.url.pathname;
+
+const NAV = [
+  { href: '/calculadora-pue/', label: 'Calculadora PUE' },
+  { href: '/simulador-economia/', label: 'Simulador de Economia' },
+  { href: '/calculadora-virtualizacao/', label: 'Virtualização' },
+  { href: '/modelador-pue/', label: 'Modelador de PUE' },
+  { href: '/planejador-densidade/', label: 'Espaço & Densidade' },
+  { href: '/maturidade-operacional/', label: 'Maturidade (FOMM)' },
+  { href: '/metodologia/', label: 'Metodologia' },
+];
+
+const organizationLd = {
+  '@type': 'Organization',
+  '@id': 'https://www.toptier.net.br/#org',
+  name: 'Top Tier Infrastructure',
+  url: 'https://www.toptier.net.br',
+  logo: new URL('/logo-tti.webp', Astro.site).href,
+  email: 'contato@toptier.net.br',
+};
+
+const jsonLd = {
+  '@context': 'https://schema.org',
+  '@graph': [
+    organizationLd,
+    {
+      '@type': 'WebSite',
+      '@id': `${Astro.site}#website`,
+      url: `${Astro.site}`,
+      name: 'Top Tools · Top Tier Infrastructure',
+      inLanguage: 'pt-BR',
+      publisher: { '@id': 'https://www.toptier.net.br/#org' },
+    },
+    ...(tool
+      ? [
+          {
+            '@type': 'WebApplication',
+            name: title,
+            description,
+            url: canonical.href,
+            applicationCategory: 'BusinessApplication',
+            operatingSystem: 'Web',
+            inLanguage: 'pt-BR',
+            isAccessibleForFree: true,
+            offers: { '@type': 'Offer', price: '0', priceCurrency: 'BRL' },
+            provider: { '@id': 'https://www.toptier.net.br/#org' },
+          },
+        ]
+      : []),
+  ],
+};
 ---
 
 <!doctype html>
@@ -17,17 +73,28 @@ const year = new Date().getFullYear();
     <meta name="viewport" content="width=device-width, initial-scale=1" />
     <title>{title} · Top Tools · Top Tier Infrastructure</title>
     <meta name="description" content={description} />
+    <link rel="canonical" href={canonical} />
+    <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.png" type="image/png" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
     <meta property="og:site_name" content="Top Tools · Top Tier Infrastructure" />
-    <link rel="preconnect" href="https://fonts.googleapis.com" />
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link
-      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=JetBrains+Mono:wght@400;600&display=swap"
-      rel="stylesheet"
+    <meta property="og:url" content={canonical} />
+    <meta property="og:locale" content="pt_BR" />
+    <meta property="og:image" content={ogImage} />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta
+      property="og:image:alt"
+      content="Top Tools — ferramentas abertas de eficiência energética para data centers"
     />
+    <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={ogImage} />
+    <link rel="preload" href="/fonts/inter-var.woff2" as="font" type="font/woff2" crossorigin />
+    <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     <script is:inline>
       // Resolve o tema antes do primeiro paint (evita flash). Escolha manual > sistema.
       (() => {
@@ -46,25 +113,44 @@ const year = new Date().getFullYear();
     </script>
   </head>
   <body>
+    <a class="skip-link" href="#conteudo">Pular para o conteúdo</a>
     <header class="site-header">
       <div class="inner">
         <a class="brand" href="/">
-          <img class="brand-logo" src="/logo-tti.png" alt="Top Tier Infrastructure" />
+          <img
+            class="brand-logo logo-light"
+            src="/logo-tti.webp"
+            alt="Top Tier Infrastructure"
+            width="146"
+            height="34"
+            decoding="async"
+          />
+          <img
+            class="brand-logo logo-dark"
+            src="/logo-tti-dark.webp"
+            alt=""
+            aria-hidden="true"
+            width="146"
+            height="34"
+            decoding="async"
+          />
           <span class="brand-name">Top <em>Tools</em></span>
         </a>
-        <nav>
-          <a href="/calculadora-pue/">Calculadora PUE</a>
-          <a href="/simulador-economia/">Simulador de Economia</a>
-          <a href="/calculadora-virtualizacao/">Virtualização</a>
-          <a href="/modelador-pue/">Modelador de PUE</a>
-          <a href="/planejador-densidade/">Espaço & Densidade</a>
-          <a href="/metodologia/">Metodologia</a>
-          <a href="https://www.toptier.net.br" target="_blank" rel="noopener">toptier.net.br</a>
+        <nav aria-label="Ferramentas">
+          {NAV.map((item) => (
+            <a href={item.href} aria-current={currentPath === item.href ? 'page' : undefined}>
+              {item.label}
+            </a>
+          ))}
+          <a href="https://www.toptier.net.br" target="_blank" rel="noopener noreferrer">
+            toptier.net.br<span class="sr-only"> (abre em nova aba)</span>
+          </a>
           <button
             id="theme-toggle"
             class="theme-toggle"
             type="button"
             aria-label="Alternar tema claro/escuro"
+            aria-pressed="false"
             title="Alternar tema claro/escuro"
           >
             <svg
@@ -107,31 +193,62 @@ const year = new Date().getFullYear();
         </nav>
       </div>
     </header>
-    <main>
+    <main id="conteudo">
       <slot />
     </main>
     <footer class="site-footer">
-      <div class="inner">
-        <p>
-          © {year} Top Tier Infrastructure — mais de 25 anos em ambientes de missão crítica.
-          <strong>Top Tools</strong> é a suíte de ferramentas educacionais abertas da Top Tier —
-          conheça nossos serviços e treinamentos em
-          <a href="https://www.toptier.net.br" style="color:inherit;">toptier.net.br</a>.
-        </p>
-        <p>
-          Contato: <a href="mailto:contato@toptier.net.br">contato@toptier.net.br</a> ·
-          Metodologia aberta: todas as fórmulas, fatores e fontes estão expostos em cada ferramenta.
-        </p>
+      <div class="inner footer-grid">
+        <div>
+          <p class="footer-title">Ferramentas</p>
+          <ul class="footer-links">
+            {NAV.slice(0, 6).map((item) => (
+              <li><a href={item.href}>{item.label}</a></li>
+            ))}
+          </ul>
+        </div>
+        <div>
+          <p class="footer-title">Confiança</p>
+          <ul class="footer-links">
+            <li><a href="/metodologia/">Metodologia aberta</a></li>
+            <li>Métricas ISO/IEC 30134 · The Green Grid</li>
+            <li>Benchmarks Uptime Institute 2025</li>
+            <li>Engines validados e testados — fórmulas expostas</li>
+          </ul>
+        </div>
+        <div>
+          <p class="footer-title">Top Tier Infrastructure</p>
+          <ul class="footer-links">
+            <li>Mais de 25 anos em missão crítica</li>
+            <li>
+              <a href="https://www.toptier.net.br" rel="noopener noreferrer" target="_blank"
+                >toptier.net.br<span class="sr-only"> (abre em nova aba)</span></a
+              >
+            </li>
+            <li><a href="mailto:contato@toptier.net.br">contato@toptier.net.br</a></li>
+          </ul>
+        </div>
+      </div>
+      <div class="inner footer-legal">
+        © {year} Top Tier Infrastructure. Ferramentas educacionais — resultados são estimativas e
+        não substituem medição em campo nem parecer de engenharia.
       </div>
     </footer>
     <script is:inline>
-      document.getElementById('theme-toggle')?.addEventListener('click', () => {
-        const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
-        document.documentElement.dataset.theme = next;
-        try {
-          localStorage.setItem('tt-theme', next);
-        } catch {}
-      });
+      (() => {
+        const btn = document.getElementById('theme-toggle');
+        if (!btn) return;
+        const sync = () =>
+          btn.setAttribute('aria-pressed', String(document.documentElement.dataset.theme === 'dark'));
+        sync();
+        btn.addEventListener('click', () => {
+          const next = document.documentElement.dataset.theme === 'dark' ? 'light' : 'dark';
+          document.documentElement.dataset.theme = next;
+          try {
+            localStorage.setItem('tt-theme', next);
+          } catch {}
+          sync();
+        });
+      })();
     </script>
   </body>
 </html>

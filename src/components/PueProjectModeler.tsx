@@ -292,7 +292,7 @@ export default function PueProjectModeler({ locale = 'pt-br' }: { locale?: Local
               <label htmlFor="pp-cost">{d.costLabel}</label>
               <span style={{ display: 'flex', gap: '0.5rem' }}>
                 <select
-                  aria-label="moeda"
+                  aria-label={d.currencyAriaLabel}
                   value={currency}
                   onChange={(e) => setCurrency(e.target.value as 'brl' | 'usd')}
                   style={{ width: '6rem' }}
@@ -429,7 +429,7 @@ export default function PueProjectModeler({ locale = 'pt-br' }: { locale?: Local
                 <table>
                   <thead>
                     <tr>
-                      <th></th>
+                      <th scope="col"><span className="sr-only">Métrica</span></th>
                       <th>PUE @{loadPct}%</th>
                       <th>{d.totalPower}</th>
                       <th>{d.annualCost}</th>

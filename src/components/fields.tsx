@@ -112,7 +112,7 @@ export function TariffFields({ t, state, onChange }: TariffFieldsProps) {
             onChange={(v) => onChange({ ...state, baseRsKwh: v })}
             help={t.tariff.baseHelp}
             step={0.01}
-            placeholder="0,75"
+            placeholder="0.75"
           />
         ) : null}
         <div className="field">

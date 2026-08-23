@@ -142,12 +142,62 @@ h3 {
   line-height: 1.25;
 }
 
+/* Escala tipográfica explícita (não depender do default do browser) */
 h1 {
   font-size: clamp(1.7rem, 4vw, 2.4rem);
+  letter-spacing: -0.015em;
+}
+
+h2 {
+  font-size: 1.45rem;
+  letter-spacing: -0.01em;
+  margin: 1.6em 0 0.5em;
+}
+
+h3 {
+  font-size: 1.12rem;
+  margin: 1.5em 0 0.5em;
+}
+
+.card h2,
+.card h3 {
+  margin-top: 0.2em;
 }
 
 a {
   color: var(--tt-navy-500);
+}
+
+/* Microinterações — transições curtas e específicas (nunca `all`) */
+a,
+button,
+.btn,
+.theme-toggle,
+input,
+select,
+.card,
+.stat,
+.badge,
+summary {
+  transition:
+    background-color 0.18s ease,
+    color 0.18s ease,
+    border-color 0.18s ease,
+    box-shadow 0.18s ease;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+
+/* Foco visível consistente em todo elemento interativo (teclado) */
+:focus-visible {
+  outline: 2px solid var(--tt-green);
+  outline-offset: 2px;
+  border-radius: 4px;
 }
 
 code {
@@ -186,9 +236,29 @@ code {
   height: 34px;
   width: auto;
   display: block;
-  background: var(--tt-logo-chip);
-  border-radius: 6px;
-  padding: 2px 4px;
+}
+
+/* Variante do logo por tema (sem chip branco de fundo) */
+.brand-logo.logo-dark {
+  display: none;
+}
+
+:root[data-theme='dark'] .brand-logo.logo-light {
+  display: none;
+}
+
+:root[data-theme='dark'] .brand-logo.logo-dark {
+  display: block;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) .brand-logo.logo-light {
+    display: none;
+  }
+
+  :root:not([data-theme='light']) .brand-logo.logo-dark {
+    display: block;
+  }
 }
 
 .brand-name {
@@ -214,19 +284,27 @@ code {
   color: var(--tt-gray-700);
   text-decoration: none;
   font-size: 0.95rem;
+  padding: 0.55rem 0.6rem; /* alvo de toque ≥44px de altura no mobile */
+  border-radius: 6px;
 }
 
 .site-header nav a:hover {
   color: var(--tt-navy-500);
-  text-decoration: underline;
+  background: var(--tt-bg-soft);
+}
+
+.site-header nav a[aria-current='page'] {
+  color: var(--tt-navy-500);
+  font-weight: 600;
+  background: var(--tt-teal-100);
 }
 
 .theme-toggle {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  width: 36px;
-  height: 36px;
+  width: 44px;
+  height: 44px;
   padding: 0;
   background: transparent;
   border: 1px solid var(--tt-gray-300);
@@ -266,6 +344,125 @@ code {
   padding: 1.5rem 1.25rem;
 }
 
+.footer-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 1.5rem;
+  padding-bottom: 0.5rem;
+}
+
+.footer-title {
+  font-weight: 700;
+  color: var(--tt-navy-900);
+  margin: 0 0 0.5rem;
+  font-size: 0.9rem;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.footer-links {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.footer-links li {
+  margin: 0.3rem 0;
+}
+
+.footer-links a {
+  color: var(--tt-gray-700);
+  text-decoration: none;
+}
+
+.footer-links a:hover {
+  color: var(--tt-navy-500);
+  text-decoration: underline;
+}
+
+.footer-legal {
+  border-top: 1px solid var(--tt-gray-300);
+  padding-top: 1rem;
+  font-size: 0.78rem;
+}
+
+/* Hero da home */
+.hero {
+  display: grid;
+  grid-template-columns: 1.4fr 1fr;
+  gap: 2rem;
+  align-items: center;
+  padding: 1.5rem 0 2rem;
+}
+
+.hero h1 {
+  margin-top: 0;
+}
+
+.hero-sub {
+  font-size: 1.08rem;
+  color: var(--tt-gray-700);
+  max-width: 42rem;
+}
+
+.hero-ctas {
+  display: flex;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+  margin-top: 1.25rem;
+}
+
+.btn-ghost {
+  display: inline-block;
+  padding: 0.65rem 1.4rem;
+  border-radius: 8px;
+  font-weight: 600;
+  text-decoration: none;
+  color: var(--tt-navy-500);
+  border: 1px solid var(--tt-navy-500);
+}
+
+.btn-ghost:hover {
+  background: var(--tt-teal-100);
+}
+
+.hero-proof {
+  list-style: none;
+  margin: 0;
+  padding: 1.25rem 1.5rem;
+  background: var(--tt-bg-soft);
+  border: 1px solid var(--tt-gray-300);
+  border-radius: var(--tt-radius);
+  display: flex;
+  flex-direction: column;
+  gap: 0.85rem;
+  font-size: 0.95rem;
+  color: var(--tt-gray-700);
+}
+
+.hero-proof li {
+  padding-left: 1.5rem;
+  position: relative;
+}
+
+.hero-proof li::before {
+  content: '';
+  position: absolute;
+  left: 0;
+  top: 0.4em;
+  width: 0.65rem;
+  height: 0.65rem;
+  border-radius: 3px;
+  background: var(--tt-green);
+}
+
+@media (max-width: 820px) {
+  .hero {
+    grid-template-columns: 1fr;
+    gap: 1.25rem;
+  }
+}
+
 /* Cards e formulários */
 .card {
   background: var(--tt-card);
@@ -279,17 +476,27 @@ code {
   background: var(--tt-bg-soft);
 }
 
+/* Agrupamentos de formulário como cartões suaves (sem a borda datada de fieldset) */
 fieldset {
-  border: 1px solid var(--tt-gray-300);
+  border: none;
+  background: var(--tt-bg-soft);
   border-radius: var(--tt-radius);
-  padding: 1rem 1.25rem;
+  padding: 1.1rem 1.25rem 0.5rem;
   margin: 0 0 1rem;
 }
 
 legend {
-  font-weight: 600;
-  color: var(--tt-navy-700);
-  padding: 0 0.4rem;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--tt-navy-900);
+  padding: 0;
+  margin-bottom: 0.6rem;
+  float: left; /* faz o legend fluir dentro do cartão (sem borda não há vão a cortar) */
+  width: 100%;
+}
+
+legend + * {
+  clear: both;
 }
 
 label {
@@ -315,14 +522,34 @@ select {
   color: var(--tt-gray-900);
 }
 
-input:focus,
-select:focus {
-  outline: 2px solid var(--tt-green);
-  outline-offset: 1px;
-}
+/* Foco de teclado coberto pelo :focus-visible global (sem outline duplicado no clique) */
 
 .field {
   margin-bottom: 1rem;
+}
+
+/* Honeypot anti-spam: fora da tela para humanos, presente no DOM para bots */
+.hp-field {
+  position: absolute;
+  left: -9999px;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
+
+.consent {
+  display: flex;
+  gap: 0.5rem;
+  align-items: flex-start;
+  font-weight: 400;
+  font-size: 0.85rem;
+  color: var(--tt-gray-700);
+  margin: 0.75rem 0 1rem;
+}
+
+.consent input {
+  margin-top: 0.2rem;
+  flex-shrink: 0;
 }
 
 .field .help {
@@ -334,7 +561,39 @@ select:focus {
 .grid-2 {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  gap: 0 1.25rem;
+  column-gap: 1.25rem;
+  row-gap: 0.35rem; /* os .field já têm margin-bottom; isto evita colagem de filhos sem margem */
+}
+
+/* Utilitário para texto só de leitor de tela */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* Skip-link (aparece só ao focar via teclado) */
+.skip-link {
+  position: absolute;
+  left: 0.75rem;
+  top: -3rem;
+  z-index: 10;
+  background: var(--tt-green-deep);
+  color: #fff;
+  padding: 0.5rem 1rem;
+  border-radius: 0 0 8px 8px;
+  text-decoration: none;
+  font-weight: 600;
+}
+
+.skip-link:focus {
+  top: 0;
 }
 
 button,
@@ -400,11 +659,18 @@ button.secondary {
 }
 
 .stat .value {
-  font-size: 1.45rem;
+  font-size: 1.9rem;
+  line-height: 1.15;
   font-weight: 700;
   color: var(--tt-navy-900);
   font-family: var(--tt-font-mono);
   font-variant-numeric: tabular-nums;
+  overflow-wrap: anywhere;
+}
+
+/* O número que importa domina a tela */
+.stat.highlight .value {
+  font-size: 2.35rem;
 }
 
 .stat .note {
@@ -495,10 +761,108 @@ details.method summary {
   margin-top: 1rem;
 }
 
+/* Pré-Diagnóstico FOMM */
+.scale-legend {
+  margin: 0.5rem 0 0;
+  padding-left: 1.25rem;
+  font-size: 0.9rem;
+  color: var(--tt-gray-700);
+}
+
+.scale-legend li {
+  margin: 0.3rem 0;
+}
+
+.fomm-q {
+  margin: 0 0 1.1rem;
+}
+
+.fomm-q-text {
+  font-weight: 600;
+  font-size: 0.95rem;
+  color: var(--tt-gray-900);
+  margin: 0 0 0.45rem;
+}
+
+.fomm-scale {
+  display: flex;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.fomm-opt {
+  position: relative; /* ancora o input oculto dentro do cartão (alvo de foco coincide) */
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.1rem;
+  min-width: 4.6rem;
+  padding: 0.45rem 0.6rem;
+  border: 1px solid var(--tt-gray-300);
+  border-radius: 8px;
+  background: var(--tt-card);
+  cursor: pointer;
+  font-weight: 400;
+  text-align: center;
+  transition:
+    background-color 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
+}
+
+.fomm-opt input {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  opacity: 0;
+  margin: 0;
+  cursor: pointer;
+}
+
+.fomm-opt .n {
+  font-weight: 700;
+  font-family: var(--tt-font-mono);
+  font-size: 1rem;
+  color: var(--tt-gray-700);
+}
+
+.fomm-opt .t {
+  font-size: 0.72rem;
+  color: var(--tt-gray-700); /* AA para texto pequeno */
+}
+
+.fomm-opt:hover {
+  border-color: var(--tt-teal-600);
+}
+
+.fomm-opt.on {
+  background: var(--tt-teal-100);
+  border-color: var(--tt-teal-600);
+}
+
+.fomm-opt.on .n,
+.fomm-opt.on .t {
+  color: var(--tt-teal-600);
+}
+
+.fomm-opt:has(input:focus-visible) {
+  outline: 2px solid var(--tt-green);
+  outline-offset: 2px;
+}
+
 /* Gauge */
 .gauge {
   width: 100%;
   height: auto;
+}
+
+/* Em telas estreitas o SVG escala ~0.5×: esconder texto secundário ilegível */
+@media (max-width: 480px) {
+  .gauge .bench-label,
+  .gauge .tick-minor {
+    display: none;
+  }
 }
 
 /* Print — relatório sempre em claro, independente do tema na tela.

@@ -101,7 +101,7 @@ export default function SavingsSimulator({ locale = 'pt-br' }: { locale?: Locale
               onChange={setCurrentPue}
               min={1}
               step={0.01}
-              placeholder="1,80"
+              placeholder="1.80"
             />
             <NumberField
               id="sv-tgt"
@@ -136,7 +136,7 @@ export default function SavingsSimulator({ locale = 'pt-br' }: { locale?: Locale
             <table>
               <thead>
                 <tr>
-                  <th></th>
+                  <th scope="col"><span className="sr-only">Métrica</span></th>
                   <th>{d.year1}</th>
                   <th>{d.year5}</th>
                   <th>{d.year10}</th>
