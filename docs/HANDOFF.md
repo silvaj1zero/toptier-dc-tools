@@ -9,8 +9,9 @@
 - **Pesquisa versionada** em `docs/research/2026-08-22-best-of-breed/`: benchmark de mercado (grok — "a suíte que não existe" é a nossa), fontes FOMM verificadas, 5 auditorias, plano de integração com toptier.net.br (03) e relatório final com gaps/sugestões (04).
 - **Pendências quentes:** (1) operador configurar `PUBLIC_LEAD_ENDPOINT` na Vercel — sem isso lead cai em mailto; (2) ADR da fronteira FOMM suíte × site novo (colide com ADR-SITE-TECH-FOUNDATION do TTI-Web-Renew); (3) deploy manual `npx vercel --prod` após push.
 - **Ajuste do founder (23/08):** bloco de autoridade comercial no FOMM — metodologia exclusiva com score/software proprietários (TierScope), 10+ anos em clientes líderes, Zero Outage (IBM), certificações FOMM via ICOR Internacional; `Top Tier Infrastructure®` nas superfícies de marca. A ferramenta segue sem emitir certificação (gate de claims preservado).
+- **FOMM v2 (23/08, testado pelo operador em produção):** ícone "i" com critérios por nível (WP #197 Fig. 3), **gate de registro** (resultado/folder exigem nome+e-mail; WhatsApp opcional; contato só com check de autorização — lead vai ao Formspree com perfil fomm_* completo), folder "Auditoria e Certificação FOMM" R9 em `/downloads/`, credencial ISO/IEC 17021-1. **Funil fechado:** `PUBLIC_LEAD_ENDPOINT` configurada na Vercel (Formspree `xwlezdjg`) — leads não caem mais em mailto.
 - Gates finais: `tsc` 0 · **72/72** testes · build **8 páginas** + sitemap.
-- Commits da rodada: `23a1890` (best-of-breed) · `bd116e9` (FOMM) · `a1c26de` (docs) · `23054f5` (autoridade/marca).
+- Commits da rodada: `23a1890` (best-of-breed) · `bd116e9` (FOMM) · `a1c26de` (docs) · `23054f5` (autoridade/marca) · `daaab79` (gate+folder+critérios).
 
 ## Estado anterior (parte 1 da sessão)
 
