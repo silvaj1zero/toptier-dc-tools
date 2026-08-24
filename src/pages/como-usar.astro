@@ -1,0 +1,250 @@
+---
+import Base from '@/layouts/Base.astro';
+import LeadForm from '@/components/LeadForm';
+---
+
+<Base
+  title="Como usar as ferramentas"
+  description="Guia prático da suíte Top Tools: por onde começar, o que cada ferramenta responde e como transformar os resultados em um plano de eficiência e maturidade operacional — em roteiros de 5 a 20 minutos."
+>
+  <section class="hero">
+    <div>
+      <h1>Como usar as ferramentas — do primeiro número ao plano de ação</h1>
+      <p class="hero-sub">
+        Seis ferramentas gratuitas, <strong>nenhum cadastro para calcular</strong> e um caminho
+        claro: em 5 a 20 minutos você sai com números que a diretoria entende — custo anual do seu
+        PUE, potencial de economia, capacidade real e maturidade da operação. Este guia mostra por
+        onde começar conforme o seu objetivo.
+      </p>
+      <p class="hero-ctas">
+        <a class="btn" href="#roteiros">Escolher meu roteiro</a>
+        <a class="btn-ghost" href="#tour">Ver o tour ferramenta a ferramenta</a>
+      </p>
+    </div>
+  </section>
+
+  <section id="roteiros" aria-labelledby="roteiros-titulo">
+    <h2 id="roteiros-titulo">Comece pelo seu objetivo</h2>
+    <p>
+      Você não precisa usar tudo. Três roteiros cobrem as perguntas mais comuns — cada um termina
+      com um resultado concreto para levar à sua equipe ou à diretoria.
+    </p>
+    <div class="tool-grid">
+      <div class="card route">
+        <p class="route-tag">Roteiro 1 · ~10 minutos</p>
+        <h3>"Quanto a ineficiência está me custando?"</h3>
+        <ol>
+          <li>
+            <a href="/calculadora-pue/">Calculadora de PUE</a> — informe a energia total e a de TI
+            (da sua fatura e medições) e descubra seu PUE, a posição na régua de 2025 e o custo
+            anual em reais.
+          </li>
+          <li>
+            <a href="/simulador-economia/">Simulador de Economia</a> — leve o PUE apurado, escolha
+            uma meta e veja a economia em kWh, reais e CO₂e em 1, 5 e 10 anos, com medidas típicas
+            para cada faixa de ganho.
+          </li>
+        </ol>
+        <p class="route-out"><strong>Você sai com:</strong> o custo da ineficiência hoje e um business case de redução com horizonte e medidas.</p>
+      </div>
+
+      <div class="card route">
+        <p class="route-tag">Roteiro 2 · ~20 minutos</p>
+        <h3>"Estou projetando, expandindo ou consolidando"</h3>
+        <ol>
+          <li>
+            <a href="/modelador-pue/">Modelador de PUE de Projeto</a> — monte até 4 cenários de
+            arquitetura (UPS, redundância, climatização, economizador) e compare o PUE esperado e a
+            curva PUE × carga de cada um.
+          </li>
+          <li>
+            <a href="/planejador-densidade/">Planejador de Espaço e Densidade</a> — dimensione a
+            cascata gabinete → pod → sala → instalação sem o "W/m² solto" que encalha capacidade.
+          </li>
+          <li>
+            <a href="/calculadora-virtualizacao/">Calculadora de Virtualização</a> — se o plano
+            inclui consolidar servidores, veja o efeito real no PUE e na conta (incluindo o
+            paradoxo do PUE).
+          </li>
+        </ol>
+        <p class="route-out"><strong>Você sai com:</strong> cenários comparados e defensáveis — cada fórmula e fator exposto para o seu projetista ou auditor conferir.</p>
+      </div>
+
+      <div class="card route highlight-card">
+        <p class="route-tag">Roteiro 3 · ~10 minutos</p>
+        <h3>"Quero elevar a maturidade da operação"</h3>
+        <ol>
+          <li>
+            <a href="/maturidade-operacional/">Pré-Diagnóstico FOMM</a> — responda 18 perguntas
+            sobre as 7 disciplinas da operação (escala 1–5, WP #197) e receba o radar de
+            maturidade com os 3 gaps prioritários.
+          </li>
+          <li>
+            Baixe o folder da <strong>Auditoria e Certificação FOMM</strong> e, se fizer sentido,
+            solicite o <strong>diagnóstico de prontidão FOMM</strong> — o passo seguinte da
+            jornada, rumo às certificações via ICOR Internacional (ISO/IEC 17021-1).
+          </li>
+        </ol>
+        <p class="route-out"><strong>Você sai com:</strong> um perfil de maturidade disciplina a disciplina e prioridades claras — antes que os gaps virem incidente.</p>
+      </div>
+    </div>
+  </section>
+
+  <section id="tour" aria-labelledby="tour-titulo">
+    <h2 id="tour-titulo">O tour, ferramenta a ferramenta</h2>
+    <p>
+      Todas seguem o mesmo princípio: <strong>você informa poucos dados, recebe um resultado
+      auditável</strong> — e cada fórmula, fator e fonte está exposta na página e na
+      <a href="/metodologia/">metodologia</a>.
+    </p>
+
+    <div class="tour-list">
+      <div class="card">
+        <h3><a href="/calculadora-pue/">1 · Calculadora de PUE</a> <span class="time">~5 min</span></h3>
+        <p><strong>Você informa:</strong> energia total da instalação e energia de TI (fatura + medição), tarifa e bandeira.</p>
+        <p><strong>Você recebe:</strong> PUE e DCiE (ISO/IEC 30134-2), comparação com a média global de 2025 (1,54 — Uptime Institute), custo anual em reais, WUE/CUE opcionais e a leitura regulatória (EED/EnEfG).</p>
+        <p class="tip">Dica: use a média de 12 meses, não um mês isolado — sazonalidade de clima distorce o PUE.</p>
+      </div>
+
+      <div class="card">
+        <h3><a href="/simulador-economia/">2 · Simulador de Economia</a> <span class="time">~5 min</span></h3>
+        <p><strong>Você informa:</strong> PUE atual, PUE alvo, carga de TI e tarifa.</p>
+        <p><strong>Você recebe:</strong> economia em kWh, reais e toneladas de CO₂e em 1, 5 e 10 anos — com o fator de emissão do grid brasileiro e medidas típicas para a sua faixa de ganho.</p>
+        <p class="tip">Dica: apresente o horizonte de 5 anos — é onde o business case fica evidente sem depender de projeção longa.</p>
+      </div>
+
+      <div class="card">
+        <h3><a href="/calculadora-virtualizacao/">3 · Calculadora de Virtualização</a> <span class="time">~5 min</span></h3>
+        <p><strong>Você informa:</strong> quantos servidores físicos, taxa de consolidação pretendida e a arquitetura da infraestrutura.</p>
+        <p><strong>Você recebe:</strong> o efeito da consolidação na energia de TI, no PUE e na conta anual — incluindo o paradoxo do PUE (consolidar sem right-sizing piora a métrica).</p>
+        <p class="tip">Dica: rode dois cenários — com e sem right-sizing da infraestrutura — e compare; a diferença é o argumento.</p>
+      </div>
+
+      <div class="card">
+        <h3><a href="/modelador-pue/">4 · Modelador de PUE de Projeto</a> <span class="time">~10 min</span></h3>
+        <p><strong>Você informa:</strong> as decisões de arquitetura — UPS, redundância, água gelada vs. DX, economizador e 13 detalhes de projeto.</p>
+        <p><strong>Você recebe:</strong> PUE estimado por cenário (até 4 lado a lado), curva PUE × carga com marcador interativo e a alocação de energia por subsistema. Réplica validada ponto a ponto contra a ferramenta clássica do mercado (610/610).</p>
+        <p class="tip">Dica: olhe a curva em carga parcial (30–50%) — é onde o oversizing aparece e onde a maioria dos data centers realmente opera.</p>
+      </div>
+
+      <div class="card">
+        <h3><a href="/planejador-densidade/">5 · Planejador de Espaço e Densidade</a> <span class="time">~10 min</span></h3>
+        <p><strong>Você informa:</strong> gabinetes, potência média e de pico, incerteza e reservas — no nível da sala ou da instalação inteira.</p>
+        <p><strong>Você recebe:</strong> área, densidade e capacidade em cada nível da cascata gabinete → pod → sala → instalação (método do White Paper #155) — a mesma instalação mede densidades diferentes conforme o nível, e é isso que evita capacidade encalhada.</p>
+        <p class="tip">Dica: declare a incerteza com honestidade — a reserva sugerida existe para absorver o desvio, não para inflar a área.</p>
+      </div>
+
+      <div class="card highlight-card">
+        <h3><a href="/maturidade-operacional/">6 · Pré-Diagnóstico FOMM</a> <span class="time">~10 min</span></h3>
+        <p><strong>Você informa:</strong> 18 respostas sobre as 7 disciplinas da operação (WP #197), na escala oficial 1–5 — com os critérios de cada nível explicados no ícone "i".</p>
+        <p><strong>Você recebe:</strong> radar de maturidade, nível por disciplina e os 3 gaps prioritários com recomendação — mais o folder da Auditoria e Certificação FOMM. É um pré-diagnóstico auto-declarado: o primeiro passo da jornada de auditoria, não um selo.</p>
+        <p class="tip">Dica: responda com a operação como ela é hoje, não como deveria ser — o valor do radar está nos gaps que ele revela.</p>
+      </div>
+    </div>
+  </section>
+
+  <section aria-labelledby="praticas-titulo">
+    <h2 id="praticas-titulo">Quatro práticas para tirar o máximo</h2>
+    <div class="tool-grid">
+      <div class="card soft">
+        <h3>Use dados reais</h3>
+        <p>Fatura de energia, medições de TI e inventário verdadeiro. As ferramentas são tão boas quanto os dados de entrada — e presets são ponto de partida didático, não a sua tarifa.</p>
+      </div>
+      <div class="card soft">
+        <h3>Compare cenários</h3>
+        <p>O valor está no contraste: atual × meta, arquitetura A × B, com × sem consolidação. Todas as ferramentas foram desenhadas para responder "e se?".</p>
+      </div>
+      <div class="card soft">
+        <h3>Confira as fontes</h3>
+        <p>Cada número tem fonte e cada fórmula está exposta na <a href="/metodologia/">metodologia</a>. Se alguém duvidar do resultado, mostre a régua — ela é pública.</p>
+      </div>
+      <div class="card soft">
+        <h3>Feche o ciclo com gente</h3>
+        <p>Ferramenta mede; quem transforma é o time. Quando o resultado apontar gaps, o passo seguinte é o diagnóstico de prontidão FOMM com a Top Tier — auditoria independente rumo às certificações via ICOR Internacional.</p>
+      </div>
+    </div>
+  </section>
+
+  <LeadForm client:visible title="Quer ajuda para interpretar seus resultados?" />
+</Base>
+
+<style>
+  section {
+    margin-top: 2.5rem;
+  }
+
+  section:first-of-type {
+    margin-top: 0;
+  }
+
+  .tool-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(310px, 1fr));
+    gap: 1rem;
+  }
+
+  .tool-grid :global(.card) {
+    margin: 0;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .tour-list {
+    display: grid;
+    gap: 1rem;
+  }
+
+  .tour-list :global(.card) {
+    margin: 0;
+  }
+
+  .highlight-card {
+    border-color: var(--tt-teal-600);
+    background: var(--tt-teal-100);
+  }
+
+  .route ol {
+    padding-left: 1.25rem;
+    margin: 0.5rem 0;
+  }
+
+  .route ol li {
+    margin-bottom: 0.5rem;
+  }
+
+  .route-tag {
+    font-size: 0.78rem;
+    font-weight: 700;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    color: var(--tt-teal-600);
+    margin-bottom: 0.25rem;
+  }
+
+  .route-out {
+    margin-top: auto;
+    padding-top: 0.5rem;
+    border-top: 1px solid var(--tt-gray-300);
+    font-size: 0.95rem;
+  }
+
+  .time {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--tt-gray-700);
+    background: var(--tt-bg-soft);
+    border: 1px solid var(--tt-gray-300);
+    border-radius: 999px;
+    padding: 0.1rem 0.6rem;
+    vertical-align: middle;
+    margin-left: 0.5rem;
+    white-space: nowrap;
+  }
+
+  .tip {
+    font-size: 0.92rem;
+    color: var(--tt-gray-700);
+    border-left: 3px solid var(--tt-teal-600);
+    padding-left: 0.75rem;
+  }
+</style>
