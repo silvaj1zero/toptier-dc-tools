@@ -6,7 +6,8 @@
 
 - **Captação padronizada em TODAS as ferramentas:** `LeadForm` agora segue o padrão do gate FOMM — WhatsApp opcional (com aviso de finalidade) e campo `origem` automático (slug da página) em todo lead; mailto fallback inclui WhatsApp. Strings novas em pt/en (`whatsappLabel`, `whatsappHelp`). Todo lead (LeadForm ou gate FOMM) chega ao Formspree com o mesmo esquema: origem + pagina + referrer + UTMs + LGPD.
 - **Materiais do time em `docs/time/`:** `01-guia-suite.md` (explica cada ferramenta, padrão de captação, gate de claims), `02-status-time.md` (o que temos pronto), `diagrama-ecossistema.html` (SVG autocontido para envio separado — validado visualmente no Chrome) e `index.html` (página de introdução reunindo tudo, DS Silent Precision, tema claro fixo).
-- Gates: `tsc` 0 · **72/72** testes · build **8 páginas**. Screenshots do Chrome voltaram a funcionar nesta sessão (gotcha da sessão 2026-08-22 não se repetiu).
+- **Home reescrita como página de marketing** (`src/pages/index.astro`): hero de liderança em missão crítica, credenciais (stat-grid: 25+ anos · Zero Outage IBM · DCEP/US DOE · FOMM·ICOR), **diagrama público da jornada** em 4 passos (SVG inline theme-aware com tokens `var(--tt-*)` — versão pública SEM detalhes internos de funil/Formspree), grid das 6 ferramentas com CTAs, pilares liderança/capacitação/expertise, seção "para quem" (operadores, empresas de missão crítica, engenharia) e LeadForm "Fale com um especialista em missão crítica". Gate de claims e zero-MBA respeitados.
+- Gates: `tsc` 0 · **72/72** testes · build **8 páginas**. Screenshots do Chrome funcionaram no início da sessão e depois quebraram de novo (timeout de injeção; headless CLI também travou) — validação da home via read_page (a11y tree), padrão da sessão 2026-08-22.
 - Pendência mantida: deploy manual `npx vercel --prod` pelo operador após push.
 
 ## Sessão 2026-08-22 (parte 2) — Goal-loop Best-of-Breed + FOMM
