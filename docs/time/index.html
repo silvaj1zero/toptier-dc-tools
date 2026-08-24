@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="pt-br">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Top Tools — Introdução para o time</title>
+<style>
+  /* Página interna do time — visual único deliberado (tema claro fixo, DS "Silent Precision"). */
+  :root {
+    --green: #00a651; --green-deep: #007a3d; --green-soft: #e5f5ec;
+    --navy: #111827; --gray-700: #374151; --gray-500: #6b7280;
+    --gray-300: #d1d5db; --gray-100: #f3f4f6; --bg-soft: #f7faf8;
+  }
+  * { box-sizing: border-box; margin: 0; }
+  body {
+    background: var(--bg-soft); color: var(--navy);
+    font-family: 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, Arial, sans-serif;
+    line-height: 1.55;
+  }
+  .wrap { max-width: 1080px; margin: 0 auto; padding: 40px 20px 64px; }
+  .kicker { color: var(--green-deep); font-weight: 700; font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase; }
+  h1 { font-size: 34px; letter-spacing: -0.02em; margin: 6px 0 10px; }
+  .lede { font-size: 17px; color: var(--gray-700); max-width: 760px; }
+  h2 { font-size: 22px; margin: 44px 0 14px; letter-spacing: -0.01em; }
+  h3 { font-size: 16px; margin: 0 0 6px; }
+  p + p { margin-top: 10px; }
+  a { color: var(--green-deep); }
+  .badges { display: flex; flex-wrap: wrap; gap: 10px; margin: 22px 0 0; }
+  .badge {
+    background: #ffffff; border: 1px solid var(--gray-300); border-radius: 999px;
+    padding: 6px 14px; font-size: 13px; color: var(--gray-700);
+  }
+  .badge strong { color: var(--green-deep); }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 14px; }
+  .card {
+    background: #ffffff; border: 1px solid var(--gray-300); border-radius: 12px; padding: 18px;
+  }
+  .card p { font-size: 14px; color: var(--gray-700); }
+  .card .url { font-size: 12px; color: var(--gray-500); font-family: ui-monospace, Consolas, monospace; }
+  .card.hot { background: var(--green-soft); border-color: var(--green); }
+  table { width: 100%; border-collapse: collapse; background: #fff; border: 1px solid var(--gray-300); border-radius: 12px; overflow: hidden; font-size: 14px; }
+  th, td { text-align: left; padding: 10px 14px; border-bottom: 1px solid var(--gray-100); vertical-align: top; }
+  th { background: var(--gray-100); font-size: 13px; }
+  tr:last-child td { border-bottom: none; }
+  .ok { color: var(--green-deep); font-weight: 600; }
+  .no { color: #b91c1c; font-weight: 600; }
+  .table-scroll { overflow-x: auto; }
+  .diagram { background: #ffffff; border: 1px solid var(--gray-300); border-radius: 12px; padding: 12px; overflow-x: auto; }
+  .diagram svg { display: block; min-width: 1100px; width: 100%; height: auto; }
+  .note { font-size: 13px; color: var(--gray-500); margin-top: 8px; }
+  .files { font-size: 14px; }
+  .files code { background: var(--gray-100); border-radius: 6px; padding: 2px 6px; font-family: ui-monospace, Consolas, monospace; font-size: 12.5px; }
+  footer { margin-top: 56px; padding-top: 16px; border-top: 1px solid var(--gray-300); color: var(--gray-500); font-size: 12.5px; }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+  <p class="kicker">Top Tier Infrastructure® · uso interno do time</p>
+  <h1>Top Tools — a suíte de ferramentas que gera nossos leads</h1>
+  <p class="lede">
+    O <strong>Top Tools</strong> (<a href="https://ferramentas.toptier.net.br">ferramentas.toptier.net.br</a>)
+    é o conjunto de ferramentas abertas de eficiência para data centers da Top Tier. Ele é o
+    <strong>teaser público de geração de leads</strong> dos nossos serviços e treinamentos: o prospect
+    usa uma ferramenta gratuita, recebe valor real, e entra no funil com contexto — sabemos qual
+    ferramenta usou, de onde veio e (no FOMM) quais são os gaps da operação dele.
+  </p>
+
+  <div class="badges">
+    <span class="badge"><strong>8 páginas</strong> no ar</span>
+    <span class="badge"><strong>72/72</strong> testes passando</span>
+    <span class="badge"><strong>610/610</strong> pontos validados no Modelador</span>
+    <span class="badge"><strong>Funil fechado</strong> — leads no Formspree</span>
+    <span class="badge"><strong>Duplo APROVADO</strong> em auditoria externa</span>
+  </div>
+
+  <h2>Por que isso tem autoridade</h2>
+  <p>
+    O posicionamento é <strong>metodologia aberta</strong>: toda fórmula, fator e fonte está exposta —
+    diferente das calculadoras clássicas do mercado (tarifas de 2010, benchmarks obsoletos, fatores
+    ocultos). A régua é a de 2025: Uptime Institute, ISO/IEC 30134, dados brasileiros ANEEL/MCTI.
+    O benchmark de mercado que fizemos mostrou que <em>"a suíte que não existe" no mercado é
+    exatamente a nossa</em> — as ferramentas do gênero foram descontinuadas pelos fabricantes ou
+    escondem a metodologia.
+  </p>
+
+  <h2>As 6 ferramentas</h2>
+  <div class="grid">
+    <div class="card">
+      <h3>Calculadora de PUE</h3>
+      <p>PUE e DCiE conforme ISO/IEC 30134-2; benchmarks 2025 (média global 1,54); custo anual em R$ com bandeira tarifária; WUE/CUE; leitura regulatória (EnEfG/EED).</p>
+      <p class="url">/calculadora-pue/</p>
+    </div>
+    <div class="card">
+      <h3>Simulador de Economia</h3>
+      <p>Economia em kWh, R$ e tCO₂e ao reduzir o PUE, em 1/5/10 anos, com o grid brasileiro — e medidas típicas para cada faixa de ganho.</p>
+      <p class="url">/simulador-economia/</p>
+    </div>
+    <div class="card">
+      <h3>Calculadora de Virtualização</h3>
+      <p>Consolidação de servidores e efeito no PUE e na conta — incluindo o paradoxo do PUE. Reconstrução aberta do TradeOff Tool (WP 118), validada em 311 instalações.</p>
+      <p class="url">/calculadora-virtualizacao/</p>
+    </div>
+    <div class="card">
+      <h3>Modelador de PUE de Projeto</h3>
+      <p>PUE a partir das decisões de arquitetura (UPS, redundância, climatização, economizador…), curva PUE × carga e até 4 cenários. Réplica exata, 610/610 pontos validados.</p>
+      <p class="url">/modelador-pue/</p>
+    </div>
+    <div class="card">
+      <h3>Planejador de Espaço e Densidade</h3>
+      <p>Área, densidade e capacidade de gabinetes na cascata gabinete → pod → sala → instalação, pelo método do WP #155 — sem o "W/m² solto" que encalha capacidade.</p>
+      <p class="url">/planejador-densidade/</p>
+    </div>
+    <div class="card hot">
+      <h3>Pré-Diagnóstico FOMM ★</h3>
+      <p>Maturidade operacional nas 7 disciplinas do WP #197: 18 perguntas, escala 1–5, radar, gaps priorizados. Gate de registro + folder da Auditoria e Certificação FOMM. <strong>O funil mais quente.</strong></p>
+      <p class="url">/maturidade-operacional/</p>
+    </div>
+  </div>
+  <p class="note">+ a página <strong>/metodologia/</strong>, que documenta normas, benchmarks e decisões — a prova pública do posicionamento.</p>
+
+  <h2>Padrão único de captação de leads</h2>
+  <p>
+    Toda ferramenta capta leads com o <strong>mesmo formulário</strong> e todo lead chega à
+    <strong>mesma caixa</strong> (Formspree) com o mesmo esquema de campos:
+  </p>
+  <div class="table-scroll"><table>
+    <tr><th>O que</th><th>Como</th></tr>
+    <tr><td><strong>Campos</strong></td><td>nome + e-mail corporativo (obrigatórios) · empresa e WhatsApp (opcionais) · consentimento LGPD obrigatório com finalidade declarada</td></tr>
+    <tr><td><strong>Atribuição automática</strong></td><td><code>origem</code> (qual ferramenta gerou o lead) · página · referrer · UTMs de campanha — dá para medir qual ferramenta e qual campanha performam</td></tr>
+    <tr><td><strong>Anti-spam</strong></td><td>honeypot invisível — bots são descartados silenciosamente</td></tr>
+    <tr><td><strong>Gate FOMM</strong></td><td>resultado e folder só após nome + e-mail; contato comercial apenas com autorização explícita; o lead vem com o perfil completo das 7 disciplinas</td></tr>
+    <tr><td><strong>Resiliência</strong></td><td>sem endpoint configurado, degrada para e-mail direto — o formulário nunca quebra</td></tr>
+  </table></div>
+
+  <h2>O ecossistema num único desenho</h2>
+  <div class="diagram" role="img" aria-label="Diagrama do ecossistema: canais de aquisição levam à suíte de 6 ferramentas; toda ferramenta capta leads num padrão único que chega ao Formspree; leads autorizados seguem para diagnóstico, auditoria e certificação FOMM, consultoria e treinamentos.">
+  <svg viewBox="0 0 1360 850" xmlns="http://www.w3.org/2000/svg" font-family="Inter, system-ui, 'Segoe UI', Arial, sans-serif">
+    <defs>
+      <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="#007a3d"/>
+      </marker>
+      <marker id="arrg" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+        <path d="M0 0 L10 5 L0 10 z" fill="#6b7280"/>
+      </marker>
+    </defs>
+
+    <text x="40" y="42" font-size="15" font-weight="700" fill="#111827">1 · AQUISIÇÃO</text>
+    <text x="40" y="60" font-size="12" fill="#6b7280">de onde o tráfego vem</text>
+
+    <g font-size="14" fill="#111827">
+      <rect x="40" y="80" width="240" height="52" rx="10" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="56" y="102" font-weight="600">LinkedIn</text>
+      <text x="56" y="121" font-size="12" fill="#6b7280">lançamento — Fase 3, a iniciar</text>
+
+      <rect x="40" y="148" width="240" height="52" rx="10" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="56" y="170" font-weight="600">Google / busca orgânica</text>
+      <text x="56" y="189" font-size="12" fill="#6b7280">SEO técnico pronto (sitemap, OG, JSON-LD)</text>
+
+      <rect x="40" y="216" width="240" height="52" rx="10" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="56" y="238" font-weight="600">Site toptier.net.br</text>
+      <text x="56" y="257" font-size="12" fill="#6b7280">integração de links planejada</text>
+
+      <rect x="40" y="284" width="240" height="52" rx="10" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="56" y="306" font-weight="600">Indicações e clientes</text>
+      <text x="56" y="325" font-size="12" fill="#6b7280">aulas, auditorias, rede Top Tier</text>
+    </g>
+
+    <line x1="292" y1="208" x2="336" y2="208" stroke="#007a3d" stroke-width="2.5" marker-end="url(#arr)"/>
+
+    <text x="348" y="42" font-size="15" font-weight="700" fill="#111827">2 · SUÍTE TOP TOOLS</text>
+    <text x="348" y="60" font-size="12" fill="#6b7280">ferramentas.toptier.net.br — 8 páginas no ar</text>
+
+    <rect x="340" y="72" width="352" height="530" rx="12" fill="#f7faf8" stroke="#d1d5db"/>
+    <g font-size="14" fill="#111827">
+      <rect x="356" y="88" width="320" height="56" rx="10" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="372" y="111" font-weight="600">Calculadora de PUE</text>
+      <text x="372" y="130" font-size="12" fill="#6b7280">ISO/IEC 30134-2 · benchmarks 2025 · R$/ano</text>
+
+      <rect x="356" y="156" width="320" height="56" rx="10" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="372" y="179" font-weight="600">Simulador de Economia</text>
+      <text x="372" y="198" font-size="12" fill="#6b7280">kWh · R$ · tCO₂e em 1/5/10 anos</text>
+
+      <rect x="356" y="224" width="320" height="56" rx="10" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="372" y="247" font-weight="600">Calculadora de Virtualização</text>
+      <text x="372" y="266" font-size="12" fill="#6b7280">WP 118 · paradoxo do PUE · 311 instalações</text>
+
+      <rect x="356" y="292" width="320" height="56" rx="10" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="372" y="315" font-weight="600">Modelador de PUE de Projeto</text>
+      <text x="372" y="334" font-size="12" fill="#6b7280">réplica validada 610/610 · até 4 cenários</text>
+
+      <rect x="356" y="360" width="320" height="56" rx="10" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="372" y="383" font-weight="600">Planejador de Espaço e Densidade</text>
+      <text x="372" y="402" font-size="12" fill="#6b7280">WP #155 · gabinete → pod → sala → instalação</text>
+
+      <rect x="356" y="428" width="320" height="70" rx="10" fill="#e5f5ec" stroke="#00a651" stroke-width="1.5"/>
+      <text x="372" y="451" font-weight="700">Pré-Diagnóstico FOMM</text>
+      <text x="372" y="470" font-size="12" fill="#374151">WP #197 · 7 disciplinas · radar 1–5 · gaps</text>
+      <text x="372" y="487" font-size="12" fill="#007a3d" font-weight="600">funil mais quente — gate + folder</text>
+
+      <rect x="356" y="514" width="320" height="52" rx="10" fill="#ffffff" stroke="#d1d5db" stroke-dasharray="4 3"/>
+      <text x="372" y="536" font-weight="600">Metodologia aberta</text>
+      <text x="372" y="555" font-size="12" fill="#6b7280">toda fórmula, fator e fonte expostos</text>
+    </g>
+
+    <line x1="692" y1="230" x2="742" y2="230" stroke="#007a3d" stroke-width="2.5" marker-end="url(#arr)"/>
+    <path d="M 692 463 C 726 463, 730 420, 764 420" fill="none" stroke="#00a651" stroke-width="2.5" marker-end="url(#arr)"/>
+
+    <text x="756" y="42" font-size="15" font-weight="700" fill="#111827">3 · CAPTAÇÃO — padrão único</text>
+    <text x="756" y="60" font-size="12" fill="#6b7280">mesmo formulário e mesmo esquema em toda a suíte</text>
+
+    <g font-size="13" fill="#374151">
+      <rect x="748" y="80" width="300" height="188" rx="10" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="764" y="106" font-size="14" font-weight="700" fill="#111827">Formulário padrão (todas)</text>
+      <text x="764" y="130">nome · e-mail corporativo · empresa</text>
+      <text x="764" y="150">WhatsApp opcional · LGPD obrigatória</text>
+      <text x="764" y="170">honeypot anti-spam</text>
+      <text x="764" y="196" font-weight="600" fill="#007a3d">atribuição automática:</text>
+      <text x="764" y="216">origem (ferramenta) · página · referrer</text>
+      <text x="764" y="236">utm_source/medium/campaign/…</text>
+
+      <rect x="768" y="352" width="280" height="150" rx="10" fill="#e5f5ec" stroke="#00a651" stroke-width="1.5"/>
+      <text x="784" y="378" font-size="14" font-weight="700" fill="#111827">Gate de registro FOMM</text>
+      <text x="784" y="402">resultado + folder após nome + e-mail</text>
+      <text x="784" y="422">contato só com autorização explícita</text>
+      <text x="784" y="442">perfil completo das 7 disciplinas</text>
+      <text x="784" y="462">no lead (fomm_*)</text>
+      <text x="784" y="488" font-size="12" fill="#007a3d" font-weight="600">nunca bloqueia o prospect</text>
+
+      <rect x="748" y="546" width="300" height="88" rx="10" fill="#111827"/>
+      <text x="764" y="574" font-size="14" font-weight="700" fill="#ffffff">Formspree (endpoint na Vercel)</text>
+      <text x="764" y="596" fill="#c9d1d9">todo lead cai na mesma caixa,</text>
+      <text x="764" y="614" fill="#c9d1d9">com origem e campanha rastreadas</text>
+    </g>
+
+    <line x1="756" y1="268" x2="756" y2="542" stroke="#007a3d" stroke-width="2.5" marker-end="url(#arr)"/>
+    <line x1="958" y1="502" x2="958" y2="542" stroke="#00a651" stroke-width="2.5" marker-end="url(#arr)"/>
+
+    <path d="M 1048 590 C 1078 590, 1064 209, 1092 209" fill="none" stroke="#007a3d" stroke-width="2.5" marker-end="url(#arr)"/>
+
+    <text x="1104" y="42" font-size="15" font-weight="700" fill="#111827">4 · COMERCIAL</text>
+    <text x="1104" y="60" font-size="12" fill="#6b7280">para onde o lead vai</text>
+
+    <g font-size="13" fill="#374151">
+      <rect x="1096" y="80" width="230" height="64" rx="10" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="1112" y="104" font-size="14" font-weight="700" fill="#111827">TierScope</text>
+      <text x="1112" y="123">score e software proprietários</text>
+      <text x="1112" y="139" font-size="12" fill="#6b7280">autoridade da metodologia</text>
+
+      <rect x="1096" y="180" width="230" height="58" rx="10" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="1112" y="204" font-size="14" font-weight="700" fill="#111827">Contato autorizado</text>
+      <text x="1112" y="224">apenas leads com opt-in (LGPD)</text>
+
+      <rect x="1096" y="262" width="230" height="58" rx="10" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="1112" y="286" font-size="14" font-weight="700" fill="#111827">Diagnóstico de prontidão</text>
+      <text x="1112" y="306">FOMM — serviço de entrada</text>
+
+      <rect x="1096" y="344" width="230" height="78" rx="10" fill="#e5f5ec" stroke="#00a651" stroke-width="1.5"/>
+      <text x="1112" y="368" font-size="14" font-weight="700" fill="#111827">Auditoria e Certificação</text>
+      <text x="1112" y="388">FOMM — via ICOR Internacional</text>
+      <text x="1112" y="408" font-size="12" fill="#6b7280">credencial ISO/IEC 17021-1</text>
+
+      <rect x="1096" y="446" width="230" height="58" rx="10" fill="#ffffff" stroke="#d1d5db"/>
+      <text x="1112" y="470" font-size="14" font-weight="700" fill="#111827">Consultoria e treinamentos</text>
+      <text x="1112" y="490">Top Tier Infrastructure®</text>
+    </g>
+
+    <line x1="1211" y1="238" x2="1211" y2="258" stroke="#6b7280" stroke-width="2" marker-end="url(#arrg)"/>
+    <line x1="1211" y1="320" x2="1211" y2="340" stroke="#6b7280" stroke-width="2" marker-end="url(#arrg)"/>
+    <line x1="1211" y1="422" x2="1211" y2="442" stroke="#6b7280" stroke-width="2" marker-end="url(#arrg)"/>
+
+    <rect x="40" y="680" width="1286" height="130" rx="12" fill="#111827"/>
+    <text x="64" y="714" font-size="15" font-weight="700" fill="#ffffff">FUNDAÇÃO DE AUTORIDADE — o que sustenta tudo</text>
+    <g font-size="13" fill="#c9d1d9">
+      <text x="64" y="748"><tspan fill="#3ccb7f" font-weight="700">Metodologia aberta</tspan> — nenhum número sem fonte, nenhuma fórmula oculta (régua 2025, não 2010)</text>
+      <text x="64" y="772"><tspan fill="#3ccb7f" font-weight="700">Engines validados</tspan> — 610/610 pontos exatos vs. ferramenta original · 72/72 testes · TypeScript 0 erros</text>
+      <text x="64" y="796"><tspan fill="#3ccb7f" font-weight="700">Top Tier Infrastructure®</tspan> — 25+ anos em missão crítica · parceira DCEP/US DOE · Zero Outage (IBM)</text>
+    </g>
+  </svg>
+  </div>
+  <p class="note">Este diagrama também existe como arquivo separado para envio: <strong>diagrama-ecossistema.html</strong>.</p>
+
+  <h2>O que dizer — e o que NÃO dizer</h2>
+  <div class="table-scroll"><table>
+    <tr><th style="width:50%">✅ Pode</th><th>❌ Não pode</th></tr>
+    <tr><td class="ok">"Pré-diagnóstico auto-declarado, primeiro passo da jornada de auditoria"</td><td class="no">"A ferramenta emite certificação"</td></tr>
+    <tr><td class="ok">"Escala 1–5 (WP #197)"</td><td class="no">Escala "0–5"</td></tr>
+    <tr><td class="ok">"Certificações FOMM via ICOR Internacional (ISO/IEC 17021-1)"</td><td class="no">Prometer certificação sem o processo de auditoria</td></tr>
+    <tr><td class="ok">"Score e software proprietários — TierScope"</td><td class="no">Citar números de base de clientes não verificados</td></tr>
+    <tr><td class="ok">"Réplica aberta e validada do TradeOff Tool"</td><td class="no">"Ferramenta oficial da Schneider"</td></tr>
+    <tr><td class="ok">Ferramentas como serviços/treinamentos Top Tier</td><td class="no">Mencionar "MBA" no site público ou ligar as ferramentas ao material de aula</td></tr>
+  </table></div>
+
+  <h2>O que ainda falta (transparência com o time)</h2>
+  <div class="table-scroll"><table>
+    <tr><th>Frente</th><th>Estado</th></tr>
+    <tr><td>Lançamento/divulgação (SEO ativo + LinkedIn)</td><td>Fase 3 — nunca iniciada; o site está tecnicamente pronto para isso</td></tr>
+    <tr><td>Régua de e-mails para leads</td><td>Leads chegam ao Formspree, mas sem sequência automática de nutrição</td></tr>
+    <tr><td>Integração visual com toptier.net.br</td><td>Plano documentado; pendente de decisão de arquitetura do site novo</td></tr>
+    <tr><td>Deploy</td><td>Manual — push no GitHub não publica; operador roda o deploy na Vercel</td></tr>
+  </table></div>
+
+  <h2>Materiais desta pasta</h2>
+  <p class="files">
+    <code>index.html</code> — esta página (introdução geral) ·
+    <code>01-guia-suite.md</code> — guia detalhado de cada ferramenta e do padrão de captação ·
+    <code>02-status-time.md</code> — status executivo "o que temos pronto" ·
+    <code>diagrama-ecossistema.html</code> — o diagrama, em arquivo separado para envio
+  </p>
+
+  <footer>
+    Top Tools · Top Tier Infrastructure® · material interno do time · gerado em 23/08/2026 a partir do repo <code>toptier-dc-tools</code> (docs/time/).
+  </footer>
+</div>
+</body>
+</html>

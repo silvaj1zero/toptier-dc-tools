@@ -40,6 +40,7 @@ export default function LeadForm({
     // Atribuição da origem (qual ferramenta gerou o lead).
     const url = new URL(window.location.href);
     data.set('pagina', url.pathname);
+    data.set('origem', url.pathname.replaceAll('/', '') || 'home');
     if (context) {
       for (const [k, v] of Object.entries(context)) data.set(k, v);
     }
@@ -57,8 +58,9 @@ export default function LeadForm({
             .map(([k, v]) => `${k}: ${v}`)
             .join('\n')
         : '';
+      const whats = data.get('whatsapp');
       const body = encodeURIComponent(
-        `Nome: ${data.get('name')}\nE-mail: ${data.get('email')}\nEmpresa: ${data.get('company')}\nPágina: ${url.href}${extras}`,
+        `Nome: ${data.get('name')}\nE-mail: ${data.get('email')}\nEmpresa: ${data.get('company')}${whats ? `\nWhatsApp: ${whats}` : ''}\nPágina: ${url.href}${extras}`,
       );
       window.location.href = `mailto:contato@toptier.net.br?subject=${subject}&body=${body}`;
       setStatus('ok');
@@ -100,6 +102,21 @@ export default function LeadForm({
             <div className="field">
               <label htmlFor="lead-company">{d.companyLabel}</label>
               <input id="lead-company" name="company" type="text" autoComplete="organization" maxLength={160} />
+            </div>
+            <div className="field">
+              <label htmlFor="lead-whatsapp">{d.whatsappLabel}</label>
+              <input
+                id="lead-whatsapp"
+                name="whatsapp"
+                type="tel"
+                autoComplete="tel"
+                maxLength={24}
+                placeholder="+55 11 9…"
+                aria-describedby="lead-whatsapp-help"
+              />
+              <p className="help" id="lead-whatsapp-help">
+                {d.whatsappHelp}
+              </p>
             </div>
           </div>
           {/* Honeypot — invisível para humanos, irresistível para bots */}

@@ -407,6 +407,8 @@ export const en: Dict = {
     nameLabel: 'Name',
     emailLabel: 'Work e-mail',
     companyLabel: 'Company',
+    whatsappLabel: 'WhatsApp (optional)',
+    whatsappHelp: 'Provide it if you prefer contact via WhatsApp.',
     submit: 'Send',
     sending: 'Sending…',
     success: 'Received! We will get in touch.',

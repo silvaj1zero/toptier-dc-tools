@@ -410,6 +410,8 @@ export const pt = {
     nameLabel: 'Nome',
     emailLabel: 'E-mail corporativo',
     companyLabel: 'Empresa',
+    whatsappLabel: 'WhatsApp (opcional)',
+    whatsappHelp: 'Informe se desejar contato por WhatsApp.',
     submit: 'Enviar',
     sending: 'Enviando…',
     success: 'Recebido! Entraremos em contato.',
