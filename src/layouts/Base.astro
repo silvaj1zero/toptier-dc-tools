@@ -20,7 +20,10 @@ const currentPath = Astro.url.pathname;
 // para um ID inventado. Website separado no mesmo projeto Umami Cloud do
 // site principal — dashboards distintos, sem misturar métricas dos dois
 // domínios. [Story M3 — Nível 2a da integração Top Tools]
-const UMAMI_WEBSITE_ID = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID;
+// `.trim()`: um id salvo com quebra de linha no painel de env vai parar no
+// atributo HTML com o `\n` junto, e o coletor do Umami responde 400 — o script
+// carrega, a página parece certa e NADA é gravado. Aconteceu em 25/08.
+const UMAMI_WEBSITE_ID = import.meta.env.PUBLIC_UMAMI_WEBSITE_ID?.trim();
 if (!UMAMI_WEBSITE_ID && import.meta.env.PROD) {
   console.warn(
     '[Base] PUBLIC_UMAMI_WEBSITE_ID ausente no build de produção — script Umami OMITIDO. ' +

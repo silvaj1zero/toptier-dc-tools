@@ -30,7 +30,9 @@ export type ResultadoEnvio =
   | { ok: true }
   | { ok: false; motivo: 'sem-endpoint' | 'anti-robo' | 'rede' | 'servidor' };
 
-export const LEAD_ENDPOINT: string | undefined = import.meta.env.PUBLIC_TOOL_LEAD_ENDPOINT;
+/** `.trim()` pelo mesmo motivo do site key — ver src/lib/turnstile.ts. */
+export const LEAD_ENDPOINT: string | undefined =
+  import.meta.env.PUBLIC_TOOL_LEAD_ENDPOINT?.trim() || undefined;
 
 /**
  * Reúne os metadados de atribuição da sessão (página, referrer, UTMs).

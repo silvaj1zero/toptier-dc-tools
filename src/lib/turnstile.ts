@@ -78,5 +78,13 @@ export function carregarTurnstile(): Promise<TurnstileApi | null> {
   return carregando;
 }
 
-/** Site key público, vindo do build. Ausente ⇒ sem anti-robô configurado. */
-export const TURNSTILE_SITE_KEY: string | undefined = import.meta.env.PUBLIC_TURNSTILE_SITE_KEY;
+/**
+ * Site key público, vindo do build. Ausente ⇒ sem anti-robô configurado.
+ *
+ * `.trim()` não é decoração: um valor colado com espaço ou salvo com quebra de
+ * linha no painel de env chega aqui com o lixo junto, e o Turnstile recusa com
+ * `Invalid input for parameter "sitekey"` — falha que só aparece no console do
+ * navegador, em produção. Aconteceu em 25/08.
+ */
+export const TURNSTILE_SITE_KEY: string | undefined =
+  import.meta.env.PUBLIC_TURNSTILE_SITE_KEY?.trim() || undefined;
