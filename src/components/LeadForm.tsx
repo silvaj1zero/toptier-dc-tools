@@ -1,13 +1,29 @@
-import { useState, type FormEvent } from 'react';
+import { useEffect, useRef, useState, type FormEvent } from 'react';
 import { t, type Locale } from '@/i18n';
 import { track } from '@/lib/track';
+import {
+  abrirMailto,
+  contextoDaSessao,
+  enviarLead,
+  origemDaPagina,
+  LEAD_ENDPOINT,
+} from '@/lib/lead';
+import { carregarTurnstile, TURNSTILE_SITE_KEY } from '@/lib/turnstile';
 
 /**
- * Captura de lead. O endpoint (Formspree ou similar) vem de PUBLIC_LEAD_ENDPOINT.
- * Sem endpoint configurado, degrada para mailto: — nunca quebra.
+ * Captura de lead — canal único com o site institucional.
  *
- * Anti-spam: honeypot (campo "website" invisível; preenchido ⇒ finge sucesso e descarta).
- * Atribuição: envia página de origem, referrer e UTMs da sessão junto com o lead.
+ * Desde 2026-08-25 o lead vai para `/api/tool-lead` (Pages Function do site),
+ * que valida o Turnstile e entrega via Resend na MESMA caixa dos formulários do
+ * site. Antes ia para o Formspree, num canal separado. [F-4 ADR-FOMM-FRONTEIRA]
+ *
+ * Sem endpoint configurado, degrada para `mailto:` — nunca quebra.
+ *
+ * Anti-spam em duas camadas: honeypot (campo "website" invisível; preenchido ⇒
+ * finge sucesso e descarta) e Turnstile. O honeypot continua porque é grátis e
+ * pega o bot burro antes de qualquer chamada de rede.
+ *
+ * Atribuição: página de origem, referrer e UTMs viajam no `contexto`.
  * LGPD: consentimento explícito por checkbox obrigatório, com finalidade declarada.
  */
 export default function LeadForm({
@@ -16,17 +32,63 @@ export default function LeadForm({
   title,
 }: {
   locale?: Locale;
-  /** Pares extras enviados como campos ocultos (ex.: perfil FOMM, ferramenta de origem). */
+  /** Pares extras enviados junto ao lead (ex.: perfil FOMM, ferramenta de origem). */
   context?: Record<string, string>;
   /** Título alternativo do cartão (default: dicionário). */
   title?: string;
 }) {
   const dict = t(locale);
-  const endpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT;
   const [status, setStatus] = useState<'idle' | 'sending' | 'ok' | 'error'>('idle');
+  const [erroDetalhe, setErroDetalhe] = useState<string | null>(null);
+
+  // --- Turnstile (renderização explícita — ver src/lib/turnstile.ts) ---
+  const boxRef = useRef<HTMLDivElement>(null);
+  const widgetId = useRef<string | null>(null);
+  const token = useRef<string>('');
+
+  useEffect(() => {
+    // Sem site key não há anti-robô configurado: o formulário continua
+    // funcionando (o servidor é quem decide recusar), e nada é renderizado.
+    if (!TURNSTILE_SITE_KEY || !boxRef.current) return;
+    // Cópia local: o guard acima não estreita o tipo dentro da closure do then.
+    const sitekey = TURNSTILE_SITE_KEY;
+    let vivo = true;
+
+    carregarTurnstile().then((api) => {
+      if (!vivo || !api || !boxRef.current || widgetId.current) return;
+      widgetId.current = api.render(boxRef.current, {
+        sitekey,
+        size: 'flexible',
+        action: 'tool-lead',
+        callback: (t) => {
+          token.current = t;
+        },
+        'error-callback': () => {
+          token.current = '';
+        },
+        // Token do Turnstile expira: sem limpar, um formulário aberto há muito
+        // tempo enviaria um token morto e o visitante veria erro sem entender.
+        'expired-callback': () => {
+          token.current = '';
+          if (widgetId.current) api.reset(widgetId.current);
+        },
+      });
+    });
+
+    return () => {
+      vivo = false;
+    };
+  }, []);
+
+  function resetarWidget() {
+    token.current = '';
+    if (widgetId.current && window.turnstile) window.turnstile.reset(widgetId.current);
+  }
 
   async function onSubmit(e: FormEvent<HTMLFormElement>) {
     e.preventDefault();
+    if (status === 'sending') return;
+
     const form = e.currentTarget;
     const data = new FormData(form);
 
@@ -36,56 +98,45 @@ export default function LeadForm({
       form.reset();
       return;
     }
-    data.delete('website');
 
-    // Atribuição da origem (qual ferramenta gerou o lead).
-    const url = new URL(window.location.href);
-    data.set('pagina', url.pathname);
-    data.set('origem', url.pathname.replaceAll('/', '') || 'home');
-    if (context) {
-      for (const [k, v] of Object.entries(context)) data.set(k, v);
-    }
-    if (document.referrer) data.set('referrer', document.referrer);
-    for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']) {
-      const v = url.searchParams.get(k);
-      if (v) data.set(k, v);
-    }
+    const origem = origemDaPagina();
+    const payloadBase = {
+      nome: String(data.get('name') ?? '').trim(),
+      email: String(data.get('email') ?? '').trim(),
+      origem,
+      empresa: String(data.get('company') ?? '').trim(),
+      whatsapp: String(data.get('whatsapp') ?? '').trim(),
+      lgpdConsent: data.get('consent') === 'on',
+      contexto: contextoDaSessao(context),
+    };
 
-    if (!endpoint) {
-      const subject = encodeURIComponent('Contato — Ferramentas de Eficiência Top Tier');
-      const extras = context
-        ? '\n' +
-          Object.entries(context)
-            .map(([k, v]) => `${k}: ${v}`)
-            .join('\n')
-        : '';
-      const whats = data.get('whatsapp');
-      const body = encodeURIComponent(
-        `Nome: ${data.get('name')}\nE-mail: ${data.get('email')}\nEmpresa: ${data.get('company')}${whats ? `\nWhatsApp: ${whats}` : ''}\nPágina: ${url.href}${extras}`,
-      );
-      window.location.href = `mailto:contato@toptier.net.br?subject=${subject}&body=${body}`;
+    // Sem endpoint: caminho do mailto, como sempre foi.
+    if (!LEAD_ENDPOINT) {
+      abrirMailto(payloadBase);
       setStatus('ok');
       return;
     }
 
     setStatus('sending');
-    try {
-      const res = await fetch(endpoint, {
-        method: 'POST',
-        headers: { Accept: 'application/json' },
-        body: data,
-      });
-      setStatus(res.ok ? 'ok' : 'error');
-      if (res.ok) {
-        form.reset();
-        // Só o envio ACEITO conta como lead. A `origem` (slug da página) é a
-        // mesma que vai ao endpoint — no painel dá para ver qual ferramenta
-        // gerou o contato.
-        track('lead_enviado', { origem: String(data.get('origem') ?? 'desconhecida') });
-      }
-    } catch {
-      setStatus('error');
+    setErroDetalhe(null);
+
+    const resultado = await enviarLead({ ...payloadBase, turnstileToken: token.current });
+
+    if (resultado.ok) {
+      setStatus('ok');
+      form.reset();
+      track('lead_enviado', { origem });
+      return;
     }
+
+    // Token é de uso único: qualquer falha exige um novo antes de tentar de novo.
+    resetarWidget();
+    setStatus('error');
+    setErroDetalhe(
+      resultado.motivo === 'anti-robo'
+        ? d.errorAntiRobo
+        : null,
+    );
   }
 
   const d = dict.lead;
@@ -135,12 +186,14 @@ export default function LeadForm({
             <input type="checkbox" name="consent" required />
             <span>{d.consentLabel}</span>
           </label>
+          {/* Widget do Turnstile — preenchido pelo efeito acima */}
+          <div ref={boxRef} className="turnstile-box" />
           <button type="submit" disabled={status === 'sending'}>
             {status === 'sending' ? d.sending : d.submit}
           </button>
           {status === 'error' ? (
             <p className="help" role="alert">
-              {d.error}
+              {erroDetalhe ?? d.error}
             </p>
           ) : null}
           <p className="help">{d.privacy}</p>

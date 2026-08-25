@@ -416,6 +416,10 @@ export const pt = {
     sending: 'Enviando…',
     success: 'Recebido! Entraremos em contato.',
     error: 'Não foi possível enviar. Escreva para contato@toptier.net.br.',
+    // Mensagem própria porque a ação que resolve é outra: aqui recarregar
+    // funciona; no erro genérico, não.
+    errorAntiRobo:
+      'A verificação anti-robô falhou ou expirou. Recarregue a página e tente novamente.',
     consentLabel:
       'Autorizo o uso destes dados para contato sobre ferramentas, serviços e treinamentos da Top Tier (LGPD).',
     privacy: 'Usamos seus dados apenas para contato sobre as ferramentas, serviços e treinamentos Top Tier.',

@@ -413,6 +413,7 @@ export const en: Dict = {
     sending: 'Sending…',
     success: 'Received! We will get in touch.',
     error: 'Could not send. Please write to contato@toptier.net.br.',
+    errorAntiRobo: 'The anti-bot check failed or expired. Please reload the page and try again.',
     consentLabel:
       'I authorize the use of this data for contact about Top Tier tools, services, and courses (LGPD).',
     privacy: 'We use your data only to contact you about Top Tier tools and courses.',

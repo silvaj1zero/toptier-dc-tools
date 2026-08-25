@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useRef, useState, type FormEvent } from 'react';
 import { fmtNumber } from '@/lib/calc';
 import {
   DISCIPLINAS,
@@ -12,6 +12,8 @@ import {
 } from '@/lib/fomm';
 import { t, type Dict, type Locale } from '@/i18n';
 import { track, trackOnce } from '@/lib/track';
+import { contextoDaSessao, enviarLead, LEAD_ENDPOINT } from '@/lib/lead';
+import { carregarTurnstile, TURNSTILE_SITE_KEY } from '@/lib/turnstile';
 
 const FOLDER_URL = '/downloads/tti-fomm-certification-r9.pdf';
 
@@ -171,6 +173,43 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
     if (result?.completo) trackOnce('fomm_respondido');
   }, [result?.completo]);
 
+  // --- Turnstile do gate (renderização explícita — ver src/lib/turnstile.ts) ---
+  // O container só existe quando o questionário está completo, por isso o
+  // efeito depende de `result?.completo`: renderizar antes não teria onde.
+  const gateBoxRef = useRef<HTMLDivElement>(null);
+  const gateWidgetId = useRef<string | null>(null);
+  const gateToken = useRef<string>('');
+
+  useEffect(() => {
+    if (!TURNSTILE_SITE_KEY || !result?.completo || unlocked) return;
+    // Cópia local: o guard acima não estreita o tipo dentro da closure do then.
+    const sitekey = TURNSTILE_SITE_KEY;
+    let vivo = true;
+
+    carregarTurnstile().then((api) => {
+      if (!vivo || !api || !gateBoxRef.current || gateWidgetId.current) return;
+      gateWidgetId.current = api.render(gateBoxRef.current, {
+        sitekey,
+        size: 'flexible',
+        action: 'fomm-gate',
+        callback: (t) => {
+          gateToken.current = t;
+        },
+        'error-callback': () => {
+          gateToken.current = '';
+        },
+        'expired-callback': () => {
+          gateToken.current = '';
+          if (gateWidgetId.current) api.reset(gateWidgetId.current);
+        },
+      });
+    });
+
+    return () => {
+      vivo = false;
+    };
+  }, [result?.completo, unlocked]);
+
   const responder = (id: string, nivel: NivelMaturidade) =>
     setRespostas((r) => ({ ...r, [id]: nivel }));
 
@@ -193,26 +232,37 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
       setUnlocked(true);
       return;
     }
-    data.delete('website');
+    const autorizaContato = Boolean(data.get('autoriza_contato'));
 
-    data.set('origem', 'fomm-gate');
-    data.set('autoriza_contato', data.get('autoriza_contato') ? 'sim' : 'nao');
-    const url = new URL(window.location.href);
-    data.set('pagina', url.pathname);
-    if (document.referrer) data.set('referrer', document.referrer);
-    for (const k of ['utm_source', 'utm_medium', 'utm_campaign', 'utm_term', 'utm_content']) {
-      const v = url.searchParams.get(k);
-      if (v) data.set(k, v);
-    }
-    for (const [k, v] of Object.entries(fommParaLead(result))) data.set(k, v);
+    // O perfil FOMM (score, disciplinas, gaps) viaja como contexto — é o que
+    // torna este lead o mais qualificado da suíte.
+    const contexto = contextoDaSessao({
+      autoriza_contato: autorizaContato ? 'sim' : 'nao',
+      ...fommParaLead(result),
+    });
 
-    const endpoint = import.meta.env.PUBLIC_LEAD_ENDPOINT;
-    if (endpoint) {
+    const payloadBase = {
+      nome: String(data.get('name') ?? '').trim(),
+      email: String(data.get('email') ?? '').trim(),
+      origem: 'fomm-gate',
+      empresa: String(data.get('company') ?? '').trim(),
+      whatsapp: String(data.get('whatsapp') ?? '').trim(),
+      lgpdConsent: autorizaContato,
+      contexto,
+    };
+
+    if (LEAD_ENDPOINT) {
       setGateStatus('sending');
-      try {
-        await fetch(endpoint, { method: 'POST', headers: { Accept: 'application/json' }, body: data });
-      } catch {
-        // registro é cortesia — nunca impede o prospect de ver o resultado
+      const enviado = await enviarLead({ ...payloadBase, turnstileToken: gateToken.current });
+      if (enviado.ok) {
+        track('lead_enviado', { origem: 'fomm-gate' });
+      } else {
+        // Registro é CORTESIA: falhou, o prospect vê o resultado assim mesmo.
+        // Trocar isso por um bloqueio transformaria um problema nosso (rede,
+        // anti-robô, servidor) em porta fechada na cara de quem respondeu 18
+        // perguntas. O token é de uso único — reseta para uma nova tentativa.
+        gateToken.current = '';
+        if (gateWidgetId.current && window.turnstile) window.turnstile.reset(gateWidgetId.current);
       }
     }
     setGateStatus('idle');
@@ -328,6 +378,8 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
               <input type="checkbox" name="autoriza_contato" />
               <span>{d.gateAuthContact}</span>
             </label>
+            {/* Widget do Turnstile — preenchido pelo efeito do gate */}
+            <div ref={gateBoxRef} className="turnstile-box" />
             <button type="submit" disabled={gateStatus === 'sending'}>
               {gateStatus === 'sending' ? d.gateSending : d.gateButton}
             </button>
