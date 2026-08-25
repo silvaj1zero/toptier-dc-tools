@@ -507,10 +507,16 @@ label {
   color: var(--tt-gray-700);
 }
 
+/* `tel` estava fora desta lista, e os dois campos de WhatsApp do site —
+   o LeadForm e o formulário do FOMM — caíam no estilo nativo do navegador:
+   sem borda, sem raio, e com `font-size` abaixo de 1rem, o que faz o iOS dar
+   zoom ao focar o campo. Ficavam visivelmente diferentes dos vizinhos dentro
+   do mesmo formulário. [Onda 0 2026-08-25] */
 input:not([type]),
 input[type='number'],
 input[type='text'],
 input[type='email'],
+input[type='tel'],
 select {
   width: 100%;
   padding: 0.55rem 0.7rem;
