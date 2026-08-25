@@ -31,10 +31,29 @@
     adicionada nota factual no rodapé linkando a política do site principal
     (mesma marca, mesma base legal; sem duplicar texto).
 
+- **Eventos de uso por ferramenta** (`src/lib/track.ts`) — mede O QUE usam, não
+  só quais páginas abrem: `pue_calculado` · `economia_simulada` ·
+  `virtualizacao_calculada` · `pue_projeto_modelado` · `densidade_planejada` ·
+  `fomm_respondido` · `resultado_impresso` · `lead_enviado`.
+  - **A invariante que não pode ser quebrada:** as ferramentas recalculam via
+    `useMemo` **a cada tecla**. Um evento por cálculo geraria centenas por
+    visita e estouraria a cota (100 mil/mês). `trackOnce` emite no máximo
+    **1 evento por nome por carregamento de página**. Só ações deliberadas
+    (imprimir, enviar lead) usam `track`, sem dedupe.
+  - **Dois gatilhos diferentes, por desenho:** ferramentas que nascem VAZIAS
+    (PUE, economia, virtualização, FOMM) disparam no primeiro resultado
+    válido; as que nascem com exemplo VÁLIDO (modelador, densidade) disparam
+    na primeira interação — nelas, "primeiro resultado" seria eco do pageview.
+  - FOMM conta só o questionário **completo** (18 respostas), não o abandonado.
+  - Ao adicionar ferramenta nova: incluir o nome em `ToolEvent` (lista fechada,
+    evita typo virar métrica órfã) e escolher o gatilho pelo grupo acima.
+  - Verificado em produção com navegador real: 7 recálculos → 1 evento; página
+    com exemplo válido → 0 no load; página institucional → 0.
+
 - **Favicon alinhado à marca** nos dois domínios: emblema oficial (monograma
   TT + elipse verde) extraído do logo, no lugar do tile "T" genérico.
-- Gates: build 9 páginas (validado com e sem a env) · **72/72** testes.
-- Commits: `2b6169c` (favicon) · `0a9a8d5` (Umami + privacidade).
+- Gates: build 9 páginas (validado com e sem a env) · **79/79** testes.
+- Commits: `2b6169c` (favicon) · `0a9a8d5` (Umami + privacidade) · `c82d668` (eventos por ferramenta).
 - Deploy: `npx vercel --prod` (MANUAL — push não dispara build neste projeto).
 
 ## Sessão 2026-08-23 (parte 2) — Deploy, ADR da fronteira FOMM e página /como-usar/
