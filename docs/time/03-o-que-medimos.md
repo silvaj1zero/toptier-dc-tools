@@ -76,10 +76,13 @@ Vale dizer com todas as letras, porque a diferença já custou caro antes:
 - O link novo no site institucional está trazendo gente? → filtro de origem
 - Qual dor domina o mercado neste trimestre? → ranking de eventos ao longo do tempo
 
-## Pendência conhecida
+## Canal de leads — unificado em 25/08
 
-Os leads da suíte ainda chegam por um canal (Formspree) **diferente** do site
-institucional (que usa o pipeline próprio com anti-robô e Resend). A unificação
-está desenhada — `functions/api/tool-lead.ts`, follow-up F-4 do
-`ADR-FOMM-FRONTEIRA` — e é o próximo passo. Até lá, **quem confere leads precisa
-olhar os dois lugares.**
+Os leads da suíte agora chegam na **mesma caixa** dos leads do site
+(contato@toptier.net.br), pelo mesmo pipeline com anti-robô. Não é mais preciso
+conferir dois lugares.
+
+Durante a transição existe uma rede de segurança: se o canal novo recusar um
+envio, o lead vai pelo canal antigo em vez de se perder. Enquanto ela estiver
+ativa, **um lead ocasional ainda pode cair no Formspree** — vale uma olhada lá
+até a confirmação final.

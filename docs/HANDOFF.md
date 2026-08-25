@@ -50,6 +50,32 @@
   - Verificado em produção com navegador real: 7 recálculos → 1 evento; página
     com exemplo válido → 0 no load; página institucional → 0.
 
+- **Canal único de leads (Nível 2b)** — `LeadForm` e o gate FOMM agora enviam
+  para `/api/tool-lead` (Pages Function do site), que valida Turnstile e entrega
+  via Resend na MESMA caixa dos formulários do site. Atravessa deliberadamente a
+  invariante I-4 do `ADR-FOMM-FRONTEIRA` ("manter dois canais até o CRM estar
+  pronto") — **decisão explícita do owner em 25/08**, registrada na story M5 do
+  repo do site. O CRM entra depois como segundo destino, sem mudar o contrato.
+  - Turnstile em renderização **explícita** (`src/lib/turnstile.ts`): o modo
+    implícito do site varre o DOM no load, e aqui os formulários são React — só
+    existem depois da hidratação. Ilhas são `client:visible`: **nada do React
+    roda antes de rolar até o formulário** (isso derrubou o primeiro E2E, que
+    era falha do teste, não do código).
+  - **Fallback de transição ATIVO** (`src/lib/lead.ts`): se o canal novo
+    recusar, o lead vai para o Formspree antes de qualquer erro ao visitante.
+    Existe porque não há como provar por automação que o token emitido em
+    `ferramentas.toptier.net.br` é aceito — navegador automatizado não recebe
+    token do Turnstile (headless E headed). **REMOVER após confirmação humana
+    de um envio real.** O evento `lead_fallback` denuncia se está sendo usado.
+
+- **⚠️ Envs com `\n` deixaram o Umami mudo entre 24 e 25/08.** `echo | vercel
+  env add` grava quebra de linha no fim do valor. Efeitos: Turnstile recusava o
+  site key (erro só no console) e `gateway.umami.is/api/send` respondia **400 em
+  toda chamada** — script carregado, tag no HTML, **nada gravado**. Os testes de
+  evento passaram porque usavam coletor simulado. Corrigido com `printf` +
+  `.trim()` ao ler `import.meta.env.PUBLIC_*`. Ao definir env: **use `printf`** e
+  confira o valor no ar com `od -c` (o `\n` é invisível no grep).
+
 - **Favicon alinhado à marca** nos dois domínios: emblema oficial (monograma
   TT + elipse verde) extraído do logo, no lugar do tile "T" genérico.
 - Gates: build 9 páginas (validado com e sem a env) · **79/79** testes.
