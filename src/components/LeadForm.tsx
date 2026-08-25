@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from 'react';
 import { t, type Locale } from '@/i18n';
+import { track } from '@/lib/track';
 
 /**
  * Captura de lead. O endpoint (Formspree ou similar) vem de PUBLIC_LEAD_ENDPOINT.
@@ -75,7 +76,13 @@ export default function LeadForm({
         body: data,
       });
       setStatus(res.ok ? 'ok' : 'error');
-      if (res.ok) form.reset();
+      if (res.ok) {
+        form.reset();
+        // Só o envio ACEITO conta como lead. A `origem` (slug da página) é a
+        // mesma que vai ao endpoint — no painel dá para ver qual ferramenta
+        // gerou o contato.
+        track('lead_enviado', { origem: String(data.get('origem') ?? 'desconhecida') });
+      }
     } catch {
       setStatus('error');
     }

@@ -11,6 +11,7 @@ import {
 } from '@/lib/pue-model';
 import { fmtNumber } from '@/lib/calc';
 import { t, type Locale } from '@/i18n';
+import { trackOnce } from '@/lib/track';
 
 interface NamedScenario {
   name: string;
@@ -57,7 +58,14 @@ export default function PueProjectModeler({ locale = 'pt-br' }: { locale?: Local
   const curResult = results[safeActive] ?? results[0]!;
   const curPoint = points[safeActive] ?? points[0]!;
 
+  /*
+   * Diferente das outras ferramentas: esta NASCE com um cenário padrão válido,
+   * então "primeiro resultado" seria só um eco do pageview. O sinal de uso real
+   * é o visitante MEXER no modelo — é aqui que ele começa a modelar o projeto
+   * dele em vez de olhar o exemplo. `trackOnce` cuida da repetição.
+   */
   const update = (patch: Partial<ProjectScenario>) => {
+    trackOnce('pue_projeto_modelado');
     setScenarios((list) =>
       list.map((s, i) => (i === safeActive ? { ...s, scenario: { ...s.scenario, ...patch } } : s)),
     );

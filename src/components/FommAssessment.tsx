@@ -1,4 +1,4 @@
-import { useMemo, useState, type FormEvent } from 'react';
+import { useEffect, useMemo, useState, type FormEvent } from 'react';
 import { fmtNumber } from '@/lib/calc';
 import {
   DISCIPLINAS,
@@ -11,6 +11,7 @@ import {
   type RespostasFomm,
 } from '@/lib/fomm';
 import { t, type Dict, type Locale } from '@/i18n';
+import { track, trackOnce } from '@/lib/track';
 
 const FOLDER_URL = '/downloads/tti-fomm-certification-r9.pdf';
 
@@ -161,6 +162,15 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
     }
   }, [respostas]);
 
+  /*
+   * Mede o questionário CONCLUÍDO, não iniciado: `completo` só é verdadeiro
+   * com as 18 perguntas respondidas. Quem responde tudo é o sinal que importa —
+   * abandono no meio não vira métrica de uso.
+   */
+  useEffect(() => {
+    if (result?.completo) trackOnce('fomm_respondido');
+  }, [result?.completo]);
+
   const responder = (id: string, nivel: NivelMaturidade) =>
     setRespostas((r) => ({ ...r, [id]: nivel }));
 
@@ -207,6 +217,8 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
     }
     setGateStatus('idle');
     setUnlocked(true);
+    // Lead de verdade: ação deliberada, contada sempre (sem dedupe).
+    track('lead_enviado', { origem: 'fomm-gate' });
   }
 
   return (

@@ -12,6 +12,7 @@ import {
   type SistemaResult,
 } from '@/lib/density';
 import { t, type Dict, type Locale } from '@/i18n';
+import { trackOnce } from '@/lib/track';
 import { NumberField } from './fields';
 
 type Modo = 'sala' | 'instalacao';
@@ -300,7 +301,12 @@ function SalaPlanner({ d, dict }: { d: Dict['density']; dict: Dict }) {
   const areaPorUnidade = Number.parseFloat(gab.area);
   return (
     <div>
-      <form onSubmit={(e) => e.preventDefault()}>
+      {/* Esta ferramenta NASCE com um dimensionamento padrão válido, então
+          "primeiro resultado" seria eco do pageview. O uso real começa quando o
+          visitante mexe em algum campo — `onInput` no formulário captura
+          qualquer alteração (texto, número, seleção) numa linha só, e
+          `trackOnce` garante 1 evento por visita, não 1 por tecla. */}
+      <form onSubmit={(e) => e.preventDefault()} onInput={() => trackOnce('densidade_planejada')}>
         <CabinetFields d={d} idp="dp-s" state={gab} onChange={setGab} />
         <fieldset>
           <legend>{d.salaLegend}</legend>
@@ -437,7 +443,12 @@ function InstalacaoPlanner({ d, dict }: { d: Dict['density']; dict: Dict }) {
 
   return (
     <div>
-      <form onSubmit={(e) => e.preventDefault()}>
+      {/* Esta ferramenta NASCE com um dimensionamento padrão válido, então
+          "primeiro resultado" seria eco do pageview. O uso real começa quando o
+          visitante mexe em algum campo — `onInput` no formulário captura
+          qualquer alteração (texto, número, seleção) numa linha só, e
+          `trackOnce` garante 1 evento por visita, não 1 por tecla. */}
+      <form onSubmit={(e) => e.preventDefault()} onInput={() => trackOnce('densidade_planejada')}>
         <CabinetFields d={d} idp="dp-f" state={gab} onChange={setGab} />
         {nivelFieldset(
           d.podLegend,

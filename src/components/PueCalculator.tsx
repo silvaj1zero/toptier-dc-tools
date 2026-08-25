@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { PUE_BENCHMARKS, REGULATORY } from '@/data/benchmarks';
 import { FATOR_SIN_DEFAULT } from '@/data/energia-br';
 import {
@@ -16,6 +16,7 @@ import {
   wue,
 } from '@/lib/calc';
 import { t, type Locale } from '@/i18n';
+import { trackOnce } from '@/lib/track';
 import { NumberField, TariffFields, initialTariff, tariffFromState, type TariffState } from './fields';
 import { PueGauge } from './PueGauge';
 
@@ -61,6 +62,12 @@ export default function PueCalculator({ locale = 'pt-br' }: { locale?: Locale })
       regulatory: regulatoryRead(pueValue, it),
     };
   }, [itLoad, facilityLoad, tariffState, waterLiters, emissionsTons]);
+
+  // Uso da ferramenta: uma vez por visita, no primeiro resultado válido.
+  // `trackOnce` já deduplica — o useMemo acima roda a cada tecla.
+  useEffect(() => {
+    if (result) trackOnce('pue_calculado');
+  }, [result]);
 
   const d = dict.pueCalc;
 

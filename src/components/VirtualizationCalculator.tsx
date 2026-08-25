@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { HOURS_PER_YEAR } from '@/data/benchmarks';
 import { CONSOLIDACAO, INFRA_EVIDENCIA, INFRA_PRESETS, MELHORIAS } from '@/data/virtualizacao';
 import { effectiveTariff, fmtCurrencyBRL, fmtEnergy, fmtNumber } from '@/lib/calc';
@@ -9,6 +9,7 @@ import {
   type VirtualizationResult,
 } from '@/lib/virtualization';
 import { t, type Locale } from '@/i18n';
+import { trackOnce } from '@/lib/track';
 import { NumberField, TariffFields, initialTariff, tariffFromState, type TariffState } from './fields';
 
 type Currency = 'brl' | 'usd';
@@ -65,6 +66,11 @@ export default function VirtualizationCalculator({ locale = 'pt-br' }: { locale?
       return null;
     }
   }, [capacidade, cargaTi, pctServ, numServ, ocupacao, infraId, currency, tariffState, priceUsd, pctVirt, ratio, melhorias]);
+
+  // Uma vez por visita, no primeiro resultado válido (o useMemo roda a cada tecla).
+  useEffect(() => {
+    if (result) trackOnce('virtualizacao_calculada');
+  }, [result]);
 
   const money = moneyFormatter(currency);
   const toggle = (key: keyof Melhorias) => setMelhorias((m) => ({ ...m, [key]: !m[key] }));

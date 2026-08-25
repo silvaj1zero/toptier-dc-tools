@@ -1,4 +1,4 @@
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { EQUIVALENCIAS, FATOR_SIN_DEFAULT } from '@/data/energia-br';
 import {
   effectiveTariff,
@@ -8,6 +8,7 @@ import {
   savings,
 } from '@/lib/calc';
 import { t, type Locale } from '@/i18n';
+import { track, trackOnce } from '@/lib/track';
 import { NumberField, TariffFields, initialTariff, tariffFromState, type TariffState } from './fields';
 
 /** Medidas típicas por faixa de redução de PUE — conteúdo didático dos treinamentos Top Tier. */
@@ -74,6 +75,11 @@ export default function SavingsSimulator({ locale = 'pt-br' }: { locale?: Locale
     });
     return { res, tariff, delta: cur - tgt };
   }, [itLoad, currentPue, targetPue, tariffState]);
+
+  // Uma vez por visita, no primeiro resultado válido (o useMemo roda a cada tecla).
+  useEffect(() => {
+    if (result) trackOnce('economia_simulada');
+  }, [result]);
 
   const d = dict.savings;
   const measures = result
@@ -212,7 +218,16 @@ export default function SavingsSimulator({ locale = 'pt-br' }: { locale?: Locale
           ) : null}
 
           <div className="no-print" style={{ marginTop: '1.5rem' }}>
-            <button type="button" onClick={() => window.print()}>
+            {/* Ação deliberada (não derivada de digitação): `track` sem dedupe.
+                Imprimir/salvar em PDF é sinal forte de intenção — vale contar
+                cada vez. */}
+            <button
+              type="button"
+              onClick={() => {
+                track('resultado_impresso', { ferramenta: 'simulador-economia' });
+                window.print();
+              }}
+            >
               {dict.common.print}
             </button>
           </div>
