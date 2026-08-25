@@ -1,6 +1,41 @@
-# HANDOFF — toptier-dc-tools (sessão 2026-08-23)
+# HANDOFF — toptier-dc-tools (sessão 2026-08-24)
 
 > Leia isto primeiro ao retomar. Estado consolidado, decisões vivas e pendências.
+
+## Sessão 2026-08-24 — Integração com o site institucional (Níveis 1 e 2a)
+
+- **A suíte agora é alcançável a partir do site.** O `toptier.net.br` (v2, em
+  produção desde 24/08) ganhou "Ferramentas" na nav do header e do footer, mais
+  um bloco contextual em `/cursos` — Story M2 no repo TTI-Web-Renew-2026,
+  ratificada pelo owner. Primeira mudança na nav desde 01/08. Integração por
+  LINK, não embed: o site tem gate `no-react`, a suíte usa React 19, e iframe
+  quebraria a CSP do site. Deploys seguem separados por desenho.
+
+- **Umami ativo na suíte, sem custo — decisão de arquitetura a preservar.**
+  A conta Umami Cloud do operador tem **limite de 1 website** (só "TopTier —
+  Produção"); criar um website "Top Tools" exigiria o plano Pro (US$ 20/mês).
+  Como no Umami o que separa dados é o **website ID e não o domínio**, a suíte
+  reusa o MESMO ID do site institucional (`83d02de6-…`) e a separação se faz
+  pelo filtro nativo **Hostname** no painel. Custo zero, nenhuma vaga consumida.
+  - Consequência a lembrar: os totais do painel "TopTier — Produção" passam a
+    somar os dois domínios. Para ler só a suíte: filtro Hostname =
+    `ferramentas.toptier.net.br`. Para ler só o site: `toptier.net.br`.
+  - Se um dia houver plano pago, separar é trivial: criar o website e trocar
+    `PUBLIC_UMAMI_WEBSITE_ID` na Vercel (o código não muda).
+  - Implementação: `src/layouts/Base.astro`, tag gated por
+    `PUBLIC_UMAMI_WEBSITE_ID` (build-time) — **ausência da env OMITE a tag**,
+    nunca aponta para ID inventado (mesmo padrão do site institucional).
+  - Env configurada na Vercel (Production) via CLI. Verificado em produção:
+    tag presente nas **9 páginas**.
+  - **A suíte não tinha nenhuma menção a analytics/privacidade** — foi
+    adicionada nota factual no rodapé linkando a política do site principal
+    (mesma marca, mesma base legal; sem duplicar texto).
+
+- **Favicon alinhado à marca** nos dois domínios: emblema oficial (monograma
+  TT + elipse verde) extraído do logo, no lugar do tile "T" genérico.
+- Gates: build 9 páginas (validado com e sem a env) · **72/72** testes.
+- Commits: `2b6169c` (favicon) · `0a9a8d5` (Umami + privacidade).
+- Deploy: `npx vercel --prod` (MANUAL — push não dispara build neste projeto).
 
 ## Sessão 2026-08-23 (parte 2) — Deploy, ADR da fronteira FOMM e página /como-usar/
 
