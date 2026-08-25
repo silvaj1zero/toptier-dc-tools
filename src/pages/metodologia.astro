@@ -6,7 +6,7 @@ import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS, UPS_CURVA_LBNL } from '@/data/v
 
 <Base
   title="Metodologia"
-  description="Fundamentação das ferramentas Top Tier: ISO/IEC 30134, The Green Grid, ASHRAE 90.4, benchmarks Uptime Institute 2025 e regulação (EED, EnEfG). Todas as fórmulas e fontes expostas."
+  description="Fundamentação das ferramentas Top Tier: ISO/IEC 30134, The Green Grid, ASHRAE 90.4, benchmarks Uptime Institute 2025 e regulação (EED, EnEfG). Cada fórmula e cada fonte, documentada nesta página."
 >
   <h1>Metodologia</h1>
   <p>
@@ -72,7 +72,7 @@ import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS, UPS_CURVA_LBNL } from '@/data/v
       <li><strong>ASHRAE 90.4-2025</strong> — requisitos mínimos de eficiência para projeto e operação; escopo ampliado para GEE e água.</li>
       <li><strong>UE — Diretiva de Eficiência Energética (EED), Art. 12</strong> — reporting anual obrigatório para data centers com TI instalada ≥ 500 kW: PUE, WUE, ERF, REF (Delegated Regulation (EU) 2024/1364).</li>
       <li><strong>Alemanha — EnEfG</strong> — PUE ≤ 1,2 para data centers novos a partir de 07/2026; existentes: ≤ 1,5 (07/2027) e ≤ 1,3 (07/2030).</li>
-      <li><strong>Brasil — ReData/PNDC</strong> — regime especial de tributação para data centers condicionado a energia renovável e investimento em P&D&I nacional; a agenda regulatória brasileira de eficiência está nascendo agora.</li>
+      <li><strong>Brasil — ReData/PNDC</strong> — regime especial de tributação para data centers condicionado a energia renovável e investimento em P&D&I nacional.</li>
     </ul>
   </section>
 
@@ -82,7 +82,7 @@ import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS, UPS_CURVA_LBNL } from '@/data/v
       <li><strong>Tarifas:</strong> presets por distribuidora vêm do ranking público de tarifas da ANEEL (tarifa convencional, sem impostos, jan/2025) — são ponto de partida didático. A tarifa real de um data center (Grupo A, TE + TUSD, impostos ou mercado livre) deve ser informada manualmente a partir da fatura.</li>
       <li><strong>Bandeiras tarifárias:</strong> adicional por 100 kWh conforme ANEEL (2025/2026): verde R$ 0 · amarela R$ 1,885 · vermelha P1 R$ 4,46 · vermelha P2 R$ 7,87.</li>
       <li><strong>Fator de emissão:</strong> fator médio anual do SIN publicado pelo MCTI/SIRENE — 0,0385 tCO2/MWh em 2023, o menor em 12 anos. Usado para CO2e e CUE estimado. O grid brasileiro (~80% renovável) é um diferencial competitivo real dos data centers locais. Nota: a partir de 2025 o MCTI mudou a metodologia de cálculo (inclusão de renováveis na base), então séries não são diretamente comparáveis.</li>
-      <li><strong>Equivalências:</strong> residências (consumo médio 179,1 kWh/mês — EPE, Anuário 2025) e árvores nativas (faixa 7–10 kg CO2/ano — SOS Mata Atlântica/ESALQ-USP). Não usamos equivalência em "carros" porque não há fator oficial brasileiro consolidado — transparência antes de marketing.</li>
+      <li><strong>Equivalências:</strong> residências (consumo médio 179,1 kWh/mês — EPE, Anuário 2025) e árvores nativas (faixa 7–10 kg CO2/ano — SOS Mata Atlântica/ESALQ-USP). Não usamos equivalência em "carros" porque não há fator oficial brasileiro consolidado.</li>
       <li><strong>Contraste internacional:</strong> tarifa média comercial dos EUA em abr/2026: 13,51 ¢/kWh (EIA) — as calculadoras clássicas ainda usam a tabela DOE/EIA de 2010.</li>
     </ul>
   </section>
@@ -139,7 +139,7 @@ import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS, UPS_CURVA_LBNL } from '@/data/v
       O Modelador reconstrói a <em>Data Center Efficiency and PUE Calculator</em> (Schneider
       Electric TradeOff Tool) por um caminho diferente das demais ferramentas: a planilha interna
       do dashboard original (10 abas, ~1.750 células) foi <strong>transpilada célula a célula</strong>
-      para código executável — fórmulas e coeficientes idênticos, não uma aproximação.
+      para código executável — com fórmulas e coeficientes idênticos.
     </p>
     <ul>
       <li><strong>Validação:</strong> no cenário default, a réplica produz PUE 2,1759 @50% de carga — a ferramenta viva exibe "2.18" e custo anual "$1,140,000" (validado em 2026-08-17); a alocação de energia coincide (Power 11,3% · Cooling 40,4% · IT 46,0% · Other 2,4%).</li>
