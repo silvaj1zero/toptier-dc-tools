@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { EQUIVALENCIAS, FATOR_SIN_DEFAULT } from '@/data/energia-br';
 import {
   effectiveTariff,
@@ -44,9 +44,9 @@ const MEASURES: { maxDelta: number; items: string[] }[] = [
 
 export default function SavingsSimulator({ locale = 'pt-br' }: { locale?: Locale }) {
   const dict = t(locale);
-  const [itLoad, setItLoad] = useState('');
-  const [currentPue, setCurrentPue] = useState('');
-  const [targetPue, setTargetPue] = useState('');
+  const [itLoad, setItLoad] = useState('500');
+  const [currentPue, setCurrentPue] = useState('1.80');
+  const [targetPue, setTargetPue] = useState('1.50');
   const [tariffState, setTariffState] = useState<TariffState>(initialTariff);
 
   const result = useMemo(() => {
@@ -76,10 +76,17 @@ export default function SavingsSimulator({ locale = 'pt-br' }: { locale?: Locale
     return { res, tariff, delta: cur - tgt };
   }, [itLoad, currentPue, targetPue, tariffState]);
 
-  // Uma vez por visita, no primeiro resultado válido (o useMemo roda a cada tecla).
-  useEffect(() => {
-    if (result) trackOnce('economia_simulada');
-  }, [result]);
+  /*
+   * Esta ferramenta passou a NASCER com um caso de referência válido, como o
+   * Modelador e o Planejador já faziam: abrir vazia obrigava o visitante a
+   * trabalhar antes de receber qualquer coisa, e ferramenta técnica boa mostra
+   * um resultado de cara para você conferir contra o seu caso.
+   *
+   * Consequência no rastreio: "primeiro resultado" virou eco do pageview, então
+   * o sinal de uso passou para o `onInput` do formulário — o visitante MEXER é
+   * o que indica uso real. Mesmo padrão do Planejador de Densidade; `trackOnce`
+   * garante 1 evento por visita, não 1 por tecla. [Onda 1 2026-08-25]
+   */
 
   const d = dict.savings;
   const measures = result
@@ -88,9 +95,12 @@ export default function SavingsSimulator({ locale = 'pt-br' }: { locale?: Locale
 
   return (
     <div>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={(e) => e.preventDefault()} onInput={() => trackOnce('economia_simulada')}>
         <fieldset>
-          <legend>{d.title}</legend>
+          {/* O texto repetia o <h1> da página a poucos pixels de distância. A
+              legend continua no DOM porque é ela que rotula o fieldset para
+              leitor de tela — some só da tela, não da árvore de acessibilidade. */}
+          <legend className="sr-only">{d.title}</legend>
           <div className="grid-2">
             <NumberField
               id="sv-it"
@@ -126,6 +136,39 @@ export default function SavingsSimulator({ locale = 'pt-br' }: { locale?: Locale
 
       {result ? (
         <section className="results" aria-live="polite">
+          {/* Esta era a única das cinco calculadoras cujo número principal vivia
+              dentro de um parágrafo: quem abria via texto corrido e uma tabela,
+              enquanto as irmãs abrem com o resultado em destaque. Os três
+              números que respondem à pergunta da ferramenta — quanto economizo,
+              quanta potência libero, quanto CO₂e deixo de emitir — passam a ter
+              peso proporcional à sua importância. [Onda 1 2026-08-25] */}
+          <div className="stat-grid">
+            <div className="stat highlight">
+              <div className="label">
+                {d.lessCost} · {d.year1}
+              </div>
+              <div className="value">{fmtCurrencyBRL(result.res.perYear[0]?.costRs ?? 0)}</div>
+              <div className="note">{fmtEnergy(result.res.perYear[0]?.energyKwh ?? 0)}</div>
+            </div>
+            <div className="stat">
+              <div className="label">Δ potência</div>
+              <div className="value">{fmtNumber(result.res.deltaKw, 0)} kW</div>
+              <div className="note">
+                {fmtNumber(result.res.currentFacilityKw, 0)} kW →{' '}
+                {fmtNumber(result.res.targetFacilityKw, 0)} kW
+              </div>
+            </div>
+            {result.res.perYear[0]?.carbonTons != null ? (
+              <div className="stat">
+                <div className="label">CO₂e · {d.year1}</div>
+                <div className="value">{fmtNumber(result.res.perYear[0].carbonTons, 1)} t</div>
+                <div className="note">
+                  {d.year10}: {fmtNumber(result.res.perYear[2]?.carbonTons ?? 0, 1)} t
+                </div>
+              </div>
+            ) : null}
+          </div>
+
           <div className="card soft">
             <p>
               Reduzir o PUE de <strong>{fmtNumber(Number.parseFloat(currentPue))}</strong> para{' '}

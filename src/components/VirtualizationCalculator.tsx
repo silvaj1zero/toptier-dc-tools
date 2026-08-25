@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { HOURS_PER_YEAR } from '@/data/benchmarks';
 import { CONSOLIDACAO, INFRA_EVIDENCIA, INFRA_PRESETS, MELHORIAS } from '@/data/virtualizacao';
 import { effectiveTariff, fmtCurrencyBRL, fmtEnergy, fmtNumber } from '@/lib/calc';
@@ -25,10 +25,10 @@ export default function VirtualizationCalculator({ locale = 'pt-br' }: { locale?
   const d = dict.virtualization;
 
   // Cenário pré (placeholders = caso de referência do WP 118)
-  const [capacidade, setCapacidade] = useState('');
-  const [cargaTi, setCargaTi] = useState('');
-  const [pctServ, setPctServ] = useState('');
-  const [numServ, setNumServ] = useState('');
+  const [capacidade, setCapacidade] = useState('1000');
+  const [cargaTi, setCargaTi] = useState('500');
+  const [pctServ, setPctServ] = useState('50');
+  const [numServ, setNumServ] = useState('750');
   const [ocupacao, setOcupacao] = useState('70');
   const [infraId, setInfraId] = useState(INFRA_PRESETS[0]!.id);
   const [currency, setCurrency] = useState<Currency>('brl');
@@ -67,10 +67,17 @@ export default function VirtualizationCalculator({ locale = 'pt-br' }: { locale?
     }
   }, [capacidade, cargaTi, pctServ, numServ, ocupacao, infraId, currency, tariffState, priceUsd, pctVirt, ratio, melhorias]);
 
-  // Uma vez por visita, no primeiro resultado válido (o useMemo roda a cada tecla).
-  useEffect(() => {
-    if (result) trackOnce('virtualizacao_calculada');
-  }, [result]);
+  /*
+   * Esta ferramenta passou a NASCER com um caso de referência válido, como o
+   * Modelador e o Planejador já faziam: abrir vazia obrigava o visitante a
+   * trabalhar antes de receber qualquer coisa, e ferramenta técnica boa mostra
+   * um resultado de cara para você conferir contra o seu caso.
+   *
+   * Consequência no rastreio: "primeiro resultado" virou eco do pageview, então
+   * o sinal de uso passou para o `onInput` do formulário — o visitante MEXER é
+   * o que indica uso real. Mesmo padrão do Planejador de Densidade; `trackOnce`
+   * garante 1 evento por visita, não 1 por tecla. [Onda 1 2026-08-25]
+   */
 
   const money = moneyFormatter(currency);
   const toggle = (key: keyof Melhorias) => setMelhorias((m) => ({ ...m, [key]: !m[key] }));
@@ -110,7 +117,7 @@ export default function VirtualizationCalculator({ locale = 'pt-br' }: { locale?
 
   return (
     <div>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={(e) => e.preventDefault()} onInput={() => trackOnce('virtualizacao_calculada')}>
         <fieldset>
           <legend>{d.preTitle}</legend>
           <div className="grid-2">

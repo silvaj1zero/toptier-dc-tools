@@ -1,22 +1,59 @@
-/* Fontes self-hosted (ex-Google Fonts, subset latin, arquivos variáveis) — 2026-08-22.
-   Um único WOFF2 variável por família cobre os pesos 400/600/700 usados no DS. */
+/* Fontes self-hosted, subset latin, arquivos variáveis.
+
+   2026-08-25 — trocadas de Inter + JetBrains Mono para IBM Plex Sans + IBM Plex
+   Mono, as MESMAS famílias do site institucional (toptier.net.br). Não é
+   preferência estética: os dois produtos são a mesma marca e o usuário atravessa
+   de um para o outro pelo menu do site, comparando lado a lado. Tipografia
+   diferente fazia a suíte parecer de outra empresa.
+
+   Os arquivos são cópia byte a byte dos que o site já serve — mesma origem,
+   mesmo subset, mesmo unicode-range. Se um dia o site trocar de família, esta é
+   a segunda casa a atualizar.
+
+   O eixo `wdth` (font-stretch 75%–100%) do Plex Sans faz o papel de segunda
+   família nas manchetes, como no site — condensa sem carregar outro arquivo. */
 
 @font-face {
-  font-family: 'Inter';
+  font-family: 'IBM Plex Sans Variable';
   font-style: normal;
-  font-weight: 100 900;
   font-display: swap;
-  src: url('/fonts/inter-var.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
-    U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  font-weight: 100 700;
+  font-stretch: 75% 100%;
+  src: url('/fonts/plex-sans-var.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+/* Itálico é arquivo próprio: a suíte usa <em> de verdade (níveis oficiais do
+   FOMM, nomes de ferramenta citados). Sem ele o navegador sintetiza uma
+   inclinação falsa, que fica visivelmente pior num texto técnico. */
+@font-face {
+  font-family: 'IBM Plex Sans Variable';
+  font-style: italic;
+  font-display: swap;
+  font-weight: 100 700;
+  font-stretch: 75% 100%;
+  src: url('/fonts/plex-sans-var-italic.woff2') format('woff2-variations');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }
 
 @font-face {
-  font-family: 'JetBrains Mono';
+  font-family: 'IBM Plex Mono';
   font-style: normal;
-  font-weight: 100 800;
   font-display: swap;
-  src: url('/fonts/jetbrainsmono-var.woff2') format('woff2');
-  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC,
-    U+2000-206F, U+2074, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+  font-weight: 400;
+  src: url('/fonts/plex-mono-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url('/fonts/plex-mono-500.woff2') format('woff2');
+  unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304,
+    U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
 }

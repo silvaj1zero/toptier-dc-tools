@@ -153,7 +153,18 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
   const d = dict.fomm;
   const [respostas, setRespostas] = useState<RespostasFomm>({});
   const [openInfo, setOpenInfo] = useState<string | null>(null);
-  const [unlocked, setUnlocked] = useState(false);
+  /* Chamava-se `unlocked`, e o nome dizia tudo: o resultado ficava atrás de nome
+     + e-mail DEPOIS de 18 perguntas respondidas, enquanto
+     /maturidade-operacional e /como-usar prometiam por escrito que não havia
+     cadastro. Promessa quebrada no ponto de maior investimento de quem
+     respondeu.
+
+     Agora o resultado é livre e o formulário virou convite, depois do
+     resultado, ao lado do folder — o mesmo padrão opcional das outras cinco
+     ferramentas. O contexto do perfil FOMM continua viajando junto quando a
+     pessoa escolhe se identificar, que é o que torna este o lead mais
+     qualificado da suíte. Decisão do owner em 25/08. [Onda 1] */
+  const [leadEnviado, setLeadEnviado] = useState(false);
   const [gateStatus, setGateStatus] = useState<'idle' | 'sending'>('idle');
 
   const result = useMemo(() => {
@@ -181,7 +192,7 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
   const gateToken = useRef<string>('');
 
   useEffect(() => {
-    if (!TURNSTILE_SITE_KEY || !result?.completo || unlocked) return;
+    if (!TURNSTILE_SITE_KEY || !result?.completo || leadEnviado) return;
     // Cópia local: o guard acima não estreita o tipo dentro da closure do then.
     const sitekey = TURNSTILE_SITE_KEY;
     let vivo = true;
@@ -208,7 +219,7 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
     return () => {
       vivo = false;
     };
-  }, [result?.completo, unlocked]);
+  }, [result?.completo, leadEnviado]);
 
   const responder = (id: string, nivel: NivelMaturidade) =>
     setRespostas((r) => ({ ...r, [id]: nivel }));
@@ -229,7 +240,7 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
 
     // Honeypot: bots preenchem, humanos não veem.
     if (data.get('website')) {
-      setUnlocked(true);
+      setLeadEnviado(true);
       return;
     }
     const autorizaContato = Boolean(data.get('autoriza_contato'));
@@ -266,7 +277,7 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
       }
     }
     setGateStatus('idle');
-    setUnlocked(true);
+    setLeadEnviado(true);
     // Lead de verdade: ação deliberada, contada sempre (sem dedupe).
     track('lead_enviado', { origem: 'fomm-gate' });
   }
@@ -345,50 +356,7 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
         {result && !result.completo ? ` — ${d.incompleteNote}` : ''}
       </p>
 
-      {/* Gate de registro: perfil pronto, resultado atrás de nome + e-mail. */}
-      {result?.completo && !unlocked ? (
-        <section className="card fomm-gate">
-          <h2 style={{ marginTop: 0 }}>{d.gateTitle}</h2>
-          <p>{d.gateIntro}</p>
-          <form onSubmit={onGateSubmit}>
-            <div className="grid-2">
-              <div className="field">
-                <label htmlFor="fg-name">{dict.lead.nameLabel}</label>
-                <input id="fg-name" name="name" type="text" required autoComplete="name" maxLength={120} />
-              </div>
-              <div className="field">
-                <label htmlFor="fg-email">{dict.lead.emailLabel}</label>
-                <input id="fg-email" name="email" type="email" required autoComplete="email" maxLength={160} />
-              </div>
-              <div className="field">
-                <label htmlFor="fg-company">{dict.lead.companyLabel}</label>
-                <input id="fg-company" name="company" type="text" autoComplete="organization" maxLength={160} />
-              </div>
-              <div className="field">
-                <label htmlFor="fg-whats">{d.gateWhatsapp}</label>
-                <input id="fg-whats" name="whatsapp" type="tel" autoComplete="tel" maxLength={24} placeholder="+55 11 9…" />
-                <p className="help">{d.gateWhatsappHelp}</p>
-              </div>
-            </div>
-            <div className="hp-field" aria-hidden="true">
-              <label htmlFor="fg-website">Website</label>
-              <input id="fg-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
-            </div>
-            <label className="consent">
-              <input type="checkbox" name="autoriza_contato" />
-              <span>{d.gateAuthContact}</span>
-            </label>
-            {/* Widget do Turnstile — preenchido pelo efeito do gate */}
-            <div ref={gateBoxRef} className="turnstile-box" />
-            <button type="submit" disabled={gateStatus === 'sending'}>
-              {gateStatus === 'sending' ? d.gateSending : d.gateButton}
-            </button>
-            <p className="help">{d.gatePrivacy}</p>
-          </form>
-        </section>
-      ) : null}
-
-      {result?.completo && unlocked ? (
+      {result?.completo ? (
         <section className="results">
           <h2>{d.resultsTitle}</h2>
           <div className="stat-grid">
@@ -466,6 +434,50 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
             <h3 style={{ marginTop: 0 }}>{d.ctaTitle}</h3>
             <p>{d.ctaText}</p>
           </div>
+
+          {/* Convite, não pedágio: o resultado já está acima. Some depois do
+              envio para não insistir com quem já respondeu. */}
+          {!leadEnviado ? (
+            <section className="card fomm-gate no-print">
+          <h2 style={{ marginTop: 0 }}>{d.gateTitle}</h2>
+          <p>{d.gateIntro}</p>
+          <form onSubmit={onGateSubmit}>
+            <div className="grid-2">
+              <div className="field">
+                <label htmlFor="fg-name">{dict.lead.nameLabel}</label>
+                <input id="fg-name" name="name" type="text" required autoComplete="name" maxLength={120} />
+              </div>
+              <div className="field">
+                <label htmlFor="fg-email">{dict.lead.emailLabel}</label>
+                <input id="fg-email" name="email" type="email" required autoComplete="email" maxLength={160} />
+              </div>
+              <div className="field">
+                <label htmlFor="fg-company">{dict.lead.companyLabel}</label>
+                <input id="fg-company" name="company" type="text" autoComplete="organization" maxLength={160} />
+              </div>
+              <div className="field">
+                <label htmlFor="fg-whats">{d.gateWhatsapp}</label>
+                <input id="fg-whats" name="whatsapp" type="tel" autoComplete="tel" maxLength={24} placeholder="+55 11 9…" />
+                <p className="help">{d.gateWhatsappHelp}</p>
+              </div>
+            </div>
+            <div className="hp-field" aria-hidden="true">
+              <label htmlFor="fg-website">Website</label>
+              <input id="fg-website" name="website" type="text" tabIndex={-1} autoComplete="off" />
+            </div>
+            <label className="consent">
+              <input type="checkbox" name="autoriza_contato" />
+              <span>{d.gateAuthContact}</span>
+            </label>
+            {/* Widget do Turnstile — preenchido pelo efeito do gate */}
+            <div ref={gateBoxRef} className="turnstile-box" />
+            <button type="submit" disabled={gateStatus === 'sending'}>
+              {gateStatus === 'sending' ? d.gateSending : d.gateButton}
+            </button>
+            <p className="help">{d.gatePrivacy}</p>
+          </form>
+            </section>
+          ) : null}
 
           <div className="no-print" style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
             <button type="button" onClick={() => window.print()}>

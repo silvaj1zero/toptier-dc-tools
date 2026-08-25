@@ -52,9 +52,18 @@ export interface TariffState {
   bandeiraId: string;
 }
 
+/* A tarifa nasce preenchida com o mesmo 0,75 R$/kWh que o campo já sugeria como
+   placeholder — sem ela `tariffFromState` devolve null e o Simulador de Economia
+   e a Calculadora de Virtualização não produzem resultado nenhum ao abrir, que
+   era justamente o que a Onda 1 veio corrigir.
+
+   Não é chute embutido: o valor fica VISÍVEL e editável no campo, com o texto de
+   ajuda mandando conferir na fatura. Distribuidora fica em branco de propósito —
+   escolher uma como padrão embutiria um viés regional que o número genérico não
+   tem. [Onda 1 2026-08-25] */
 export const initialTariff: TariffState = {
   distribuidora: '',
-  baseRsKwh: '',
+  baseRsKwh: '0.75',
   bandeiraId: 'verde',
 };
 

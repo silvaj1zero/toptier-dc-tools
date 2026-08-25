@@ -1,4 +1,4 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo, useState } from 'react';
 import { PUE_BENCHMARKS, REGULATORY } from '@/data/benchmarks';
 import { FATOR_SIN_DEFAULT } from '@/data/energia-br';
 import {
@@ -24,8 +24,8 @@ const MEASUREMENT_LEVELS = ['level1', 'level2', 'level3'] as const;
 
 export default function PueCalculator({ locale = 'pt-br' }: { locale?: Locale }) {
   const dict = t(locale);
-  const [itLoad, setItLoad] = useState('');
-  const [facilityLoad, setFacilityLoad] = useState('');
+  const [itLoad, setItLoad] = useState('500');
+  const [facilityLoad, setFacilityLoad] = useState('800');
   const [level, setLevel] = useState<(typeof MEASUREMENT_LEVELS)[number]>('level1');
   const [tariffState, setTariffState] = useState<TariffState>(initialTariff);
   const [waterLiters, setWaterLiters] = useState('');
@@ -63,19 +63,28 @@ export default function PueCalculator({ locale = 'pt-br' }: { locale?: Locale })
     };
   }, [itLoad, facilityLoad, tariffState, waterLiters, emissionsTons]);
 
-  // Uso da ferramenta: uma vez por visita, no primeiro resultado válido.
-  // `trackOnce` já deduplica — o useMemo acima roda a cada tecla.
-  useEffect(() => {
-    if (result) trackOnce('pue_calculado');
-  }, [result]);
+  /*
+   * Esta ferramenta passou a NASCER com um caso de referência válido, como o
+   * Modelador e o Planejador já faziam: abrir vazia obrigava o visitante a
+   * trabalhar antes de receber qualquer coisa, e ferramenta técnica boa mostra
+   * um resultado de cara para você conferir contra o seu caso.
+   *
+   * Consequência no rastreio: "primeiro resultado" virou eco do pageview, então
+   * o sinal de uso passou para o `onInput` do formulário — o visitante MEXER é
+   * o que indica uso real. Mesmo padrão do Planejador de Densidade; `trackOnce`
+   * garante 1 evento por visita, não 1 por tecla. [Onda 1 2026-08-25]
+   */
 
   const d = dict.pueCalc;
 
   return (
     <div>
-      <form onSubmit={(e) => e.preventDefault()}>
+      <form onSubmit={(e) => e.preventDefault()} onInput={() => trackOnce('pue_calculado')}>
         <fieldset>
-          <legend>{d.title}</legend>
+          {/* O texto repetia o <h1> da página a poucos pixels de distância. A
+              legend continua no DOM porque é ela que rotula o fieldset para
+              leitor de tela — some só da tela, não da árvore de acessibilidade. */}
+          <legend className="sr-only">{d.title}</legend>
           <div className="grid-2">
             <NumberField
               id="pue-it"

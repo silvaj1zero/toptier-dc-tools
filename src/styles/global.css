@@ -1,94 +1,117 @@
 /* Top Tools — design tokens (DS Top Tier Infrastructure, "Silent Precision") e base.
+
+   2026-08-25 — os VALORES foram alinhados aos do site institucional
+   (`src/styles/ds/tokens.css` em TTI-Web-Renew-2026): verde de marca, verde AA,
+   rampa de neutros (grafite quente no lugar do navy frio), raio e famílias
+   tipográficas. Os NOMES de papel continuam os mesmos, como manda a linha
+   abaixo — nenhum componente precisou mudar.
+
+   Motivo: os dois produtos são a mesma marca e o usuário atravessa de um para o
+   outro pelo menu do site. Verde quase igual, raio 2,5x maior e neutro de matiz
+   oposta faziam a suíte parecer de outra empresa. Os QUATRO blocos de tema
+   (claro, dark ×2 e o `@media print` do fim do arquivo) foram atualizados
+   juntos — esquecer o de impressão deixaria o relatório que o engenheiro leva
+   para a reunião com a paleta antiga.
+
    Tema claro é o default (:root); dark aplica via [data-theme='dark'] (toggle no header,
    persistido em localStorage) e via prefers-color-scheme quando não há escolha explícita.
    Os valores dark são duplicados nos dois blocos de propósito — CSS não permite reuso de bloco. */
 
 :root {
   /* Marca */
-  --tt-green: #00a651;
-  --tt-green-deep: #007a3d; /* verde AA (4.5:1 sobre branco) para links e CTAs */
+  /* Regra herdada do DS do site e verificada por gate lá: o verde de MARCA
+     serve a elemento gráfico (régua, ícone, borda, contorno de foco), nunca a
+     texto — sobre branco ele rende 4,05:1, abaixo do mínimo 4,5:1. Texto e
+     superfície-com-texto usam o `-deep` (5,33:1). */
+  --tt-green: #00923f;
+  --tt-green-deep: #007c36; /* verde AA (5,33:1 sobre branco) para links e CTAs */
+  /* Estado de interação escurece — nunca clareia. O hover usava o verde de
+     marca e o contraste PIORAVA ao passar o cursor (5,45:1 → 3,19:1, abaixo de
+     AA). Este rende 8,06:1 com texto branco. */
+  --tt-green-hover: #00662c;
 
   /* Papéis herdados pelos componentes (nomes estáveis — não renomear) */
-  --tt-navy-900: #111827;
-  --tt-navy-700: #1f2937;
-  --tt-navy-500: #007a3d;
-  --tt-teal-600: #007a3d;
-  --tt-teal-100: #e5f5ec;
+  --tt-navy-900: #171514;
+  --tt-navy-700: #3a3735;
+  --tt-navy-500: #007c36;
+  --tt-teal-600: #007c36;
+  --tt-teal-100: #e8f5ed;
   --tt-amber-600: #b45309;
   --tt-amber-100: #fef3c7;
   --tt-red-600: #b91c1c;
   --tt-red-100: #fee2e2;
-  --tt-gray-900: #111827;
-  --tt-gray-700: #374151;
-  --tt-gray-500: #6b7280;
-  --tt-gray-300: #d1d5db;
-  --tt-gray-100: #f3f4f6;
+  --tt-gray-900: #171514;
+  --tt-gray-700: #3a3735;
+  --tt-gray-500: #6e6866;
+  --tt-gray-300: #d8d4d0;
+  --tt-gray-100: #f4f2f0;
   --tt-bg: #ffffff;
-  --tt-bg-soft: #f7faf8;
+  --tt-bg-soft: #faf9f8;
   --tt-card: #ffffff;
   --tt-input-bg: #ffffff;
   --tt-header-bg: #ffffff;
   --tt-logo-chip: transparent;
 
   /* Categóricas (cenários/séries) — paleta do DS TTI, legível em ambos os temas */
-  --tt-cat-1: #00a651;
+  --tt-cat-1: #00923f;
   --tt-cat-2: #3b82f6;
   --tt-cat-3: #f59e0b;
   --tt-cat-4: #8b5cf6;
 
-  --tt-radius: 10px;
+  --tt-radius: 4px;
   --tt-font:
-    'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
-  --tt-font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    'IBM Plex Sans Variable', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
+    Arial, sans-serif;
+  --tt-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
 }
 
 /* Dark — escolha do sistema (sem toggle explícito) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme='light']) {
-    --tt-navy-900: #f0f6fc;
-    --tt-navy-700: #c9d1d9;
-    --tt-navy-500: #3ccb7f;
-    --tt-teal-600: #3ccb7f;
-    --tt-teal-100: rgba(0, 166, 81, 0.15);
+    --tt-navy-900: #faf9f8;
+    --tt-navy-700: #d8d4d0;
+    --tt-navy-500: #4fbb7c;
+    --tt-teal-600: #4fbb7c;
+    --tt-teal-100: #00923f1f;
     --tt-amber-600: #fbbf24;
     --tt-amber-100: rgba(245, 158, 11, 0.15);
     --tt-red-600: #f87171;
     --tt-red-100: rgba(239, 68, 68, 0.16);
-    --tt-gray-900: #f0f6fc;
-    --tt-gray-700: #c9d1d9;
-    --tt-gray-500: #8b949e;
-    --tt-gray-300: #30363d;
-    --tt-gray-100: #161b22;
-    --tt-bg: #0b0f1a;
-    --tt-bg-soft: #0f141c;
-    --tt-card: #161b22;
-    --tt-input-bg: #0f141c;
-    --tt-header-bg: #0f141c;
+    --tt-gray-900: #faf9f8;
+    --tt-gray-700: #d8d4d0;
+    --tt-gray-500: #8f8985;
+    --tt-gray-300: #3a3735;
+    --tt-gray-100: #262322;
+    --tt-bg: #0e0d0c;
+    --tt-bg-soft: #171514;
+    --tt-card: #171514;
+    --tt-input-bg: #0e0d0c;
+    --tt-header-bg: #171514;
     --tt-logo-chip: #ffffff;
   }
 }
 
 /* Dark — escolha explícita via toggle */
 :root[data-theme='dark'] {
-  --tt-navy-900: #f0f6fc;
-  --tt-navy-700: #c9d1d9;
-  --tt-navy-500: #3ccb7f;
-  --tt-teal-600: #3ccb7f;
-  --tt-teal-100: rgba(0, 166, 81, 0.15);
+  --tt-navy-900: #faf9f8;
+  --tt-navy-700: #d8d4d0;
+  --tt-navy-500: #4fbb7c;
+  --tt-teal-600: #4fbb7c;
+  --tt-teal-100: #00923f1f;
   --tt-amber-600: #fbbf24;
   --tt-amber-100: rgba(245, 158, 11, 0.15);
   --tt-red-600: #f87171;
   --tt-red-100: rgba(239, 68, 68, 0.16);
-  --tt-gray-900: #f0f6fc;
-  --tt-gray-700: #c9d1d9;
-  --tt-gray-500: #8b949e;
-  --tt-gray-300: #30363d;
-  --tt-gray-100: #161b22;
-  --tt-bg: #0b0f1a;
-  --tt-bg-soft: #0f141c;
-  --tt-card: #161b22;
-  --tt-input-bg: #0f141c;
-  --tt-header-bg: #0f141c;
+  --tt-gray-900: #faf9f8;
+  --tt-gray-700: #d8d4d0;
+  --tt-gray-500: #8f8985;
+  --tt-gray-300: #3a3735;
+  --tt-gray-100: #262322;
+  --tt-bg: #0e0d0c;
+  --tt-bg-soft: #171514;
+  --tt-card: #171514;
+  --tt-input-bg: #0e0d0c;
+  --tt-header-bg: #171514;
   --tt-logo-chip: #ffffff;
 }
 
@@ -270,33 +293,209 @@ code {
 
 .brand-name em {
   font-style: normal;
-  color: var(--tt-green);
+  /* Verde AA, não o de marca: a 1,15rem (18,4px) em peso 700 o texto fica
+     0,26px ABAIXO do limiar de 18,66px que o qualificaria como "texto grande",
+     então vale o mínimo de 4,5:1 — e o verde de marca rende 4,05:1. */
+  color: var(--tt-green-deep);
 }
 
-.site-header nav {
+/* ---------- Navegação ----------------------------------------------------
+   Duas navegações no DOM, uma visível por vez: a de desktop agrupa as 6
+   ferramentas sob um item só; a de celular é um menu de verdade. Ambas saem do
+   MESMO array no Base.astro, então não podem divergir. `display:none` remove a
+   escondida da árvore de acessibilidade — leitor de tela não lê duas vezes.
+
+   As duas usam `<details>` nativo: abre e fecha sem JavaScript, o teclado já
+   funciona, e um `<summary>` já é botão para tecnologia assistiva. O script no
+   fim do layout só acrescenta o que o elemento não dá de graça — fechar com Esc
+   e ao clicar fora. [Onda 1 2026-08-25] */
+
+.site-header .inner {
+  position: relative;
+}
+
+.nav-desktop {
   display: flex;
   align-items: center;
-  gap: 1.1rem;
-  flex-wrap: wrap;
+  gap: 0.4rem;
 }
 
-.site-header nav a {
+.header-acoes {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.site-header nav a,
+.nav-mobile-painel a,
+.nav-drop > summary {
   color: var(--tt-gray-700);
   text-decoration: none;
   font-size: 0.95rem;
-  padding: 0.55rem 0.6rem; /* alvo de toque ≥44px de altura no mobile */
-  border-radius: 6px;
+  padding: 0.55rem 0.7rem; /* alvo de toque ≥44px de altura */
+  border-radius: var(--tt-radius);
 }
 
-.site-header nav a:hover {
+.site-header nav a:hover,
+.nav-mobile-painel a:hover,
+.nav-drop > summary:hover {
   color: var(--tt-navy-500);
   background: var(--tt-bg-soft);
 }
 
-.site-header nav a[aria-current='page'] {
+.site-header nav a[aria-current='page'],
+.nav-mobile-painel a[aria-current='page'] {
   color: var(--tt-navy-500);
   font-weight: 600;
   background: var(--tt-teal-100);
+}
+
+/* --- Dropdown "Ferramentas" (desktop) --- */
+.nav-drop {
+  position: relative;
+}
+
+.nav-drop > summary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.nav-drop > summary::-webkit-details-marker {
+  display: none;
+}
+
+/* A ferramenta aberta continua sinalizada com o painel fechado — sem isso,
+   entrar numa calculadora fazia a navegação perder o "você está aqui" que o
+   item solto dava antes. */
+.nav-drop-rotulo.esta-aqui {
+  color: var(--tt-navy-500);
+  font-weight: 600;
+  box-shadow: inset 0 -2px 0 var(--tt-green);
+}
+
+.nav-chevron {
+  transition: transform 0.18s ease;
+  flex: none;
+}
+
+.nav-drop[open] > summary .nav-chevron {
+  transform: rotate(180deg);
+}
+
+.nav-drop-painel {
+  position: absolute;
+  top: calc(100% + 0.4rem);
+  left: 0;
+  z-index: 40;
+  min-width: 15rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.4rem;
+  background: var(--tt-card);
+  border: 1px solid var(--tt-gray-300);
+  border-radius: var(--tt-radius);
+  box-shadow: 0 8px 24px rgb(0 0 0 / 12%);
+}
+
+/* --- Menu do celular --- */
+.nav-mobile {
+  display: none;
+}
+
+.nav-mobile > summary {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  cursor: pointer;
+  list-style: none;
+  color: var(--tt-gray-700);
+  border: 1px solid var(--tt-gray-300);
+  border-radius: var(--tt-radius);
+}
+
+.nav-mobile > summary::-webkit-details-marker {
+  display: none;
+}
+
+.nav-mobile-painel {
+  position: absolute;
+  top: calc(100% + 0.65rem);
+  left: 0;
+  right: 0;
+  z-index: 40;
+  display: flex;
+  flex-direction: column;
+  gap: 0.1rem;
+  padding: 0.5rem;
+  background: var(--tt-card);
+  border: 1px solid var(--tt-gray-300);
+  border-radius: var(--tt-radius);
+  box-shadow: 0 10px 28px rgb(0 0 0 / 16%);
+  max-height: min(70vh, 32rem);
+  overflow-y: auto;
+}
+
+.nav-mobile-titulo {
+  margin: 0.5rem 0 0.15rem;
+  padding: 0 0.7rem;
+  font-family: var(--tt-font-mono);
+  font-size: 0.72rem;
+  font-weight: 500;
+  letter-spacing: 0.09em;
+  text-transform: uppercase;
+  color: var(--tt-gray-500);
+}
+
+.nav-mobile-painel a {
+  display: block;
+}
+
+.nav-mobile-externo {
+  margin-top: 0.35rem;
+  border-top: 1px solid var(--tt-gray-300);
+  border-radius: 0;
+}
+
+@media (max-width: 900px) {
+  .nav-desktop {
+    display: none;
+  }
+
+  .nav-mobile {
+    display: block;
+  }
+}
+
+/* Em telas estreitas a marca e os dois botões somavam mais que a largura
+   disponível e o `flex-wrap` do `.inner` jogava os botões para uma segunda
+   linha — o cabeçalho ficava com o dobro da altura sem necessidade. Reduzir o
+   logo em 6px e apertar o gap resolve sem esconder nada. */
+@media (max-width: 460px) {
+  .site-header .inner {
+    flex-wrap: nowrap;
+    gap: 0.5rem;
+    padding-inline: 1rem;
+  }
+
+  .site-header .brand {
+    gap: 0.5rem;
+    min-width: 0;
+  }
+
+  .brand-logo {
+    height: 28px;
+  }
+
+  .brand-name {
+    font-size: 1.05rem;
+  }
 }
 
 .theme-toggle {
@@ -308,7 +507,7 @@ code {
   padding: 0;
   background: transparent;
   border: 1px solid var(--tt-gray-300);
-  border-radius: 8px;
+  border-radius: var(--tt-radius);
   color: var(--tt-gray-700);
   cursor: pointer;
 }
@@ -415,7 +614,7 @@ code {
 .btn-ghost {
   display: inline-block;
   padding: 0.65rem 1.4rem;
-  border-radius: 8px;
+  border-radius: var(--tt-radius);
   font-weight: 600;
   text-decoration: none;
   color: var(--tt-navy-500);
@@ -521,11 +720,37 @@ select {
   width: 100%;
   padding: 0.55rem 0.7rem;
   border: 1px solid var(--tt-gray-300);
-  border-radius: 8px;
+  border-radius: var(--tt-radius);
   font-size: 1rem;
   font-family: inherit;
   background: var(--tt-input-bg);
   color: var(--tt-gray-900);
+}
+
+/* O <select> vinha com a aparência bruta do sistema operacional no meio de
+   campos estilizados — altura, borda e seta diferentes dos vizinhos, que é o
+   detalhe que faz um formulário parecer painel interno em vez de produto.
+   `appearance: none` desliga o desenho nativo; a seta volta como SVG embutido
+   (data URI, sem requisição) para não depender de imagem externa. O padding à
+   direita reserva o espaço dela. [Onda 1 2026-08-25] */
+select {
+  appearance: none;
+  padding-right: 2rem;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%236e6866' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 0.7rem center;
+}
+
+/* No dark a seta precisa da cor clara — o SVG é embutido, então troca o arquivo
+   inteiro em vez de herdar `currentColor`. */
+:root[data-theme='dark'] select {
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238f8985' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme='light']) select {
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='%238f8985' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpath d='m6 9 6 6 6-6'/%3E%3C/svg%3E");
+  }
 }
 
 /* Foco de teclado coberto pelo :focus-visible global (sem outline duplicado no clique) */
@@ -599,7 +824,7 @@ select {
   background: var(--tt-green-deep);
   color: #fff;
   padding: 0.5rem 1rem;
-  border-radius: 0 0 8px 8px;
+  border-radius: 0 0 var(--tt-radius) var(--tt-radius);
   text-decoration: none;
   font-weight: 600;
 }
@@ -614,7 +839,7 @@ button,
   background: var(--tt-green-deep);
   color: #fff;
   border: none;
-  border-radius: 8px;
+  border-radius: var(--tt-radius);
   padding: 0.65rem 1.4rem;
   font-size: 1rem;
   font-weight: 600;
@@ -625,7 +850,7 @@ button,
 
 button:hover,
 .btn:hover {
-  background: var(--tt-green);
+  background: var(--tt-green-hover);
 }
 
 button.secondary {
@@ -640,9 +865,11 @@ button.secondary {
   color: #06240f;
 }
 
+/* No dark o botão tem texto ESCURO sobre verde, então o hover clareia — é o
+   mesmo princípio do claro (aumentar o contraste), invertido pelo fundo. */
 :root[data-theme='dark'] button:not(.secondary):not(.theme-toggle):hover,
 :root[data-theme='dark'] .btn:hover {
-  background: #3ccb7f;
+  background: #4fbb7c;
 }
 
 /* Resultados */
@@ -887,7 +1114,7 @@ details.method summary {
   min-width: 4.6rem;
   padding: 0.45rem 0.6rem;
   border: 1px solid var(--tt-gray-300);
-  border-radius: 8px;
+  border-radius: var(--tt-radius);
   background: var(--tt-card);
   cursor: pointer;
   font-weight: 400;
@@ -958,20 +1185,20 @@ details.method summary {
 @media print {
   :root,
   :root[data-theme='dark'] {
-    --tt-navy-900: #111827;
-    --tt-navy-700: #1f2937;
-    --tt-navy-500: #007a3d;
-    --tt-teal-600: #007a3d;
-    --tt-teal-100: #e5f5ec;
+    --tt-navy-900: #171514;
+    --tt-navy-700: #3a3735;
+    --tt-navy-500: #007c36;
+    --tt-teal-600: #007c36;
+    --tt-teal-100: #e8f5ed;
     --tt-amber-600: #b45309;
     --tt-amber-100: #fef3c7;
     --tt-red-600: #b91c1c;
     --tt-red-100: #fee2e2;
-    --tt-gray-900: #111827;
-    --tt-gray-700: #374151;
-    --tt-gray-500: #6b7280;
-    --tt-gray-300: #d1d5db;
-    --tt-gray-100: #f3f4f6;
+    --tt-gray-900: #171514;
+    --tt-gray-700: #3a3735;
+    --tt-gray-500: #6e6866;
+    --tt-gray-300: #d8d4d0;
+    --tt-gray-100: #f4f2f0;
     --tt-bg: #ffffff;
     --tt-bg-soft: #ffffff;
     --tt-card: #ffffff;

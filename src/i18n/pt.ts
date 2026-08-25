@@ -383,17 +383,17 @@ export const pt = {
       qualidade:
         'Coloque procedimentos sob controle de versão e formalize o treinamento com avaliação — a base das demais disciplinas.',
     },
-    gateTitle: 'Seu perfil está pronto — veja e baixe o resultado',
+    gateTitle: 'Quer o folder da Auditoria FOMM e uma leitura do seu caso?',
     gateIntro:
-      'Registre-se para visualizar o seu perfil de maturidade, imprimir o relatório e baixar o folder da Auditoria e Certificação FOMM.',
+      'O resultado acima é seu, sem cadastro. Se quiser o folder da Auditoria e Certificação FOMM e uma leitura do seu perfil por quem aplica o modelo em campo, deixe seu contato.',
     gateWhatsapp: 'WhatsApp (opcional)',
     gateWhatsappHelp: 'Informe se desejar contato por WhatsApp.',
     gateAuthContact:
       'Autorizo a Top Tier a entrar em contato sobre meu resultado e os serviços de auditoria (LGPD). Sem esta autorização, nenhum contato será feito.',
-    gateButton: 'Ver meu resultado',
-    gateSending: 'Registrando…',
+    gateButton: 'Quero o folder e a leitura do meu perfil',
+    gateSending: 'Enviando…',
     gatePrivacy:
-      'Usamos seus dados apenas para emitir o resultado e, se autorizado, para contato sobre os serviços Top Tier.',
+      'Usamos seus dados apenas para enviar o material e, se autorizado, para contato sobre os serviços Top Tier.',
     folderButton: 'Baixar o folder — Auditoria e Certificação FOMM (PDF)',
     ctaTitle: 'Transforme o pré-diagnóstico em plano de ação',
     ctaText:

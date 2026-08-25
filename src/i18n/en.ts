@@ -380,17 +380,17 @@ export const en: Dict = {
       qualidade:
         'Put procedures under version control and formalize training with assessment — the foundation of the other disciplines.',
     },
-    gateTitle: 'Your profile is ready — view and download the result',
+    gateTitle: 'Want the FOMM Audit brochure and a read on your case?',
     gateIntro:
-      'Register to view your maturity profile, print the report, and download the FOMM Audit & Certification brochure.',
+      'The result above is yours, no sign-up. If you also want the FOMM Audit & Certification brochure and a read on your profile from the people who apply the model in the field, leave your contact.',
     gateWhatsapp: 'WhatsApp (optional)',
     gateWhatsappHelp: 'Provide it if you want to be contacted via WhatsApp.',
     gateAuthContact:
       'I authorize Top Tier to contact me about my result and audit services (LGPD). Without this authorization, no contact will be made.',
-    gateButton: 'View my result',
-    gateSending: 'Registering…',
+    gateButton: 'Send me the brochure and the read',
+    gateSending: 'Sending…',
     gatePrivacy:
-      'We use your data only to issue the result and, if authorized, to contact you about Top Tier services.',
+      'We use your data only to send the material and, if authorized, to contact you about Top Tier services.',
     folderButton: 'Download the FOMM Audit & Certification brochure (PDF)',
     ctaTitle: 'Turn the pre-assessment into an action plan',
     ctaText:
