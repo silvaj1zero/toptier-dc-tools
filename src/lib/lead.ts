@@ -27,57 +27,20 @@ export interface LeadPayload {
 }
 
 export type ResultadoEnvio =
-  | { ok: true; viaFallback?: boolean }
+  | { ok: true }
   | { ok: false; motivo: 'sem-endpoint' | 'anti-robo' | 'rede' | 'servidor' };
 
 /** `.trim()` pelo mesmo motivo do site key — ver src/lib/turnstile.ts. */
 export const LEAD_ENDPOINT: string | undefined =
   import.meta.env.PUBLIC_TOOL_LEAD_ENDPOINT?.trim() || undefined;
 
-/**
- * Canal ANTIGO (Formspree), mantido como rede de segurança da transição.
- *
- * Por que ele ainda existe: a validação de hostname do Turnstile só acontece
- * no servidor, na hora de verificar o token — não dá para provar por teste
- * automatizado que um token emitido em `ferramentas.toptier.net.br` é aceito
- * (navegador automatizado não recebe token; é limitação conhecida, registrada
- * no handoff do site). Enquanto não houver uma confirmação humana de um envio
- * real, um lead que falhe no canal novo não pode simplesmente evaporar.
- *
- * REMOVER quando houver confirmação de envio real pelo canal novo. O evento
- * `lead_fallback` no painel mostra se este caminho está sendo usado — se ele
- * aparecer, o canal novo está recusando leads de gente de verdade.
+/*
+ * O fallback para o Formspree viveu aqui entre 25/08 e 25/08 — rede de
+ * segurança enquanto não havia prova de que um token emitido no subdomínio
+ * seria aceito pelo siteverify (navegador automatizado não recebe token, então
+ * só um envio humano podia provar). O owner confirmou o recebimento do e-mail
+ * pelo canal novo em 25/08 e a rede foi retirada: canal único, de verdade.
  */
-const FALLBACK_ENDPOINT: string | undefined =
-  import.meta.env.PUBLIC_LEAD_ENDPOINT?.trim() || undefined;
-
-/** Reenvia ao canal antigo no formato que ele espera (FormData). */
-async function enviarPeloFallback(payload: LeadPayload): Promise<boolean> {
-  if (!FALLBACK_ENDPOINT) return false;
-  try {
-    const data = new FormData();
-    data.set('name', payload.nome);
-    data.set('email', payload.email);
-    data.set('origem', payload.origem);
-    if (payload.empresa) data.set('company', payload.empresa);
-    if (payload.whatsapp) data.set('whatsapp', payload.whatsapp);
-    if (payload.mensagem) data.set('mensagem', payload.mensagem);
-    data.set('autoriza_contato', payload.lgpdConsent ? 'sim' : 'nao');
-    for (const [k, v] of Object.entries(payload.contexto ?? {})) data.set(k, v);
-    // Marca explícita: no destino, dá para ver que este lead só chegou porque
-    // o canal novo falhou.
-    data.set('canal', 'fallback-formspree');
-
-    const res = await fetch(FALLBACK_ENDPOINT, {
-      method: 'POST',
-      headers: { Accept: 'application/json' },
-      body: data,
-    });
-    return res.ok;
-  } catch {
-    return false;
-  }
-}
 
 /**
  * Reúne os metadados de atribuição da sessão (página, referrer, UTMs).
@@ -109,13 +72,8 @@ export function origemDaPagina(): string {
  * falha de servidor pede "tente mais tarde ou escreva para a gente".
  */
 export async function enviarLead(payload: LeadPayload): Promise<ResultadoEnvio> {
-  if (!LEAD_ENDPOINT) {
-    // Sem canal novo: tenta o antigo antes de desistir.
-    if (await enviarPeloFallback(payload)) return { ok: true, viaFallback: true };
-    return { ok: false, motivo: 'sem-endpoint' };
-  }
+  if (!LEAD_ENDPOINT) return { ok: false, motivo: 'sem-endpoint' };
 
-  let motivo: 'anti-robo' | 'rede' | 'servidor';
   try {
     const res = await fetch(LEAD_ENDPOINT, {
       method: 'POST',
@@ -125,17 +83,11 @@ export async function enviarLead(payload: LeadPayload): Promise<ResultadoEnvio> 
 
     if (res.ok) return { ok: true };
     // 403 = token recusado ou ausente (o servidor não distingue de propósito).
-    motivo = res.status === 403 ? 'anti-robo' : 'servidor';
+    return { ok: false, motivo: res.status === 403 ? 'anti-robo' : 'servidor' };
   } catch {
     // Rede caída, CORS barrado, requisição abortada.
-    motivo = 'rede';
+    return { ok: false, motivo: 'rede' };
   }
-
-  // Canal novo recusou. Antes de mostrar erro a uma pessoa real, tenta o canal
-  // antigo — perder o lead é pior que mantê-lo temporariamente em dois lugares.
-  if (await enviarPeloFallback(payload)) return { ok: true, viaFallback: true };
-
-  return { ok: false, motivo };
 }
 
 /** Fallback histórico: abre o cliente de e-mail com tudo preenchido. */

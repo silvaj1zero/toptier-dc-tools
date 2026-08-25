@@ -34,10 +34,7 @@ export type ToolEvent =
   | 'densidade_planejada'
   | 'fomm_respondido'
   | 'resultado_impresso'
-  | 'lead_enviado'
-  /** Lead que só chegou porque o canal novo recusou — sinal de transição
-   *  incompleta, não de uso normal. Se aparecer no painel, investigar. */
-  | 'lead_fallback';
+  | 'lead_enviado';
 
 const emitidos = new Set<string>();
 

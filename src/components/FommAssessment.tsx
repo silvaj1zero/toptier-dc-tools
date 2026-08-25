@@ -256,7 +256,6 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
       const enviado = await enviarLead({ ...payloadBase, turnstileToken: gateToken.current });
       if (enviado.ok) {
         track('lead_enviado', { origem: 'fomm-gate' });
-        if (enviado.viaFallback) track('lead_fallback', { origem: 'fomm-gate' });
       } else {
         // Registro é CORTESIA: falhou, o prospect vê o resultado assim mesmo.
         // Trocar isso por um bloqueio transformaria um problema nosso (rede,

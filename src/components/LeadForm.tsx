@@ -126,8 +126,6 @@ export default function LeadForm({
       setStatus('ok');
       form.reset();
       track('lead_enviado', { origem });
-      // Marca separada: o lead chegou, mas pelo canal antigo. Ver src/lib/lead.ts.
-      if (resultado.viaFallback) track('lead_fallback', { origem });
       return;
     }
 
