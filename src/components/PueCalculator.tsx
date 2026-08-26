@@ -16,7 +16,7 @@ import {
   wue,
 } from '@/lib/calc';
 import { t, type Locale } from '@/i18n';
-import { trackOnce } from '@/lib/track';
+import { track, trackOnce } from '@/lib/track';
 import { NumberField, TariffFields, initialTariff, tariffFromState, type TariffState } from './fields';
 import { PueGauge } from './PueGauge';
 
@@ -240,6 +240,26 @@ export default function PueCalculator({ locale = 'pt-br' }: { locale?: Locale })
               <strong>{result.regulatory.eedReportingScope ? d.regInScope : d.regOutScope}</strong>
             </li>
           </ul>
+
+          <div className="no-print" style={{ marginTop: '1.5rem' }}>
+            {/* Ação deliberada (não derivada de digitação): `track` sem dedupe.
+                Imprimir/salvar em PDF é sinal forte de intenção — vale contar
+                cada vez. */}
+            <button
+              type="button"
+              onClick={() => {
+                track('resultado_impresso', { ferramenta: 'calculadora-pue' });
+                window.print();
+              }}
+            >
+              {dict.common.print}
+            </button>
+          </div>
+
+          <div className="print-only">
+            <h2>{d.reportTitle}</h2>
+            <p>{d.reportBy} — www.toptier.net.br</p>
+          </div>
 
           <details className="method">
             <summary>{dict.common.formulasTitle}</summary>

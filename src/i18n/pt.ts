@@ -55,6 +55,8 @@ export const pt = {
     regFails: 'não atende',
     regInScope: 'estaria no escopo',
     regOutScope: 'fora do escopo',
+    reportTitle: 'Relatório de cálculo de PUE',
+    reportBy: 'Gerado pelo Top Tools — Top Tier Infrastructure',
   },
   savings: {
     title: 'Simulador de Economia de Energia',
