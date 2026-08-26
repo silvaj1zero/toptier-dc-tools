@@ -7,9 +7,16 @@ interface Props {
   description: string;
   /** Marca a página como ferramenta (emite JSON-LD WebApplication). */
   tool?: boolean;
+  /**
+   * Faz preload da fonte mono. Ligado por padrão porque 7 das 9 páginas
+   * mostram números em mono acima da dobra (`.stat .value`, `.fomm-opt .n`).
+   * Desligue nas que não mostram: preload de arquivo que ninguém usa custa
+   * ~15 KB e rende o aviso "preloaded but not used" no console.
+   */
+  preloadMono?: boolean;
 }
 
-const { title, description, tool = false } = Astro.props;
+const { title, description, tool = false, preloadMono = true } = Astro.props;
 const year = new Date().getFullYear();
 const canonical = new URL(Astro.url.pathname, Astro.site);
 const ogImage = new URL('/og.png', Astro.site);
@@ -105,6 +112,7 @@ const jsonLd = {
     <link rel="canonical" href={canonical} />
     <link rel="icon" href="/favicon.svg" type="image/svg+xml" />
     <link rel="icon" href="/favicon.png" type="image/png" />
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
     <meta property="og:type" content="website" />
@@ -123,6 +131,11 @@ const jsonLd = {
     <meta name="twitter:description" content={description} />
     <meta name="twitter:image" content={ogImage} />
     <link rel="preload" href="/fonts/plex-sans-var.woff2" as="font" type="font/woff2" crossorigin />
+    {
+      preloadMono && (
+        <link rel="preload" href="/fonts/plex-mono-500.woff2" as="font" type="font/woff2" crossorigin />
+      )
+    }
     <script type="application/ld+json" set:html={JSON.stringify(jsonLd)} />
     {UMAMI_WEBSITE_ID && (
       <script defer src="https://cloud.umami.is/script.js" data-website-id={UMAMI_WEBSITE_ID} />
