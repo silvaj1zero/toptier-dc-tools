@@ -480,7 +480,13 @@ export default function FommAssessment({ locale = 'pt-br' }: { locale?: Locale }
           ) : null}
 
           <div className="no-print" style={{ marginTop: '1rem', display: 'flex', gap: '0.75rem', flexWrap: 'wrap' }}>
-            <button type="button" onClick={() => window.print()}>
+            <button
+              type="button"
+              onClick={() => {
+                track('resultado_impresso', { ferramenta: 'maturidade-operacional' });
+                window.print();
+              }}
+            >
               {dict.common.print}
             </button>
             <a className="btn-ghost" href={FOLDER_URL} download>

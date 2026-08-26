@@ -12,7 +12,7 @@ import {
   type SistemaResult,
 } from '@/lib/density';
 import { t, type Dict, type Locale } from '@/i18n';
-import { trackOnce } from '@/lib/track';
+import { track, trackOnce } from '@/lib/track';
 import { NumberField } from './fields';
 
 type Modo = 'sala' | 'instalacao';
@@ -541,7 +541,13 @@ function RodapeFerramenta({ d, dict }: { d: Dict['density']; dict: Dict }) {
   return (
     <>
       <div className="no-print" style={{ marginTop: '1.5rem' }}>
-        <button type="button" onClick={() => window.print()}>
+        <button
+          type="button"
+          onClick={() => {
+            track('resultado_impresso', { ferramenta: 'planejador-densidade' });
+            window.print();
+          }}
+        >
           {dict.common.print}
         </button>
       </div>

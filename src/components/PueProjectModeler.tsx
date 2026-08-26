@@ -11,7 +11,7 @@ import {
 } from '@/lib/pue-model';
 import { fmtNumber } from '@/lib/calc';
 import { t, type Locale } from '@/i18n';
-import { trackOnce } from '@/lib/track';
+import { track, trackOnce } from '@/lib/track';
 
 interface NamedScenario {
   name: string;
@@ -503,7 +503,13 @@ export default function PueProjectModeler({ locale = 'pt-br' }: { locale?: Local
       </details>
 
       <div className="no-print" style={{ marginTop: '1.5rem' }}>
-        <button type="button" onClick={() => window.print()}>
+        <button
+          type="button"
+          onClick={() => {
+            track('resultado_impresso', { ferramenta: 'modelador-pue' });
+            window.print();
+          }}
+        >
           {dict.common.print}
         </button>
       </div>

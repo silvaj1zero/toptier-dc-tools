@@ -9,7 +9,7 @@ import {
   type VirtualizationResult,
 } from '@/lib/virtualization';
 import { t, type Locale } from '@/i18n';
-import { trackOnce } from '@/lib/track';
+import { track, trackOnce } from '@/lib/track';
 import { NumberField, TariffFields, initialTariff, tariffFromState, type TariffState } from './fields';
 
 type Currency = 'brl' | 'usd';
@@ -273,7 +273,13 @@ export default function VirtualizationCalculator({ locale = 'pt-br' }: { locale?
           </div>
 
           <div className="no-print" style={{ marginTop: '1.5rem' }}>
-            <button type="button" onClick={() => window.print()}>
+            <button
+              type="button"
+              onClick={() => {
+                track('resultado_impresso', { ferramenta: 'calculadora-virtualizacao' });
+                window.print();
+              }}
+            >
               {dict.common.print}
             </button>
           </div>
