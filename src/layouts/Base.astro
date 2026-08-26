@@ -24,9 +24,16 @@ const currentPath = Astro.url.pathname;
 
 // Umami — mesmo padrão do site institucional (toptier.net.br): site-ID por
 // env PUBLIC_* (build-time); a AUSÊNCIA da env OMITE a tag em vez de apontar
-// para um ID inventado. Website separado no mesmo projeto Umami Cloud do
-// site principal — dashboards distintos, sem misturar métricas dos dois
-// domínios. [Story M3 — Nível 2a da integração Top Tools]
+// para um ID inventado. [Story M3 — Nível 2a da integração Top Tools]
+//
+// CORRIGIDO em 26/08: este comentário dizia "website separado ... dashboards
+// distintos, sem misturar métricas dos dois domínios". É falso, e foi medido:
+// a suíte e o site institucional servem o MESMO `data-website-id`
+// (`83d02de6-...`) — conferido no HTML dos dois domínios em produção. A conta
+// free do Umami tem uma vaga só; separar exigiria o plano pago. **Sem o filtro
+// Hostname no painel, os totais somam os dois domínios** — quem ler "visitas"
+// sem filtrar está lendo site + suíte juntos. É o B-12 do backlog, aceito
+// conscientemente; o que não valia era o código afirmar o contrário.
 // `.trim()`: um id salvo com quebra de linha no painel de env vai parar no
 // atributo HTML com o `\n` junto, e o coletor do Umami responde 400 — o script
 // carrega, a página parece certa e NADA é gravado. Aconteceu em 25/08.
