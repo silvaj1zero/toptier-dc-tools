@@ -675,6 +675,58 @@ code {
   background: var(--tt-bg-soft);
 }
 
+/* Cards de ferramenta: o título cobre o cartão inteiro sem bloquear o CTA
+   explícito. O escopo é por INTENÇÃO (`:has(h3 > a)`), não por container:
+   `.tool-grid` também é usada em /como-usar, e há grades cujos cards não têm
+   link nenhum. Card que reage ao mouse promete clique — prometer sem
+   entregar é pior que não reagir. Isso também mantém os `.card.soft` fora,
+   sem precisar listá-los. */
+.tool-grid .card:has(h3 > a) {
+  position: relative;
+}
+
+.tool-grid .card h3 a::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+}
+
+/* O CTA e qualquer link do corpo sobem acima da área estendida. Sem isto,
+   dois cards da home ("Não sabe por onde começar?" e "Metodologia aberta")
+   teriam os links do parágrafo enterrados sob o `::after` do título — o
+   ponteiro viraria mãozinha e levaria ao destino errado. */
+.tool-grid .card .btn,
+.tool-grid .card p a {
+  position: relative;
+  z-index: 1;
+}
+
+.tool-grid .card:has(h3 > a):hover {
+  background: var(--tt-teal-100);
+  border-color: var(--tt-teal-600);
+}
+
+/* O card de destaque JÁ nasce com teal-100/teal-600: o hover acima daria delta
+   zero justo no único card com CTA de negócio, que pareceria desabilitado
+   enquanto os vizinhos reagem. Estado próprio, com delta nos dois temas
+   (`--tt-bg-soft` está definido nos quatro blocos de token). */
+.tool-grid .card.highlight-card:has(h3 > a):hover {
+  background: var(--tt-bg-soft);
+  border-color: var(--tt-green);
+}
+
+/* Só o foco do próprio link do título acende o cartão — `:focus-within`
+   acendia também com link solto no corpo, e empilhava anel dentro de anel
+   com o `:focus-visible` do link. */
+.tool-grid .card:has(> h3 > a:focus-visible) {
+  outline: 2px solid var(--tt-green);
+  outline-offset: 2px;
+}
+
+.tool-grid .card h3 a:focus-visible {
+  outline: none;
+}
+
 /* Agrupamentos de formulário como cartões suaves (sem a borda datada de fieldset) */
 fieldset {
   border: none;
