@@ -58,11 +58,55 @@
   --tt-cat-3: #f59e0b;
   --tt-cat-4: #8b5cf6;
 
-  --tt-radius: 4px;
+  /* 2px, o mesmo do site (`--ds-radius-sm`). Era 4px, e a diferença aparecia
+     lado a lado em card, botão e input: canto mais mole aqui, mais seco lá. */
+  --tt-radius: 2px;
   --tt-font:
     'IBM Plex Sans Variable', system-ui, -apple-system, 'Segoe UI', Roboto, 'Helvetica Neue',
     Arial, sans-serif;
   --tt-font-mono: 'IBM Plex Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+
+  /* ---------------------------------------------------------------------
+     TIPOGRAFIA UNIFICADA COM O SITE — 2026-08-28
+
+     Medido com browser nas duas propriedades em produção ANTES de mexer: as
+     FAMÍLIAS e as CORES já batiam (herança da Onda 1 / B-20) — `--tt-green`
+     é o `--ds-accent` do site e `--tt-navy-900` é o `--ds-text`, mesmos hex.
+     O que ainda fazia parecerem duas empresas era o resto:
+
+       corpo   site 17px/1,6                     · suíte 16px/1,6
+       h1      site 52px, peso 600, CONDENSADA 85%, tracking -0,02em
+               suíte 38,4px, peso 700, largura normal, tracking -0,015em
+       raio    site 2px                          · suíte 4px
+
+     O gesto que faltava é o principal: o site CONDENSA a manchete no eixo
+     `wdth` e aperta o tracking — o `base.css` dele registra que é "o gesto
+     que dá caráter técnico sem depender de uma display font extra". Sem ele,
+     mesma fonte e mesma cor ainda leem como marcas diferentes.
+
+     ESCALA: um degrau ABAIXO da do site, de propósito — decisão de design,
+     não economia. O site é vitrine institucional (h1 de 52px); aqui são
+     calculadoras, densas de rótulo e número. Forçar escala de manchete numa
+     ferramenta pioraria o produto em nome da uniformidade. O que se unifica é
+     o SISTEMA — mesmas razões, mesmo gesto, mesmo ritmo de leitura —, não o
+     arquétipo de página. As razões resultantes (1,29 · 1,29 · 1,41) são as
+     mesmas do site (1,29–1,32).
+
+     Os valores são os tokens do site, deslocados um degrau:
+       --tt-text-h1 = --ds-text-2xl · --tt-text-h2 = --ds-text-xl
+       --tt-text-h3 = --ds-text-lg
+     --------------------------------------------------------------------- */
+  --tt-text-base: 1.0625rem; /* 17px — igual ao --ds-text-base do site */
+  --tt-text-h3: clamp(1.25rem, 1.15rem + 0.4vw, 1.5rem);
+  --tt-text-h2: clamp(1.5rem, 1.3rem + 0.8vw, 1.9375rem);
+  --tt-text-h1: clamp(1.75rem, 1.45rem + 1.3vw, 2.5rem);
+
+  --tt-leading-flat: 1.05;
+  --tt-leading-tight: 1.16;
+  --tt-tracking-display: -0.02em;
+  --tt-tracking-tight: -0.01em;
+  --tt-weight-semibold: 600;
+  --tt-width-condensed: 85%;
 }
 
 /* Dark — escolha do sistema (sem toggle explícito) */
@@ -135,6 +179,11 @@
 
 html {
   font-family: var(--tt-font);
+  /* 17px, o mesmo corpo do site. Antes herdava o default de 16px do browser,
+     e a diferença de um pixel no corpo muda o ritmo de leitura inteiro — foi
+     medido: 16px/25,6px aqui contra 17px/27,2px lá. A entrelinha 1,6 já era
+     igual nos dois, então a proporção não muda; só a escala. */
+  font-size: var(--tt-text-base);
   color: var(--tt-gray-900);
   background: var(--tt-bg);
   line-height: 1.6;
@@ -162,23 +211,37 @@ h1,
 h2,
 h3 {
   color: var(--tt-navy-900);
-  line-height: 1.25;
+  /* Peso 600 (era 700) e entrelinha 1,16 (era 1,25): os mesmos do site. O
+     700 engrossava a manchete o bastante para ler como outra marca ao lado
+     do institucional. */
+  font-weight: var(--tt-weight-semibold);
+  line-height: var(--tt-leading-tight);
+  letter-spacing: var(--tt-tracking-tight);
+  text-wrap: balance;
 }
 
 /* Escala tipográfica explícita (não depender do default do browser) */
 h1 {
-  font-size: clamp(1.7rem, 4vw, 2.4rem);
-  letter-spacing: -0.015em;
+  font-size: var(--tt-text-h1);
+  /* O GESTO DA MARCA: condensa no eixo `wdth` e aperta o tracking. É o que o
+     site faz nas manchetes e o que mais faltava aqui — sem isso, mesma fonte
+     e mesma cor ainda leem como duas empresas. */
+  font-stretch: var(--tt-width-condensed);
+  line-height: var(--tt-leading-flat);
+  letter-spacing: var(--tt-tracking-display);
 }
 
 h2 {
-  font-size: 1.45rem;
-  letter-spacing: -0.01em;
+  font-size: var(--tt-text-h2);
+  font-stretch: var(--tt-width-condensed);
   margin: 1.6em 0 0.5em;
 }
 
+/* h3 NÃO condensa, como no site: a condensação é gesto de manchete. Aplicada
+   a um rótulo de seção dentro de uma ferramenta, vira ruído em vez de
+   assinatura. */
 h3 {
-  font-size: 1.12rem;
+  font-size: var(--tt-text-h3);
   margin: 1.5em 0 0.5em;
 }
 
