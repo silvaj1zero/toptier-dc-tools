@@ -400,29 +400,26 @@ console.log('\n== LeadForm (/calculadora-pue): o envio atravessa a política =='
     );
   }
 
-  // frame-src: o que este gate NÃO consegue provar sozinho, e por quê.
+  // frame-src fica SEM PROVA, e não é limitação da chave de teste.
   //
-  // As site keys de teste da Cloudflare (1x…AA sempre passa, 2x…AB sempre
-  // falha, 3x…FF força desafio interativo) montam um widget dummy: div +
-  // `cf-turnstile-response`, SEM iframe. Medido nas três em 31/08. Só a chave
-  // real do projeto cria o iframe que exercita `frame-src`. Então: com chave de
-  // teste, o gate diz que essa metade ficou sem prova; com a chave real vinda
-  // do ambiente, ele a exige.
+  // A hipótese inicial era que só a chave real montaria o iframe. Medido contra
+  // produção em 31/08 (scripts/csp-producao.mjs), com a chave real: também não
+  // monta. No modo managed — o caminho do visitante comum, e o único que um
+  // script reproduz — o Turnstile resolve o desafio em `blob:` workers e deixa
+  // no `.turnstile-box` apenas um `<input type=hidden>`. O iframe só nasce no
+  // desafio interativo, que a Cloudflare decide apresentar e ninguém provoca
+  // sob demanda.
+  //
+  // `frame-src` segue declarado por prescrição da Cloudflare. O gate diz que
+  // não o provou em vez de inventar um "ok": asserção que nunca falha é
+  // decoração, e este arquivo existe justamente contra prova de fachada.
   const iframes = await page.locator('.turnstile-box iframe').count();
-  if (CHAVE_DE_TESTE) {
-    console.log(
-      '   --   frame-src NÃO foi exercitado: a site key de teste da Cloudflare monta o widget ' +
-        'sem iframe. Para provar esta diretiva, rode com a chave real: ' +
-        'PUBLIC_TURNSTILE_SITE_KEY=<chave do projeto> node scripts/csp-gate.mjs',
-    );
-  } else {
-    checar(
-      iframes > 0,
-      'iframe do Turnstile presente (frame-src permite challenges.cloudflare.com)',
-      'o iframe do Turnstile não apareceu com a chave real — frame-src está bloqueando ' +
-        'challenges.cloudflare.com',
-    );
-  }
+  console.log(
+    iframes > 0
+      ? '   ok   iframe do Turnstile presente (frame-src exercitado — desafio interativo apareceu)'
+      : `   --   sem iframe (chave ${CHAVE_DE_TESTE ? 'de teste' : 'real'}, modo managed): frame-src ` +
+          'fica declarado e SEM prova. Ver o docblock acima — nem a chave real o exercita.',
+  );
 
   await page.fill('#lead-name', 'Gate de CSP');
   await page.fill('#lead-email', 'csp-gate@exemplo.com');
