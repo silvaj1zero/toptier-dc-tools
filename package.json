@@ -6,7 +6,7 @@
   "type": "module",
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && node scripts/csp-hash-sync.mjs --conferir",
     "preview": "astro preview",
     "test": "vitest run",
     "test:csp": "node scripts/csp-gate.mjs",

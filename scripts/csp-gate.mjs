@@ -22,8 +22,11 @@
  * MESMAS regras de header do `vercel.json` (ver scripts/lib/vercel-headers.mjs,
  * que documenta a medição de 31/08 provando que `vercel dev` NÃO aplica esse
  * bloco) e dirige um Chromium real por cima. Prova: o aplicativo sobrevive à
- * política escrita. Não prova que a borda da Vercel entrega os headers como
- * escritos — essa metade só o domínio responde, com
+ * política escrita. Agora `script-src` é hash-only para inline: os 5 hashes
+ * SHA-256 commitados substituem `'unsafe-inline'`, então o gate também prova
+ * que o build e a política continuam sincronizados e que os scripts cobertos
+ * são justamente os que mantêm tema, menu e handlers vivos. Não prova que a
+ * borda da Vercel entrega os headers como escritos — essa metade só o domínio responde, com
  * `curl -sI https://ferramentas.toptier.net.br/`, que é a evidência de
  * fechamento que o B-39 pede.
  *
@@ -162,6 +165,19 @@ checar(
   "script-src permite 'unsafe-eval' — nenhum código desta suíte precisa de eval",
 );
 checar(
+  !/'unsafe-inline'/.test(diretivas['script-src'] ?? ''),
+  "script-src não permite 'unsafe-inline'",
+  "script-src permite 'unsafe-inline' — a migração para hashes existe justamente para eliminá-lo",
+);
+checar(
+  (diretivas['script-src'] ?? '')
+    .split(/\s+/)
+    .some((token) => /^'sha256-[A-Za-z0-9+/]+={0,2}'$/.test(token)),
+  'script-src declara pelo menos um hash SHA-256',
+  "script-src não declara nenhum token 'sha256-...' — sem hash e sem 'unsafe-inline', " +
+    'todo script inline morre: o tema, o menu e os handlers',
+);
+checar(
   (diretivas['object-src'] ?? '') === "'none'",
   "object-src 'none'",
   `object-src deveria ser 'none' (está: "${diretivas['object-src'] ?? 'ausente'}")`,
@@ -184,6 +200,31 @@ for (const [dir, origem] of [
     (diretivas[dir] ?? '').includes(origem),
     `${dir} declara ${origem}`,
     `${dir} não declara ${origem} — o lead morreria em silêncio`,
+  );
+}
+
+/* --- os hashes commitados x o build que acabou de sair --------------
+ *
+ * Um `vercel.json` com hash velho é PIOR que `'unsafe-inline'`: o deploy passa
+ * e o navegador é que descobre, quebrando tema, menu e handlers em silêncio.
+ * Por isso o gate não aceita repositório dessincronizado, nem com `--sem-build`.
+ *
+ * A ORDEM aqui é deliberada, e custou um achado do QG para ficar assim. Esta
+ * conferência rodava logo depois do build, ANTES das checagens estáticas acima
+ * — e como qualquer `'unsafe-inline'` reintroduzido à mão também dessincroniza
+ * a diretiva, o gate morria aqui com a mensagem de "hashes divergentes" e a
+ * checagem específica, que diria o problema real em uma linha, nunca rodava.
+ * As duas continuam: são defesa em profundidade. Mas a mais específica fala
+ * primeiro — um gate vale pelo diagnóstico, não só pelo veredito.
+ * ------------------------------------------------------------------ */
+const conferenciaDosHashes = spawnSync(process.execPath, ['scripts/csp-hash-sync.mjs', '--conferir'], {
+  cwd: repoRoot,
+  stdio: 'inherit',
+});
+if (conferenciaDosHashes.status !== 0) {
+  falharAlto(
+    `\`node scripts/csp-hash-sync.mjs --conferir\` saiu com ${conferenciaDosHashes.status} — ` +
+      'os hashes commitados não correspondem aos scripts inline executáveis do build.',
   );
 }
 
@@ -354,6 +395,18 @@ for (const rota of ROTAS) {
     falhas += 1;
     console.log(`  FALHA ${rota} respondeu ${resp?.status()}`);
   }
+  // Os hashes cobrem só os scripts EXECUTÁVEIS; o JSON-LD ficou de fora por
+  // ser dado, não código. Esta checagem transforma essa exclusão de suposição
+  // em hipótese verificada: se algum navegador passar a exigir hash para
+  // ld+json, é aqui que aparece, junto da contagem de securitypolicyviolation.
+  const temJsonLd = await page.evaluate(() =>
+    Boolean(document.querySelector('script[type="application/ld+json"]')),
+  );
+  checar(
+    temJsonLd,
+    `${rota} preserva o bloco application/ld+json no DOM`,
+    `${rota} perdeu o bloco application/ld+json no DOM`,
+  );
   await page.waitForTimeout(300);
   await coletar(page, rota);
   await ctx.close();
