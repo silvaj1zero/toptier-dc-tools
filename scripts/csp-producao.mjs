@@ -170,8 +170,13 @@ if (violacoes.length > 0) {
 
 console.log(
   falhas === 0
-    ? '\n[csp-producao] OK — a borda entrega a política declarada, e sob ela o Turnstile monta ' +
-        '(script E iframe) e o canal de lead continua vivo.'
+    ? '\n[csp-producao] OK — a borda entrega a política declarada, idêntica ao vercel.json, e sob ' +
+        'ela o script do Turnstile executa e o canal de lead continua vivo.\n' +
+        `               ${
+          iframes > 0
+            ? 'frame-src exercitado pelo desafio interativo.'
+            : 'frame-src NÃO foi exercitado (modo managed, sem iframe) — segue declarado sem prova.'
+        }`
     : `\n[csp-producao] ${falhas} falha(s).`,
 );
 process.exit(falhas === 0 ? 0 : 1);
