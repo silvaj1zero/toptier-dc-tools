@@ -3,7 +3,7 @@
  * A outra metade do B-39: o que só o domínio responde.
  *
  * O `csp-gate.mjs` prova que o aplicativo sobrevive à política ESCRITA — ele
- * serve o `dist/` local aplicando as regras lidas do `vercel.json`. Três coisas
+ * serve o `dist/` local aplicando as regras lidas do `vercel.json`. Quatro coisas
  * ficam fora do alcance dele por construção:
  *
  *   1. **A borda entrega o que foi declarado?** Nenhum servidor local responde
@@ -31,13 +31,9 @@
  *      visita as 9 rotas e confere `data-theme` no `<html>` e o menu
  *      `[data-menu]` abrindo no clique do `summary` e fechando com Esc.
  *
- * Este script responde as quatro contra `ferramentas.toptier.net.br`, com um
- * Chromium de verdade (1, 2 e 4) e `fetch` do HTML (3). Hash declarado no
- * header não é a mesma coisa que script executando: a seção 4 visita as
- * 9 rotas no Chromium e exige os dois efeitos dos `is:inline` do
- * Base.astro (tema no `<html>`, menu que fecha com Esc). Sob hash-only,
- * um hash errado não levanta erro de build nem exceção no console — só
- * o comportamento denuncia.
+ * Este script responde as quatro contra `ferramentas.toptier.net.br`: header e
+ * hashes por `fetch` (1 e 3); o aplicativo, o `frame-src` e o comportamento
+ * dos inlines com um Chromium de verdade (2 e 4).
  *
  * NENHUM LEAD DE TESTE É ENVIADO. O POST para o canal de lead é interceptado e
  * respondido com 403 pelo próprio script. A CSP é avaliada pelo renderer ANTES
@@ -292,15 +288,18 @@ for (const rota of ROTAS) {
   const tema = await pageRota.evaluate(() => document.documentElement.getAttribute('data-theme'));
   checar(
     Boolean(tema),
-    `${rota}: script do tema rodou (data-theme="${tema}")`,
-    `${rota}: o script do tema NÃO rodou — data-theme ausente no html. ` +
+    `${rota}: data-theme presente no elemento html (data-theme="${tema}")`,
+    `${rota}: data-theme AUSENTE no elemento html — o inline do tema não rodou. ` +
       'Sob hash-only um hash errado não levanta erro de build nem exceção no console; só o comportamento denuncia.',
   );
 
   const menu = pageRota.locator('[data-menu]').first();
   if ((await menu.count()) === 0) {
-    falhas += 1;
-    console.log(`  FALHA ${rota}: nenhum [data-menu] — o seletor deste script envelheceu`);
+    checar(
+      false,
+      '',
+      `${rota}: nenhum [data-menu] — o seletor deste verificador envelheceu`,
+    );
   } else {
     await menu.locator('summary').click();
     await pageRota.waitForTimeout(100);
@@ -310,7 +309,7 @@ for (const rota of ROTAS) {
     const fechou = await menu.evaluate((el) => !el.hasAttribute('open'));
     checar(
       abriu && fechou,
-      `${rota}: o menu abre no summary e fecha com Esc`,
+      `${rota}: o menu abre no clique do summary e fecha com Esc`,
       `${rota}: o menu não respondeu (abriu=${abriu}, fechou com Esc=${fechou}) — ` +
         'o inline do layout pode ter sido bloqueado. Sob hash-only um hash errado ' +
         'não levanta erro de build nem exceção no console; só o comportamento denuncia.',
@@ -318,7 +317,6 @@ for (const rota of ROTAS) {
   }
 
   const daRota = await pageRota.evaluate(() => window.__cspViolations ?? []);
-  for (const v of daRota) violacoes.push(`${rota}: ${v}`);
   checar(
     daRota.length === 0,
     `${rota}: zero securitypolicyviolation`,
