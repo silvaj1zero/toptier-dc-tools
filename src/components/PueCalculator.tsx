@@ -1,10 +1,22 @@
 import { useMemo, useState } from 'react';
-import { PUE_BENCHMARKS, PUE_BENCHMARK_UPDATE, REGULATORY } from '@/data/benchmarks';
+import {
+  DEFAULT_PUE_CLASS_ID,
+  FEATURED_REGIONAL_ID,
+  GLOBAL_SITE_ID,
+  PUE_AVERAGE_TYPE_LABEL,
+  PUE_BENCHMARK_UPDATE,
+  PUE_CLASS_OPTIONS,
+  PUE_REFERENCES,
+  REGULATORY,
+  getPueReference,
+  type PueReference,
+} from '@/data/benchmarks';
 import { FATOR_SIN_DEFAULT } from '@/data/energia-br';
 import {
   annualCost,
   annualEnergyKwh,
   classifyPue,
+  comparePue,
   cueFromGrid,
   dcie,
   effectiveTariff,
@@ -19,6 +31,8 @@ import { t, type Locale } from '@/i18n';
 import { track, trackOnce } from '@/lib/track';
 import { NumberField, TariffFields, initialTariff, tariffFromState, type TariffState } from './fields';
 import { PueGauge } from './PueGauge';
+import { PueReferenceTable, formatRange } from './PueReferenceTable';
+import { ServiceCta } from './ServiceCta';
 
 const MEASUREMENT_LEVELS = ['level1', 'level2', 'level3'] as const;
 
@@ -26,6 +40,7 @@ export default function PueCalculator({ locale = 'pt-br' }: { locale?: Locale })
   const dict = t(locale);
   const [itLoad, setItLoad] = useState('500');
   const [facilityLoad, setFacilityLoad] = useState('800');
+  const [classId, setClassId] = useState(DEFAULT_PUE_CLASS_ID);
   const [level, setLevel] = useState<(typeof MEASUREMENT_LEVELS)[number]>('level1');
   const [tariffState, setTariffState] = useState<TariffState>(initialTariff);
   const [waterLiters, setWaterLiters] = useState('');
@@ -76,6 +91,28 @@ export default function PueCalculator({ locale = 'pt-br' }: { locale?: Locale })
    */
 
   const d = dict.pueCalc;
+  const en = locale === 'en';
+  const classRef = getPueReference(classId) ?? PUE_CLASS_OPTIONS[0]!;
+  const latamRef = getPueReference(FEATURED_REGIONAL_ID);
+  const globalRef = getPueReference(GLOBAL_SITE_ID);
+
+  const refName = (r: PueReference) => (en ? r.labelEn : r.labelPt);
+  const typeName = (r: PueReference) => PUE_AVERAGE_TYPE_LABEL[r.averageType][en ? 'en' : 'pt'];
+  const sourceLine = (r: PueReference) =>
+    `${typeName(r)} · ${r.year}${r.sample != null ? ` · n=${r.sample}` : ''}`;
+  const rangeText = (r: PueReference) => `${r.id} · ${formatRange(r)}`;
+  /** Posição frente a uma faixa (classe) ou a um valor médio — texto, nunca só cor. */
+  const positionText = (pueValue: number, r: PueReference, asAverage: boolean) => {
+    const c = comparePue(pueValue, r);
+    const delta = `${c.delta > 0 ? '+' : ''}${fmtNumber(c.delta)}`;
+    if (asAverage) {
+      const word = c.delta < 0 ? d.positionBelowAvg : c.delta > 0 ? d.positionAboveAvg : d.positionEqualAvg;
+      return `${word} (${delta} ${d.positionVsTypical})`;
+    }
+    const word =
+      c.position === 'below' ? d.positionBelow : c.position === 'above' ? d.positionAbove : d.positionWithin;
+    return r.typical != null ? `${word} (${delta} ${d.positionVsTypical})` : word;
+  };
 
   return (
     <div>
@@ -104,6 +141,17 @@ export default function PueCalculator({ locale = 'pt-br' }: { locale?: Locale })
               step={1}
               placeholder="800"
             />
+          </div>
+          <div className="field">
+            <label htmlFor="pue-class">{d.classLabel}</label>
+            <select id="pue-class" value={classId} onChange={(e) => setClassId(e.target.value)}>
+              {PUE_CLASS_OPTIONS.map((c) => (
+                <option key={c.id} value={c.id}>
+                  {refName(c)} — {formatRange(c)}
+                </option>
+              ))}
+            </select>
+            <p className="help">{d.classHelp}</p>
           </div>
           <div className="field">
             <label htmlFor="pue-level">{d.levelLabel}</label>
@@ -155,7 +203,7 @@ export default function PueCalculator({ locale = 'pt-br' }: { locale?: Locale })
             <div className="stat highlight">
               <div className="label">{d.resultPue}</div>
               <div className="value">{fmtNumber(result.pueValue)}</div>
-              <span className={`badge ${result.band.tone}`}>{result.band.labelPt}</span>
+              <span className={`badge ${result.band.tone}`}>{en ? result.band.labelEn : result.band.labelPt}</span>
             </div>
             <div className="stat">
               <div className="label">{d.resultDcie}</div>
@@ -197,32 +245,74 @@ export default function PueCalculator({ locale = 'pt-br' }: { locale?: Locale })
           </div>
 
           <h3>{d.benchmarksTitle}</h3>
-          <PueGauge value={result.pueValue} />
+          <PueGauge value={result.pueValue} classRef={classRef} en={en} />
+
+          {latamRef ? (
+            <div className="stat highlight" style={{ marginBottom: '1rem' }}>
+              <div className="label">{refName(latamRef)}</div>
+              <div className="value">{fmtNumber(latamRef.typical ?? latamRef.min)}</div>
+              <div className="note">
+                {sourceLine(latamRef)} — {latamRef.source}{' '}
+                <a href={latamRef.url} target="_blank" rel="noopener noreferrer">
+                  {en ? 'source' : 'fonte'} {latamRef.id}
+                  <span className="sr-only"> ({d.sourceLinkSuffix})</span>
+                </a>
+              </div>
+              <span className={`badge ${latamRef.confirmation === 'primary' ? 'good' : 'warn'}`}>
+                {latamRef.confirmation === 'primary' ? d.confirmationPrimary : d.confirmationSecondary}
+              </span>
+              <div className="note">
+                <strong>
+                  {en ? 'You' : 'Você'}: {fmtNumber(result.pueValue)} —{' '}
+                  {positionText(result.pueValue, latamRef, true)}
+                </strong>
+              </div>
+            </div>
+          ) : null}
+
+          <h4>{d.positionTitle}</h4>
           <div className="table-wrap">
             <table>
               <thead>
                 <tr>
-                  <th>Referência</th>
-                  <th>PUE</th>
-                  <th>Ano</th>
-                  <th>Fonte</th>
+                  <th>{d.positionColRef}</th>
+                  <th>{d.positionColValue}</th>
+                  <th>{d.positionColType}</th>
+                  <th>{d.positionColYou}</th>
                 </tr>
               </thead>
               <tbody>
-                {PUE_BENCHMARKS.map((b) => (
-                  <tr key={b.id}>
-                    <td>{b.label}</td>
-                    <td>{fmtNumber(b.value)}</td>
-                    <td>{b.year}</td>
-                    <td>{b.source}</td>
+                <tr>
+                  <td>
+                    <strong>{refName(classRef)}</strong>
+                  </td>
+                  <td>{rangeText(classRef)}</td>
+                  <td>{sourceLine(classRef)}</td>
+                  <td>{positionText(result.pueValue, classRef, false)}</td>
+                </tr>
+                {globalRef ? (
+                  <tr>
+                    <td>{refName(globalRef)}</td>
+                    <td>{globalRef.id} · {fmtNumber(globalRef.typical ?? globalRef.min)}</td>
+                    <td>{sourceLine(globalRef)}</td>
+                    <td>{positionText(result.pueValue, globalRef, true)}</td>
                   </tr>
-                ))}
+                ) : null}
               </tbody>
             </table>
           </div>
           <p className="help" role="note">
-            {locale === 'en' ? PUE_BENCHMARK_UPDATE.noteEn : PUE_BENCHMARK_UPDATE.notePt}
+            {d.rulerNote}
           </p>
+
+          <details className="method">
+            <summary>{d.classAllRefsTitle}</summary>
+            <PueReferenceTable refs={PUE_REFERENCES} locale={locale} />
+          </details>
+          <p className="help" role="note">
+            {en ? PUE_BENCHMARK_UPDATE.noteEn : PUE_BENCHMARK_UPDATE.notePt}
+          </p>
+          <ServiceCta locale={locale} />
 
           <h3>{d.regulatoryTitle}</h3>
           <ul>

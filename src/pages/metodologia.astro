@@ -1,7 +1,21 @@
 ---
 import Base from '@/layouts/Base.astro';
-import { PUE_BENCHMARKS, PUE_BENCHMARK_UPDATE, LEGACY_42U_TABLE } from '@/data/benchmarks';
+import {
+  EC_RULER_TEXT,
+  FEATURED_REGIONAL_ID,
+  LBNL_RULER,
+  LEGACY_42U_TABLE,
+  PUE_AVERAGE_TYPE_LABEL,
+  PUE_BENCHMARK_UPDATE,
+  getPueReference,
+} from '@/data/benchmarks';
+import { PueReferenceTable } from '@/components/PueReferenceTable';
+import { ServiceCta } from '@/components/ServiceCta';
 import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS, UPS_CURVA_LBNL } from '@/data/virtualizacao';
+const latam = getPueReference(FEATURED_REGIONAL_ID);
+const LINKS = {
+  wp49: 'https://datacenters.lbl.gov/sites/default/files/WP49-PUE%20A%20Comprehensive%20Examination%20of%20the%20Metric_v6.pdf',
+};
 ---
 
 <Base
@@ -30,36 +44,55 @@ import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS, UPS_CURVA_LBNL } from '@/data/v
     </ul>
   </section>
 
-  <section class="card">
-    <h2>Benchmarks de referência (por que não usamos a régua de 2010)</h2>
-    <p>
-      As calculadoras clássicas do mercado ainda classificam PUE 2,0 como "médio" — uma régua de
-      ~2010. A média global está em <strong>1,52</strong> (Uptime Institute, Global Data Center Survey 2026) e os
-      hyperscalers operam entre 1,08 e 1,15. Comparar-se com a régua antiga infla artificialmente a
-      sensação de eficiência.
-    </p>
+  <section class="card" id="pue-nao-e-media">
+    <h2>PUE não é uma média</h2>
     <p class="help" role="note"><strong>{PUE_BENCHMARK_UPDATE.notePt}</strong></p>
+    <ul>
+      <li><strong>Métrica de tendência do mesmo site, não de ranking.</strong> O The Green Grid "generally discourages comparisons of different data centers based only on public reports of PUE results" e recomenda o PUE para acompanhar "trends in an individual facility over time" (<a href={LINKS.wp49} target="_blank" rel="noopener noreferrer">White Paper #49, 2012<span class="sr-only"> (abre em nova aba)</span></a>).</li>
+      <li><strong>O valor só tem sentido com rótulo.</strong> Período: anual, 12 meses, em kWh — não um instante em kW. Ponto de medição da energia de TI: pela ISO/IEC 30134-2 (2ª ed., 2026) e EN 50600-4-2, <em>categoria 1</em> = saída do UPS, <em>categoria 2</em> = saída da PDU, <em>categoria 3</em> = entrada do equipamento de TI. Origem: <em>projeto × medido</em> — "the initial design of a data center is obsolete the day after… commissioning" (WP #49). O Green Grid usa nomenclatura como "PUE L2,YC" (nível 2, anual, contínuo).</li>
+      <li><strong>O tipo de média muda o número, no mesmo relatório.</strong> Uptime 2026: 1,52 <em>por site</em> e 1,36 <em>ponderado por capacidade</em>. A UE também publica 1,36, ponderado por energia (<a href={EC_RULER_TEXT.url} target="_blank" rel="noopener noreferrer">1º relatório técnico EED<span class="sr-only"> (abre em nova aba)</span></a>).</li>
+      <li><strong>Surveys são autodeclarados e a pergunta muda.</strong> O Uptime perguntou pelo "maior data center" da organização em 2024 e 2025 e pelo "seu data center" em 2026; a série não é homogênea e a amostra muda a cada ano.</li>
+      <li><strong>Carga parcial, clima e porte movem o PUE.</strong> Sites maiores e mais carregados têm PUE menor (ENERGY STAR, UE, Uptime) — comparar um data center pequeno com a média global ou com um hyperscaler mistura classes.</li>
+      <li><strong>PUE melhor nem sempre é menos energia.</strong> Virtualizar reduz a energia total e pode piorar o PUE (o paradoxo do PUE, reproduzido na Calculadora de Virtualização); refrigeração líquida tira carga de ventilador da "TI" e esconde ganho — por isso existem ITUE e TUE.</li>
+      <li><strong>Métricas que acompanham o PUE:</strong> energia absoluta (kWh), WUE, REF e ERF (Reg. Delegado (UE) 2024/1364), pPUE (parcial) e TUE (refrigeração líquida/HPC).</li>
+    </ul>
+    <p class="help">Fontes: The Green Grid WP #49; ISO/IEC 30134-2:2026 e EN 50600-4-2 (categorias, via fontes secundárias — o texto integral da norma é pago); Uptime Institute, Global Data Center Survey 2025 e 2026; Comissão Europeia, 1º relatório técnico EED; Reg. Delegado (UE) 2024/1364.</p>
+  </section>
+
+  <section class="card" id="regua-de-referencias">
+    <h2>Régua de referências por classe</h2>
     <p>
-      Série publicada pelo Uptime (média anual de PUE dos respondentes): 2022 1,55 · 2023 1,58 ·
-      2024 1,56 · 2025 1,54 · 2026 1,52. O próprio Uptime descreve a tendência de sete anos como de
-      "relative stasis" (estabilidade relativa) — a média oscilou entre 1,52 e 1,59 desde 2020,
-      ou seja, o valor não ficou parado em 1,54. O survey 2025 descreve o número como média ponderada; o de 2026 o chama de
-      média do setor, sem detalhar a ponderação. A amostra muda a cada ano (2026: n=644), então a
-      comparação entre anos é indicativa, e o PUE do Uptime é referência de tendência, não meta
-      individual.
+      Em vez de uma média única, a calculadora compara o seu PUE com a <strong>faixa da classe</strong>
+      do seu data center e com duas médias, sempre com tipo de média, ano, amostra e fonte. Para o
+      usuário brasileiro, a referência regional em destaque é a da <strong>América Latina</strong>; a
+      média global entra como média <em>por site</em>. Nunca comparamos o PUE do leitor com hyperscale
+      sem apontar que é outra classe.
     </p>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr><th>Referência</th><th>PUE</th><th>Ano</th><th>Fonte</th></tr>
-        </thead>
-        <tbody>
-          {PUE_BENCHMARKS.map((b) => (
-            <tr><td>{b.label}</td><td>{b.value.toFixed(2)}</td><td>{b.year}</td><td>{b.source}</td></tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    {latam && (
+      <div class="stat highlight">
+        <div class="label">América Latina</div>
+        <div class="value">{(latam.typical ?? latam.min).toFixed(2).replace('.', ',')}</div>
+        <div class="note">{PUE_AVERAGE_TYPE_LABEL[latam.averageType].pt} · Uptime {latam.year} · n={latam.sample}</div>
+        <span class="badge warn">fonte secundária — a confirmar</span>
+        <div class="note">{latam.notePt}</div>
+      </div>
+    )}
+    <PueReferenceTable locale="pt-br" />
+    <h3>Classificação: uma régua só</h3>
+    <p>
+      A classificação usa a régua do <a href={LBNL_RULER.url} target="_blank" rel="noopener noreferrer">LBNL
+      Data Center Benchmarking Guide<span class="sr-only"> (abre em nova aba)</span></a>: <strong>Standard
+      2,0 · Good 1,4 · Better 1,1</strong> — o PUE "atinge" o nível quando é menor ou igual ao limiar.
+      Ela substitui as faixas anteriores, derivadas da média global. Como referência textual (não
+      usada para classificar): {EC_RULER_TEXT.pt}
+    </p>
+    <p>
+      Série do Uptime (média anual dos respondentes): 2022 1,55 · 2023 1,58 · 2024 1,56 · 2025 1,54 ·
+      2026 1,52. O próprio Uptime descreve a tendência como de "relative stasis" (estabilidade
+      relativa); o survey 2025 chama o número de média ponderada, o de 2026 de média do setor, sem
+      detalhar a ponderação. Lacunas conhecidas: recortes do Uptime por porte/idade (pagos) e o
+      relatório regional da América Latina (Field Report 183) não foram confirmados no original.
+    </p>
     <details class="method">
       <summary>Régua histórica (~2010) usada pelas calculadoras clássicas — apenas para contraste</summary>
       <div class="table-wrap">
@@ -73,6 +106,7 @@ import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS, UPS_CURVA_LBNL } from '@/data/v
         </table>
       </div>
     </details>
+    <ServiceCta locale="pt-br" />
   </section>
 
   <section class="card">

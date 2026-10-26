@@ -9,7 +9,14 @@
  * Todas as fórmulas são exibidas na UI — transparência metodológica é princípio do produto.
  */
 
-import { HOURS_PER_YEAR, PUE_BANDS, REGULATORY, type PueBand } from '@/data/benchmarks';
+import {
+  HOURS_PER_YEAR,
+  PUE_BANDS,
+  REGULATORY,
+  referenceCenter,
+  type PueBand,
+  type PueReference,
+} from '@/data/benchmarks';
 
 // ---------------------------------------------------------------------------
 // Métricas básicas
@@ -145,8 +152,29 @@ export function savings(input: SavingsInput, horizons: number[] = [1, 5, 10]): S
 // ---------------------------------------------------------------------------
 
 export function classifyPue(pueValue: number): PueBand {
-  const band = PUE_BANDS.find((b) => pueValue <= b.max);
+  const band = PUE_BANDS.find((b) => pueValue <= b.max + 1e-9); // tolerância de ponto flutuante nas bordas
   return band ?? PUE_BANDS[PUE_BANDS.length - 1]!;
+}
+
+export type RangePosition = 'below' | 'within' | 'above';
+
+export interface PueComparison {
+  /** Posição do PUE frente à faixa da referência (comparação na precisão exibida, 2 casas). */
+  position: RangePosition;
+  /** PUE − valor típico da referência (negativo = menor/melhor). */
+  delta: number;
+}
+
+const round2 = (n: number): number => Math.round(n * 100) / 100;
+
+/**
+ * Compara o PUE do leitor com UMA referência (faixa da classe ou média). A comparação é
+ * informativa: PUE é métrica de tendência do mesmo site, não de ranking.
+ */
+export function comparePue(pueValue: number, ref: PueReference): PueComparison {
+  const v = round2(pueValue);
+  const position: RangePosition = v < ref.min ? 'below' : v > ref.max ? 'above' : 'within';
+  return { position, delta: round2(v - referenceCenter(ref)) };
 }
 
 export interface RegulatoryRead {
