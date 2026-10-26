@@ -1,23 +1,44 @@
 import { SERVICE_CTA } from '@/data/servicos-cta';
 import type { Locale } from '@/i18n';
 
-/** Linha sóbria de CTA para os serviços TOP SITE e TOP PRACTICES (tema PUE). */
+function ExternalLink({ href, children, en }: { href: string; children: string; en: boolean }) {
+  return (
+    <a href={href} target="_blank" rel="noopener noreferrer">
+      {children}
+      <span className="sr-only"> ({en ? 'opens in a new tab' : 'abre em nova aba'})</span>
+    </a>
+  );
+}
+
+/** CTA principal: falar com especialistas em TOP EFFICIENCY (logo após a régua/tabela de referências). */
+export function EfficiencyCta({ locale = 'pt-br' }: { locale?: Locale }) {
+  const en = locale === 'en';
+  const e = SERVICE_CTA.efficiency;
+  return (
+    <p className="no-print" style={{ fontWeight: 600 }}>
+      {en ? e.leadEn : e.leadPt}{' '}
+      <ExternalLink href={e.url} en={en}>
+        {e.name}
+      </ExternalLink>{' '}
+      — {en ? e.descEn : e.descPt}.
+    </p>
+  );
+}
+
+/** Linha sóbria para TOP SITE e TOP PRACTICES (tema PUE). */
 export function ServiceCta({ locale = 'pt-br' }: { locale?: Locale }) {
   const en = locale === 'en';
   const [site, practices] = SERVICE_CTA.links;
-  const newTab = en ? 'opens in a new tab' : 'abre em nova aba';
   return (
     <p className="help no-print">
       {en ? SERVICE_CTA.introEn : SERVICE_CTA.introPt}{' '}
-      <a href={site.url} target="_blank" rel="noopener noreferrer">
+      <ExternalLink href={site.url} en={en}>
         {site.name}
-        <span className="sr-only"> ({newTab})</span>
-      </a>{' '}
+      </ExternalLink>{' '}
       — {en ? site.descEn : site.descPt}; {en ? 'and' : 'e'}{' '}
-      <a href={practices.url} target="_blank" rel="noopener noreferrer">
+      <ExternalLink href={practices.url} en={en}>
         {practices.name}
-        <span className="sr-only"> ({newTab})</span>
-      </a>{' '}
+      </ExternalLink>{' '}
       — {en ? practices.descEn : practices.descPt}.
     </p>
   );

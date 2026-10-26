@@ -65,12 +65,9 @@ export const en: Dict = {
     positionVsTypical: 'vs. typical',
     rulerNote:
       'Classification by the LBNL ruler (Data Center Benchmarking Guide): Standard 2.0 · Good 1.4 · Better 1.1. PUE compares the SAME site over time well; across sites it depends on class, measurement and average type.',
-    confirmationPrimary: 'primary',
-    confirmationSecondary: 'secondary — to be confirmed',
     refColSource: 'Source',
     refColYear: 'Year',
     refColSample: 'Sample',
-    refColConfirmation: 'Confirmation',
     sourceLinkSuffix: 'opens in a new tab',
     regulatoryTitle: 'Regulatory reading (informative)',
     regEnefgNew: 'German limit for new data centers from 07/2026 (PUE ≤ 1.2)',

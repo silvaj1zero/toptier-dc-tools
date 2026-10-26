@@ -28,14 +28,13 @@ export function PueReferenceTable({
             <th>{d.refColYear}</th>
             <th>{d.refColSample}</th>
             <th>{d.refColSource}</th>
-            <th>{d.refColConfirmation}</th>
           </tr>
         </thead>
         <tbody>
           {refs.map((r) => (
             <tr key={r.id}>
               <td>
-                <strong>{r.id}</strong> — {en ? r.labelEn : r.labelPt}
+                <strong>{en ? r.labelEn : r.labelPt}</strong>
               </td>
               <td>
                 {formatRange(r)}
@@ -47,15 +46,10 @@ export function PueReferenceTable({
               <td>
                 {r.source}{' '}
                 <a href={r.url} target="_blank" rel="noopener noreferrer">
-                  {en ? 'source' : 'fonte'} {r.id}
-                  <span className="sr-only"> ({d.sourceLinkSuffix})</span>
+                  {en ? 'source' : 'fonte'}
+                  <span className="sr-only"> — {en ? r.labelEn : r.labelPt} ({d.sourceLinkSuffix})</span>
                 </a>
                 {(en ? r.noteEn : r.notePt) ? <div className="help">{en ? r.noteEn : r.notePt}</div> : null}
-              </td>
-              <td>
-                <span className={`badge ${r.confirmation === 'primary' ? 'good' : 'ok'}`}>
-                  {r.confirmation === 'primary' ? d.confirmationPrimary : d.confirmationSecondary}
-                </span>
               </td>
             </tr>
           ))}

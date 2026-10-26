@@ -63,12 +63,9 @@ export const pt = {
     positionVsTypical: 'vs. típico',
     rulerNote:
       'Classificação pela régua LBNL (Data Center Benchmarking Guide): Standard 2,0 · Good 1,4 · Better 1,1. PUE compara bem o MESMO site ao longo do tempo; entre sites, depende de classe, medição e tipo de média.',
-    confirmationPrimary: 'primária',
-    confirmationSecondary: 'secundária — a confirmar',
     refColSource: 'Fonte',
     refColYear: 'Ano',
     refColSample: 'Amostra',
-    refColConfirmation: 'Confirmação',
     sourceLinkSuffix: 'abre em nova aba',
     regulatoryTitle: 'Leitura regulatória (informativa)',
     regEnefgNew: 'Limite alemão para novos data centers a partir de 07/2026 (PUE ≤ 1,2)',
