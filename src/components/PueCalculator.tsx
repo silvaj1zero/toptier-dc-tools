@@ -1,5 +1,5 @@
 import { useMemo, useState } from 'react';
-import { PUE_BENCHMARKS, REGULATORY } from '@/data/benchmarks';
+import { PUE_BENCHMARKS, PUE_BENCHMARK_UPDATE, REGULATORY } from '@/data/benchmarks';
 import { FATOR_SIN_DEFAULT } from '@/data/energia-br';
 import {
   annualCost,
@@ -220,6 +220,9 @@ export default function PueCalculator({ locale = 'pt-br' }: { locale?: Locale })
               </tbody>
             </table>
           </div>
+          <p className="help" role="note">
+            {locale === 'en' ? PUE_BENCHMARK_UPDATE.noteEn : PUE_BENCHMARK_UPDATE.notePt}
+          </p>
 
           <h3>{d.regulatoryTitle}</h3>
           <ul>

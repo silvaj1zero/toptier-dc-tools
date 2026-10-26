@@ -13,6 +13,7 @@ import {
   savings,
   wue,
 } from './calc';
+import { PUE_BENCHMARKS, PUE_BENCHMARK_UPDATE } from '@/data/benchmarks';
 
 describe('pue / dcie', () => {
   it('reproduz o exemplo canônico da página da 42U (100.000 / 80.000)', () => {
@@ -114,6 +115,19 @@ describe('classificação e regulação', () => {
     // PUE 2,0 era "Average" na régua 42U de 2010; hoje é ineficiente
     expect(classifyPue(2.0).tone).toBe('warn');
     expect(classifyPue(3.0).tone).toBe('bad');
+  });
+
+  it('benchmark global do Uptime é 1,52 (survey 2026) e as faixas o acompanham', () => {
+    const global = PUE_BENCHMARKS.find((b) => b.id === 'uptime-global-2026');
+    expect(global?.value).toBe(1.52);
+    expect(global?.year).toBe(2026);
+    expect(global?.source).toContain('2026');
+    // 1,53 e 1,54 eram "melhor que a média" com o benchmark 2025 (1,54); agora ficam na média
+    expect(classifyPue(1.52).labelPt).toContain('melhor que a média global');
+    expect(classifyPue(1.53).labelPt).toContain('Na média');
+    expect(classifyPue(1.54).labelPt).toContain('Na média');
+    expect(PUE_BENCHMARK_UPDATE.notePt).toContain('1,52');
+    expect(PUE_BENCHMARK_UPDATE.notePt).toContain('1,54');
   });
 
   it('leitura regulatória EnEfG/EED', () => {

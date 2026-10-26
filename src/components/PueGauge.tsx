@@ -1,4 +1,4 @@
-import { PUE_BENCHMARKS } from '@/data/benchmarks';
+import { PUE_BENCHMARKS, UPTIME_GLOBAL_PUE } from '@/data/benchmarks';
 import { classifyPue, fmtNumber } from '@/lib/calc';
 
 const MIN = 1.0;
@@ -20,8 +20,8 @@ export function PueGauge({ value, userLabel = 'Você' }: { value: number; userLa
     { from: 1.0, to: 1.1, color: '#0e9f6e' },
     { from: 1.1, to: 1.25, color: '#34b284' },
     { from: 1.25, to: 1.4, color: '#7cc9a6' },
-    { from: 1.4, to: 1.54, color: '#c8e6b0' },
-    { from: 1.54, to: 1.8, color: '#f5d78e' },
+    { from: 1.4, to: UPTIME_GLOBAL_PUE, color: '#c8e6b0' },
+    { from: UPTIME_GLOBAL_PUE, to: 1.8, color: '#f5d78e' },
     { from: 1.8, to: 2.2, color: '#f0a860' },
     { from: 2.2, to: 2.6, color: '#e06c5a' },
   ];

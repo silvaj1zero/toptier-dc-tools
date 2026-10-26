@@ -1,12 +1,12 @@
 ---
 import Base from '@/layouts/Base.astro';
-import { PUE_BENCHMARKS, LEGACY_42U_TABLE } from '@/data/benchmarks';
+import { PUE_BENCHMARKS, PUE_BENCHMARK_UPDATE, LEGACY_42U_TABLE } from '@/data/benchmarks';
 import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS, UPS_CURVA_LBNL } from '@/data/virtualizacao';
 ---
 
 <Base
   title="Metodologia"
-  description="Fundamentação das ferramentas Top Tier: ISO/IEC 30134, The Green Grid, ASHRAE 90.4, benchmarks Uptime Institute 2025 e regulação (EED, EnEfG). Cada fórmula e cada fonte, documentada nesta página."
+  description="Fundamentação das ferramentas Top Tier: ISO/IEC 30134, The Green Grid, ASHRAE 90.4, benchmarks Uptime Institute 2026 e regulação (EED, EnEfG). Cada fórmula e cada fonte, documentada nesta página."
   preloadMono={false}
 >
   <h1>Metodologia</h1>
@@ -34,9 +34,19 @@ import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS, UPS_CURVA_LBNL } from '@/data/v
     <h2>Benchmarks de referência (por que não usamos a régua de 2010)</h2>
     <p>
       As calculadoras clássicas do mercado ainda classificam PUE 2,0 como "médio" — uma régua de
-      ~2010. A média global caiu para <strong>1,54</strong> (Uptime Institute, 2025) e os
+      ~2010. A média global está em <strong>1,52</strong> (Uptime Institute, Global Data Center Survey 2026) e os
       hyperscalers operam entre 1,08 e 1,15. Comparar-se com a régua antiga infla artificialmente a
       sensação de eficiência.
+    </p>
+    <p class="help" role="note"><strong>{PUE_BENCHMARK_UPDATE.notePt}</strong></p>
+    <p>
+      Série publicada pelo Uptime (média anual de PUE dos respondentes): 2022 1,55 · 2023 1,58 ·
+      2024 1,56 · 2025 1,54 · 2026 1,52. O próprio Uptime descreve a tendência de sete anos como de
+      "relative stasis" (estabilidade relativa) — a média oscilou entre 1,52 e 1,59 desde 2020,
+      ou seja, o valor não ficou parado em 1,54. O survey 2025 descreve o número como média ponderada; o de 2026 o chama de
+      média do setor, sem detalhar a ponderação. A amostra muda a cada ano (2026: n=644), então a
+      comparação entre anos é indicativa, e o PUE do Uptime é referência de tendência, não meta
+      individual.
     </p>
     <div class="table-wrap">
       <table>

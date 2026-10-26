@@ -17,7 +17,7 @@ Ferramentas web de eficiência energética para data centers — [Top Tier Infra
 ## Princípios
 
 1. **Transparência metodológica total** — toda fórmula, fator e fonte exposta na tela.
-2. **Fundamentação atualizada** — ISO/IEC 30134, EN 50600-4, ASHRAE 90.4-2025, The Green Grid, Uptime Institute Global Survey 2025.
+2. **Fundamentação atualizada** — ISO/IEC 30134, EN 50600-4, ASHRAE 90.4-2025, The Green Grid, Uptime Institute Global Survey 2026.
 3. **Contexto brasileiro** — tarifas ANEEL, bandeiras tarifárias, fator de emissão do SIN (MCTI), agenda ReData.
 4. **Nada inventado** — dado sem fonte verificada não entra como preset (`src/data/*` documenta fonte e ano de cada valor).
 5. **Client-side first** — todo cálculo roda no navegador; site estático, sem backend.
