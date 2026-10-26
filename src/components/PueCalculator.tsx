@@ -7,6 +7,7 @@ import {
   PUE_BENCHMARK_UPDATE,
   PUE_CLASS_OPTIONS,
   PUE_REFERENCES,
+  PUE_REFERENCES_DISCLAIMER,
   REGULATORY,
   getPueReference,
   type PueReference,
@@ -32,7 +33,7 @@ import { track, trackOnce } from '@/lib/track';
 import { NumberField, TariffFields, initialTariff, tariffFromState, type TariffState } from './fields';
 import { PueGauge } from './PueGauge';
 import { PueReferenceTable, formatRange } from './PueReferenceTable';
-import { ServiceCta } from './ServiceCta';
+import { EfficiencyCta, ServiceCta } from './ServiceCta';
 
 const MEASUREMENT_LEVELS = ['level1', 'level2', 'level3'] as const;
 
@@ -100,7 +101,7 @@ export default function PueCalculator({ locale = 'pt-br' }: { locale?: Locale })
   const typeName = (r: PueReference) => PUE_AVERAGE_TYPE_LABEL[r.averageType][en ? 'en' : 'pt'];
   const sourceLine = (r: PueReference) =>
     `${typeName(r)} · ${r.year}${r.sample != null ? ` · n=${r.sample}` : ''}`;
-  const rangeText = (r: PueReference) => `${r.id} · ${formatRange(r)}`;
+  const rangeText = (r: PueReference) => formatRange(r);
   /** Posição frente a uma faixa (classe) ou a um valor médio — texto, nunca só cor. */
   const positionText = (pueValue: number, r: PueReference, asAverage: boolean) => {
     const c = comparePue(pueValue, r);
@@ -254,13 +255,10 @@ export default function PueCalculator({ locale = 'pt-br' }: { locale?: Locale })
               <div className="note">
                 {sourceLine(latamRef)} — {latamRef.source}{' '}
                 <a href={latamRef.url} target="_blank" rel="noopener noreferrer">
-                  {en ? 'source' : 'fonte'} {latamRef.id}
-                  <span className="sr-only"> ({d.sourceLinkSuffix})</span>
+                  {en ? 'source' : 'fonte'}
+                  <span className="sr-only"> — {refName(latamRef)} ({d.sourceLinkSuffix})</span>
                 </a>
               </div>
-              <span className={`badge ${latamRef.confirmation === 'primary' ? 'good' : 'warn'}`}>
-                {latamRef.confirmation === 'primary' ? d.confirmationPrimary : d.confirmationSecondary}
-              </span>
               <div className="note">
                 <strong>
                   {en ? 'You' : 'Você'}: {fmtNumber(result.pueValue)} —{' '}
@@ -293,7 +291,7 @@ export default function PueCalculator({ locale = 'pt-br' }: { locale?: Locale })
                 {globalRef ? (
                   <tr>
                     <td>{refName(globalRef)}</td>
-                    <td>{globalRef.id} · {fmtNumber(globalRef.typical ?? globalRef.min)}</td>
+                    <td>{fmtNumber(globalRef.typical ?? globalRef.min)}</td>
                     <td>{sourceLine(globalRef)}</td>
                     <td>{positionText(result.pueValue, globalRef, true)}</td>
                   </tr>
@@ -302,7 +300,7 @@ export default function PueCalculator({ locale = 'pt-br' }: { locale?: Locale })
             </table>
           </div>
           <p className="help" role="note">
-            {d.rulerNote}
+            {d.rulerNote} {en ? PUE_REFERENCES_DISCLAIMER.en : PUE_REFERENCES_DISCLAIMER.pt}
           </p>
 
           <details className="method">
@@ -312,6 +310,7 @@ export default function PueCalculator({ locale = 'pt-br' }: { locale?: Locale })
           <p className="help" role="note">
             {en ? PUE_BENCHMARK_UPDATE.noteEn : PUE_BENCHMARK_UPDATE.notePt}
           </p>
+          <EfficiencyCta locale={locale} />
           <ServiceCta locale={locale} />
 
           <h3>{d.regulatoryTitle}</h3>

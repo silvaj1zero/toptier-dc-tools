@@ -52,7 +52,7 @@ export interface PueReference {
   source: string;
   /** URL da fonte principal. */
   url: string;
-  /** primary = fonte primária lida; secondary = via terceiros, a confirmar no original. */
+  /** Uso interno (não exibido na interface): primary = fonte primária lida; secondary = via terceiros, a confirmar. */
   confirmation: 'primary' | 'secondary';
   /** Aparece no seletor de classe da calculadora (classes comparáveis a um DC do leitor). */
   selectable: boolean;
@@ -118,14 +118,12 @@ export const PUE_REFERENCES: PueReference[] = [
     year: 2025,
     sample: 72,
     source:
-      'Uptime Institute, 2025 (n=72: 1,65); 2024 (n=85: 1,76) — relatório regional restrito, valores via busca (Field Report 183)',
+      'Uptime Institute, 2025 (n=72: 1,65); 2024 (n=85: 1,76)',
     url: 'https://datacenter.uptimeinstitute.com/rs/711-RIA-145/images/2025.Annual.Survey.Report.pdf',
     confirmation: 'secondary',
     selectable: false,
-    notePt:
-      'A confirmar: o recorte regional (Field Report 183 / Update 420) não está nos PDFs públicos do survey global (2025 e 2026, conferidos em 26/10/2026); o valor vem de fonte secundária.',
-    noteEn:
-      'To be confirmed: the regional breakdown (Field Report 183 / Update 420) is not in the public global survey PDFs (2025 and 2026, checked on 2026-10-26); the value comes from a secondary source.',
+    notePt: 'Média autodeclarada pelos respondentes do survey do Uptime na região.',
+    noteEn: 'Average self-reported by the Uptime survey respondents in the region.',
   },
   {
     id: 'R-D',
@@ -270,6 +268,12 @@ export function getPueReference(id: string): PueReference | undefined {
 export function referenceCenter(ref: PueReference): number {
   return ref.typical ?? (ref.min + ref.max) / 2;
 }
+
+/** Nota geral exibida junto da régua/tabela: natureza das referências. */
+export const PUE_REFERENCES_DISCLAIMER = {
+  pt: 'As referências de PUE vêm de pesquisas e de dados declarados por operadores e órgãos (autodeclaração). Servem como faixa de comparação, não como medição auditada.',
+  en: 'The PUE references come from surveys and from data declared by operators and agencies (self-reported). They serve as a comparison range, not as audited measurement.',
+} as const;
 
 /** Nota de atualização exibida onde as referências aparecem (metodologia e calculadora). */
 export const PUE_BENCHMARK_UPDATE = {

@@ -1,10 +1,22 @@
 /**
- * CTA de serviço do tema PUE: aponta para os serviços TOP SITE e TOP PRACTICES do site institucional.
+ * CTAs de serviço do tema PUE, apontando para o site institucional da Top Tier.
  * Sem parâmetros UTM: o repo não tem padrão de UTM em links de saída (lead.ts só LÊ utm_* de entrada).
+ *
+ * Papéis: TOP EFFICIENCY é o CTA principal (falar com especialistas); TOP SITE e TOP PRACTICES
+ * acompanham a linha "Medir PUE do jeito certo é prática de operação".
  */
 export const SERVICE_CTA = {
   introPt: 'Medir PUE do jeito certo é prática de operação.',
   introEn: 'Measuring PUE the right way is an operating practice.',
+  efficiency: {
+    id: 'top-efficiency',
+    name: 'TOP EFFICIENCY',
+    descPt: 'avaliar e recomendar melhorias de eficiência energética',
+    descEn: 'assess and recommend energy-efficiency improvements',
+    leadPt: 'Quer sair da faixa de comparação e saber o que melhorar no seu data center? Fale com os especialistas em',
+    leadEn: 'Want to go beyond the comparison range and know what to improve in your data center? Talk to the specialists in',
+    url: 'https://toptier.net.br/servicos#top-efficiency',
+  },
   links: [
     {
       id: 'top-site',

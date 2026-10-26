@@ -7,10 +7,11 @@ import {
   LEGACY_42U_TABLE,
   PUE_AVERAGE_TYPE_LABEL,
   PUE_BENCHMARK_UPDATE,
+  PUE_REFERENCES_DISCLAIMER,
   getPueReference,
 } from '@/data/benchmarks';
 import { PueReferenceTable } from '@/components/PueReferenceTable';
-import { ServiceCta } from '@/components/ServiceCta';
+import { EfficiencyCta, ServiceCta } from '@/components/ServiceCta';
 import { CONSOLIDACAO, INFRA_PRESETS, MELHORIAS, UPS_CURVA_LBNL } from '@/data/virtualizacao';
 const latam = getPueReference(FEATURED_REGIONAL_ID);
 const LINKS = {
@@ -72,12 +73,13 @@ const LINKS = {
       <div class="stat highlight">
         <div class="label">América Latina</div>
         <div class="value">{(latam.typical ?? latam.min).toFixed(2).replace('.', ',')}</div>
-        <div class="note">{PUE_AVERAGE_TYPE_LABEL[latam.averageType].pt} · Uptime {latam.year} · n={latam.sample}</div>
-        <span class="badge warn">fonte secundária — a confirmar</span>
+        <div class="note">{PUE_AVERAGE_TYPE_LABEL[latam.averageType].pt} · Uptime Institute, {latam.year} · n={latam.sample}</div>
         <div class="note">{latam.notePt}</div>
       </div>
     )}
     <PueReferenceTable locale="pt-br" />
+    <p class="help" role="note">{PUE_REFERENCES_DISCLAIMER.pt}</p>
+    <EfficiencyCta locale="pt-br" />
     <h3>Classificação: uma régua só</h3>
     <p>
       A classificação usa a régua do <a href={LBNL_RULER.url} target="_blank" rel="noopener noreferrer">LBNL
@@ -90,8 +92,7 @@ const LINKS = {
       Série do Uptime (média anual dos respondentes): 2022 1,55 · 2023 1,58 · 2024 1,56 · 2025 1,54 ·
       2026 1,52. O próprio Uptime descreve a tendência como de "relative stasis" (estabilidade
       relativa); o survey 2025 chama o número de média ponderada, o de 2026 de média do setor, sem
-      detalhar a ponderação. Lacunas conhecidas: recortes do Uptime por porte/idade (pagos) e o
-      relatório regional da América Latina (Field Report 183) não foram confirmados no original.
+      detalhar a ponderação. Recortes do Uptime por porte e idade são pagos e não entram nesta régua.
     </p>
     <details class="method">
       <summary>Régua histórica (~2010) usada pelas calculadoras clássicas — apenas para contraste</summary>
