@@ -13,13 +13,31 @@ export interface PueBenchmark {
   region: 'global' | 'brasil' | 'hyperscale';
 }
 
+/**
+ * Média global de PUE do Uptime Institute — fonte única do valor, reusada nas faixas e no gauge.
+ * 2026: 1,52 (Global Data Center Survey 2026, n=644). Série publicada pelo Uptime:
+ * 2022 1,55 · 2023 1,58 · 2024 1,56 · 2025 1,54 · 2026 1,52.
+ */
+export const UPTIME_GLOBAL_PUE = 1.52;
+
+/** Nota de atualização exibida onde o benchmark aparece (metodologia e calculadora). */
+export const PUE_BENCHMARK_UPDATE = {
+  date: '2026-10-26',
+  previousValue: 1.54,
+  previousSurveyYear: 2025,
+  notePt:
+    'Atualizado em 26/10/2026: o Uptime Global Data Center Survey 2026 registra PUE médio de 1,52; a versão anterior desta página usava 1,54 (survey 2025). Faixas de classificação e gauge usam o novo valor: um PUE entre 1,52 e 1,54 passa de "Eficiente — melhor que a média global" para "Na média / abaixo da média global".',
+  noteEn:
+    'Updated on 2026-10-26: the Uptime Global Data Center Survey 2026 reports an average PUE of 1.52; the previous version of this page used 1.54 (2025 survey). Classification bands and gauge use the new value: a PUE between 1.52 and 1.54 moves from "Efficient — better than global average" to "Average / below global average".',
+} as const;
+
 export const PUE_BENCHMARKS: PueBenchmark[] = [
   {
-    id: 'uptime-global-2025',
+    id: 'uptime-global-2026',
     label: 'Média global — Uptime Institute',
-    value: 1.54,
-    year: 2025,
-    source: 'Uptime Institute Global Data Center Survey 2025',
+    value: UPTIME_GLOBAL_PUE,
+    year: 2026,
+    source: 'Uptime Institute Global Data Center Survey 2026 (n=644)',
     region: 'global',
   },
   {
@@ -76,7 +94,7 @@ export const PUE_BANDS: PueBand[] = [
   { max: 1.1, labelPt: 'Classe hyperscale', labelEn: 'Hyperscale class', tone: 'excellent' },
   { max: 1.25, labelPt: 'Excelente', labelEn: 'Excellent', tone: 'excellent' },
   { max: 1.4, labelPt: 'Muito eficiente', labelEn: 'Very efficient', tone: 'good' },
-  { max: 1.54, labelPt: 'Eficiente — melhor que a média global', labelEn: 'Efficient — better than global average', tone: 'good' },
+  { max: UPTIME_GLOBAL_PUE, labelPt: 'Eficiente — melhor que a média global', labelEn: 'Efficient — better than global average', tone: 'good' },
   { max: 1.8, labelPt: 'Na média / abaixo da média global', labelEn: 'Average / below global average', tone: 'ok' },
   { max: 2.2, labelPt: 'Ineficiente', labelEn: 'Inefficient', tone: 'warn' },
   { max: Infinity, labelPt: 'Muito ineficiente', labelEn: 'Very inefficient', tone: 'bad' },
@@ -84,7 +102,7 @@ export const PUE_BANDS: PueBand[] = [
 
 /**
  * Tabela histórica da 42U (~2010) — mantida SÓ para contraste didático na página de metodologia.
- * "Average = 2.0" era a régua de 2010; hoje a média global é 1,54.
+ * "Average = 2.0" era a régua de 2010; hoje a média global é 1,52 (Uptime, 2026).
  */
 export const LEGACY_42U_TABLE = [
   { pue: 3.0, dcie: 0.33, label: 'Very Inefficient' },
